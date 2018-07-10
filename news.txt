@@ -1,5 +1,6 @@
-Programm Tranfer,
-The Programm Transfer is Complet, 
-and with smal Fixes.
-The Database is now in Your User Files.
-Fixed the View in your Train Diagramm.
+Programm Umzug:
+
+In Vers. 1.0.4 ist Neu,
+-Die Train Datenbank ist nun in Eigene Dokumente, Hat den Voreil das Keine Daten beim Update verloren gehen.
+-Die Train liste unter Rollmaterial wurde Visuell Bearbeitet.
+-Die Wartung erinnerrung ist Teilweise eingebaut (Noch Fehlerhaft loks werden zur wartung beim Ersten ansehen, Als Fällig angezeigt)
