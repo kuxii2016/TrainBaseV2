@@ -1,9 +1,7 @@
-Programm Umzug:
 
-In Vers. 1.0.4 ist Neu,
--Die Train Datenbank ist nun in Eigene Dokumente, Hat den Voreil das Keine Daten beim Update verloren gehen.
--Die Train liste unter Rollmaterial wurde Visuell Bearbeitet.
--Die Wartung erinnerrung ist Teilweise eingebaut 
-(Noch Fehlerhaft loks werden zur wartung beim Ersten ansehen, Als Fällig angezeigt)
--Neuer Update Server (Bessere Erreichbarkeit)
+In Vers. 1.0.5 ist Neu,
+-Es kam eine Inventar liste Hinzu, um Einkaufe, Ersatzteile zu erfassen.
+-Das aussehen wurde Verbessert.
+-Visuelle Rückmeldungen, und Tooltips über Bestimmte Funktionen.
+-Lok/Wagen Exporter wurden bearbeitet (Für die Kommende import Funktion)
 
