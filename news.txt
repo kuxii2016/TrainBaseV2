@@ -1,7 +1,4 @@
 
-In Vers. 1.0.5 ist Neu,
--Es kam eine Inventar liste Hinzu, um Einkaufe, Ersatzteile zu erfassen.
--Das aussehen wurde Verbessert.
--Visuelle Rückmeldungen, und Tooltips über Bestimmte Funktionen.
--Lok/Wagen Exporter wurden bearbeitet (Für die Kommende import Funktion)
-
+In Vers. 1.0.6 ist Neu,
+-Inventar Aktualisierungs BUG behoben
+-Update Prüfung auf Dauer An gesetzt (Temp Fix)
