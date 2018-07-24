@@ -24,7 +24,8 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 # - Bekannte Bugs:<br>
 <br>
--Aktuell nichts Bekannt <br>
+-Programm muss beim Ersten Start (Wenn es noch nie verwendet wurde) 2mal Neu gestartet Werden bevor mann etwas in die Listen Einträgt.! <br>
+Liegt an den Datenbank Patches, Wird in zukunft behoben.!<br>
 <br>
 # - Was noch kommt:<br>
 <br>
