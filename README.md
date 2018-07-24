@@ -8,7 +8,7 @@ Die Daten Sätze erhalten Sämtliche Hersteller, Spurgrößen,Farbe, Adressen uv
 Für Analog/Digital Bahner geeignet.<br>
 <br>
 <br>
-Das Pack enthält das Windows/Linux Programm,<br>
+Das Pack enthält das Windows/Linux/MacOS Programm,<br>
 Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 # - Was aktuell in der Version Verfügbar ist:<br>
@@ -24,8 +24,7 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 # - Bekannte Bugs:<br>
 <br>
--Loks werden bei der Lokliste beim Ersten Klick Orange (Wartungswarung) Angezeigt.<br>
--Wartungsintervall Settings bearbeiten Fehler setzt das Alte jahr + das Neu Eingestellte.<br>
+-Aktuell nichts Bekannt <br>
 <br>
 # - Was noch kommt:<br>
 <br>
