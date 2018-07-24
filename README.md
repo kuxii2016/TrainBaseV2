@@ -15,7 +15,8 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 -Lok liste Komplett (Hinzufügen, Bearbeiten, Löschen, Preisliste Generieren, Export)<br>
 -Wagon liste Komplett (Hinzufügen, Bearbeiten, Löschen, Preisliste Generieren, Export)<br>
--Wartungs Intervall Settings (Noch nicht zu 100% sicher in der Anzeige, Beim Debugger Funktionsfähig)<br>
+-Wartungs Intervall + Settings<br>
+-Einkaufs/Inventur liste <br>
 -Debugger<br>
 -Einstellungen<br>
 -Fuhrpark Anzeige<br>
