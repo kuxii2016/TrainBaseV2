@@ -1,5 +1,6 @@
 Sommerpausen Update
-In Vers. 1.0.7 ist Neu,
--Wartungs Intervall Funktion ist Fertig,
--Update Funktion Bearbeitet,
--Rechtschreib Fehler Behoben
+In Vers. 1.0.9 ist Neu,
+-Update Installation Bearbeitet (Bei neu erstellter Datenbank,Update)
+-CV 1,2,3,4,5 Können nun Eingetragen und wieder Bearbeitet werden
+-Import Export System Fertig Gestellt
+-Error Reporter system Eingebaut, Und die Support Email angepasst
