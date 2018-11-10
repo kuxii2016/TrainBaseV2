@@ -1,6 +1,6 @@
 
-In Vers. 1.0.9 ist Neu,
--Update Installation Bearbeitet (Bei neu erstellter Datenbank,Update)
--CV 1,2,3,4,5 Können nun Eingetragen und wieder Bearbeitet werden
--Import Export System Fertig Gestellt
--Error Reporter system Eingebaut, Und die Support Email angepasst
+In Vers. 1.0.10 ist Neu,
+-Inventory Listen Blätter Bug behoben
+-Activitäts Indicator
+-Kleinere System Fixes für sätere Updates
+-Import/Export system Nachgebessert
