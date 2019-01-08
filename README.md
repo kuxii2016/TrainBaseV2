@@ -26,7 +26,7 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 # - Bekannte Bugs:<br>
 <br>
-
+-Debugger geht seid 1.0.10 nicht.! <- Wird aktuell Bearbeitet
 <br>
 # - Was noch kommt:<br>
 <br>
