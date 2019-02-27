@@ -15,7 +15,7 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 <br>
 -Lok liste Komplett (Hinzufügen, Bearbeiten, Löschen, Preisliste Generieren, Export)<br>
 -Wagon liste Komplett (Hinzufügen, Bearbeiten, Löschen, Preisliste Generieren, Export)<br>
--Wartungs Intervall + Settings<br>
+-Wartungs Intervall + Settings in der Lokliste, Die loks was eine Wartung (je nach einstellung) brauchen sind Grau und die Ok sind Schwarz<br>
 -Einkaufs/Inventur liste <br>
 -Lok / Waggonbilder<br>
 -Einstellungen<br>
