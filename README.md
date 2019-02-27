@@ -17,21 +17,17 @@ Achtung Aktive Grafikkarte mit 3D Beschleunigung wird Benötigt.!<br>
 -Wagon liste Komplett (Hinzufügen, Bearbeiten, Löschen, Preisliste Generieren, Export)<br>
 -Wartungs Intervall + Settings<br>
 -Einkaufs/Inventur liste <br>
--Debugger<br>
+-Lok / Waggonbilder<br>
 -Einstellungen<br>
 -Fuhrpark Anzeige<br>
 -Update Funktionen (Versionsprüfung, Änderrungen)<br>
 -Lok/Wagons Import/Export System<br>
 -CV System<br>
-<br>
-# - Bekannte Bugs:<br>
-<br>
--Debugger geht seid 1.0.10 nicht.! <- Wird aktuell Bearbeitet
-<br>
-# - Was noch kommt:<br>
-<br>
--Lokbilder<br>
--Möglichkeit Dokumente/Bilder bestimmten Loks Hinzufügen (Ersatzteil Liste, Anleitungen)<br>
--Speicher Limit Erhöhen Aktuell max. 240Lok und 240Wagons<br>
--Datenbank Backup Funktion<br>
-<br>
+
+![Main img](https://scontent-ber1-1.xx.fbcdn.net/v/t1.0-9/53092875_2255000228154908_550352883061620736_o.jpg?_nc_cat=101&_nc_ht=scontent-ber1-1.xx&oh=ca5e7650590213b946b6fd8a2db2e1d0&oe=5D1797BB)
+
+![Main img](https://scontent-ber1-1.xx.fbcdn.net/v/t1.0-9/52991385_2255000271488237_4879240615289683968_o.jpg?_nc_cat=105&_nc_ht=scontent-ber1-1.xx&oh=b660028c152b5472aac1158421b36565&oe=5CDF7CAE)
+
+![Main img](https://scontent-ber1-1.xx.fbcdn.net/v/t1.0-9/49678697_2222633034724961_5948517021921574912_o.jpg?_nc_cat=105&_nc_ht=scontent-ber1-1.xx&oh=9b49db3d0e3d59da1d5a852d26ebdeec&oe=5CE9C481)
+
+![Main img](https://scontent-ber1-1.xx.fbcdn.net/v/t1.0-9/50294527_2222633021391629_8252840269842481152_o.jpg?_nc_cat=105&_nc_ht=scontent-ber1-1.xx&oh=ed61917f28d3f4d2d32b893b1d46db5e&oe=5D2679F9)
