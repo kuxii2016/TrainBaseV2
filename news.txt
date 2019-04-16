@@ -1,15 +1,4 @@
 
-In Vers. 1.1.0 ist Neu,
--Lokbilder können nun ausgetauscht werden.
--Waggonbilder können nun ausgetauscht werden.
--Fuhrpark übersicht Diagramm Bearbeitet.
--Beschleunigungs Verbesserungen (Besonders beim Start)
-
---WICHTIG--
-1.Bilder MÜSSEN PNG Dateien sein.
-2.Bilder MÜSSEN durch nummeriert werden.
-Anleitng,Erklärung gibt es hier:
-https://youtu.be/701cUY2vLeo
-
-Update wie immer unter:
-https://github.com/kuxii2016/TrainBaseV2/releases
+In Vers. 1.1.1 ist Neu,
+-Vorbereitungen für die Android APP
+-Statistiken Verbessert
