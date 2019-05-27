@@ -1,4 +1,7 @@
 
-In Vers. 1.1.1 ist Neu,
--Vorbereitungen für die Android APP
--Statistiken Verbessert
+In Vers. 1.1.2 ist Neu,
+- Android version Wurde Bearbeitet.
+- Fuhrpark Manager wurde ein Bug gefixt
+- Das Löschen/Bearbeiten wurde verbessert
+- die Netzwerk Schnittstelle wurde Aktiviert
+- Lagerort wurde für loks/wagons eingeführt.
