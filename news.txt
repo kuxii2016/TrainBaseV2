@@ -1,8 +1,4 @@
 
-In Vers. 1.1.3 ist Neu,
-- Design mehr an Windows Angepasst
-- Sende/Empfang Funktion Überarbeitet
-- Mehr Einstellungen
-- Backup Funktion + Backup Center
-- Programmstart optimiert
-- Code Cleanup + inige Verbesserrungen
+In Vers. 1.1.4 ist Neu,
+- DiscordRPC
+- Anlagen Decoder können nun Gespeichert werden.
