@@ -82,6 +82,7 @@ public class ImportManager : MonoBehaviour
     public Text wwwHersteller;
     public Text wwwErfasst;
     public InputField ImportKey;
+    public Toggle DeleteToggle;
     string CacheData0 = "NULL";
     public string CacheData1 = "NULL";
     public string CacheData2 = "NULL";
@@ -453,7 +454,7 @@ public class ImportManager : MonoBehaviour
                 strArrayOne = strOne.Split(',');
 
 
-                Logger.PrintLog("Receiv: " + strArrayOne.Length);
+                Logger.PrintLog("MODUL Import_Manager :: Empfangen " + read.bytesDownloaded + " bytes");
 
                 CacheData0 = strArrayOne[0];
                 CacheData1 = strArrayOne[1];
@@ -795,6 +796,34 @@ public class ImportManager : MonoBehaviour
                 }
                 Logger.Message("Lok Erfolgreich Empfangen, und Gespeichert", "GRUEN");
             }
+            if(DeleteToggle == DeleteToggle.isOn)
+            {
+                StartCoroutine(Clear());
+            }
+            else
+            {
+                Logger.PrintLog("MODUL Import_Manager :: Material wird nicht am Server Gelöscht,bleibt erhalten bis User es Löscht (RE-Import)");
+            }
         }
     }
+
+    IEnumerator Clear()
+    {
+        WWW read = new WWW(Settings.URL + "/remove.php?uniqueID=" + ImportKey.text.ToString());
+        yield return read;
+
+        if (read.error != null)
+        {
+            Logger.PrintLogEnde();
+            Logger.PrintLog("MODUL Import_Manager :: No Internet Connection to the Server.!");
+            Logger.Message("Keine Internet Verbindung.!", "ROT");
+        }
+        else
+        {
+            Logger.PrintLogEnde();
+            Logger.PrintLog("MODUL Import_Manager :: Stored Material Cleared!");
+            
+        }
+    }
+
 }

@@ -198,8 +198,9 @@ public class LokView : MonoBehaviour
     [Header("WWW-Send")]
     public GameObject Win;
     public InputField SendOK;
-
+    public Texture2D[] TrainPic;
     public string uniqueID = "";
+    private int lel = 0;
 
     void Start()
     {
@@ -434,6 +435,17 @@ public class LokView : MonoBehaviour
             }
         }
         Logger.PrintLogEnde();
+        ReadCustomPic();
+    }
+
+    void ReadCustomPic()
+    {
+        for (int i = 0; i < Trains.Count; i++)
+        {
+            Logger.PrintLog("MODUL Lok_View :: Load Train Pic: " + (i + 1) + "." + Usettings.ImageType);
+            StartCoroutine(setImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType), i));
+        }
+        Logger.PrintLogEnde();
     }
 
     public void GetTrainData1()
@@ -503,7 +515,8 @@ public class LokView : MonoBehaviour
                             Slot3[i].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType);
+                                //vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType);
+                                vBild[i].GetComponent<RawImage>().texture = TrainPic[i] ;
                             }
                         }
                         else
@@ -517,7 +530,8 @@ public class LokView : MonoBehaviour
                             Slot3[i].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType);
+                              // vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType);
+                               vBild[i].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count <= 24)
@@ -623,7 +637,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 24].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                               // vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 24].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -638,7 +653,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 24].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                               // vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 24].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 24)
@@ -741,7 +757,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 48].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 48].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -755,7 +772,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 48].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 48].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 48)
@@ -859,7 +877,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 72].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 72].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -873,7 +892,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 72].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 72].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 72)
@@ -977,7 +997,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 96].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 96].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -991,7 +1012,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 96].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 96].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 96)
@@ -1095,7 +1117,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 120].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 120].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -1109,7 +1132,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 120].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 120].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 120)
@@ -1213,7 +1237,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 144].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 144].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -1227,7 +1252,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 144].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 144].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 144)
@@ -1331,7 +1357,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 168].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 168].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -1345,7 +1372,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 168].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 168].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 168)
@@ -1450,7 +1478,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 192].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 192].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -1464,7 +1493,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 192].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 192].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 192)
@@ -1568,7 +1598,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 216].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 216].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         else
@@ -1582,7 +1613,8 @@ public class LokView : MonoBehaviour
                             Slot3[i - 216].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "" + Jahr[Trains[i].DbWartungJahr];
                             if (ShowImage == true)
                             {
-                                vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                //vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + ((i) + 1) + "." + Usettings.ImageType);
+                                vBild[i - 216].GetComponent<RawImage>().texture = TrainPic[i];
                             }
                         }
                         if (Trains.Count >= 216)
@@ -1873,6 +1905,18 @@ public class LokView : MonoBehaviour
             tex.LoadImage(fileData);
         }
         return tex;
+    }
+
+    IEnumerator setImage(string url, int number)
+    {
+        Texture2D tex;
+        tex = new Texture2D(2, 2, TextureFormat.DXT1, false);
+        using (WWW www = new WWW("file:///" + url.Replace("\\", "/")))
+        {
+            yield return www;
+            www.LoadImageIntoTexture(tex);
+            TrainPic[number] = tex;
+        }
     }
 
     public void SendTrainToClient()
