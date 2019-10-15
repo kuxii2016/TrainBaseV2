@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class Translator : MonoBehaviour
@@ -8,6 +9,18 @@ public class Translator : MonoBehaviour
     public bool German;
     public bool Other;
     public LogWriterManager Logger;
+    [Header("MainMenue")]
+    public Text LokListe;
+    public Text NewLok;
+    public Text WagonList;
+    public Text NewWagon;
+    public Text Settings;
+    public Text EinkaufsList;
+    public Text Decoder;
+    public Text Stats;
+    public Text Importer;
+    public Text Backups;
+    public Text ProgrammInfo;
 
     void Start()
     {

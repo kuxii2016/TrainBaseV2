@@ -195,6 +195,11 @@ public class LokView : MonoBehaviour
     public bool UpdateInProgress = false;
     public int counter = 0;
     public int RcpItems;
+    [Header("WWW-Send")]
+    public GameObject Win;
+    public InputField SendOK;
+
+    public string uniqueID = "";
 
     void Start()
     {
@@ -1880,6 +1885,12 @@ public class LokView : MonoBehaviour
         }
     }
 
+    public void SendWWW()
+    {
+        uniqueID = DateTime.Now.ToString("HHmmssddMMyyyy");
+        StartCoroutine(SendSelected());
+    }
+
     public void verifyTrainData()
     {
         for (int i = 0; i < Trains.Count; i++)
@@ -2493,5 +2504,26 @@ public class LokView : MonoBehaviour
         }
         Usettings.ReadSettings();
         RcpItems = Usettings.ImportRPC;
+    }
+
+    IEnumerator SendSelected()
+    {
+        string FinshURL = Settings.URL + "/insert.php?uniqueID=" + uniqueID + "&data=ISTRAIN," + Trains[SelectedID].DbBaureihe.ToString() + "," + Trains[SelectedID].DbFarbe.ToString() + "," + Trains[SelectedID].DbLokTyp.ToString() + "," + Trains[SelectedID].DbHersteller.ToString() + "," + Trains[SelectedID].DbKatalognummer.ToString() + "," + Trains[SelectedID].DbSeriennummer.ToString() + "," + Trains[SelectedID].DbKaufTag.ToString() + "," + Trains[SelectedID].DbKaufMonat.ToString() + "," + Trains[SelectedID].DbKaufJahr.ToString() + "," + Trains[SelectedID].DbPreis.ToString() + "," + Trains[SelectedID].DbWartungTag.ToString() + "," + Trains[SelectedID].DbWartungMonat.ToString() + "," + Trains[SelectedID].DbWartungJahr.ToString() + "," + Trains[SelectedID].DbAdresse.ToString() + "," + Trains[SelectedID].DbProtokoll.ToString() + "," + Trains[SelectedID].DbFahrstufen.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbDecHersteller.ToString() + "," + Trains[SelectedID].DbAngelegt.ToString() + "," + Trains[SelectedID].DbRauch.ToString() + "," + Trains[SelectedID].DbSound.ToString() + "," + Trains[SelectedID].DbROTWEISS.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbPandos.ToString() + "," + Trains[SelectedID].DbTelex.ToString() + "," + Trains[SelectedID].DbElekKupplung.ToString() + "," + Trains[SelectedID].DbSpurweite.ToString() + "," + Trains[SelectedID].DbCV2.ToString() + "," + Trains[SelectedID].DbCV3.ToString() + "," + Trains[SelectedID].DbCV4.ToString() + "," + Trains[SelectedID].DbCV5.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString();
+        Debug.Log(FinshURL);
+        WWW insert = new WWW(FinshURL);
+
+        yield return insert;
+
+        if(insert.error != null)
+        {
+            Logger.PrintLog("MODUL Lok_View :: Error by send Train over WWW! Check your Internet Connection.!");
+            Logger.PrintLog("MODUL Lok_View :: " + insert.error);
+        }
+        if(insert.isDone)
+        { 
+            Logger.PrintLog("MODUL Lok_View :: Send Complete ExportKey = " + uniqueID);
+            Win.SetActive(true);
+            SendOK.text = uniqueID.ToString();
+        }
     }
 }

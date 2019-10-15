@@ -24,7 +24,7 @@ public class MessagesManager : MonoBehaviour {
         {
             Logger.PrintLog("ENABLE Message System -> Message is Normal.");
             Logger.PrintLogEnde();
-            Logger.PrintLog("MODUL Message System :: 41 Messages Found.");
+            Logger.PrintLog("MODUL Message System :: 43 Messages Found.");
         }
     }
 
@@ -173,11 +173,27 @@ public class MessagesManager : MonoBehaviour {
 
     public void Export()
     {
-        Logger.Message("Exportiert den Ausgewählten Eintrag, ist im Export Ordner zu Finden", "GRUEN");
+        Logger.Message("Öffnet das Export Menü", "GRUEN");
     }
 
+    public void ExportDATA()
+    {
+        Logger.Message("Exportiert es als Datei", "GRUEN");
+    }
+
+    public void ExportWWW()
+    {
+        Logger.Message("Exportiert es über das WWW", "GRUEN");
+    }
     public void Send()
     {
         Logger.Message("Sendet den Ausgewählten Eintrag, zu einem anderen Empfänger (Verbindung Erforderlich)", "GRUEN");
+    }
+
+    //###### WWW Import Update
+
+    public void ImportWWW()
+    {
+        Logger.Message("Import Material via ImportKey", "lila");
     }
 }
