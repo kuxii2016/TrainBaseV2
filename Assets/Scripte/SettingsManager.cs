@@ -25,6 +25,7 @@ public class SettingsManager : MonoBehaviour
     public StartUpManager StartManager;
     public LokView Lokview;
     public WagonView Wagonview;
+    public Translator lang;
     [Header("DB-Werte")]
     public int AutoUpdateValue;
     public int LeistungsDatenValue;
@@ -84,9 +85,14 @@ public class SettingsManager : MonoBehaviour
     public Button JA;
     public Button Nein;
     public int ImageCount = 1;
+    [Header("GPU-Settings")]
+    public Dropdown Resulotion;
+    public Resolution[] resolutions;
+    private SettingsData settingsData;
 
     void Start()
     {
+        settingsData = new SettingsData();
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE User_Settings -> Message is Normal.");
@@ -97,7 +103,15 @@ public class SettingsManager : MonoBehaviour
         ReadSettings();
         DBInfo();
         GetIPAdress();
-
+        if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"))
+        {
+            LoadSettingsData();
+        }
+        else
+        {
+            Logger.PrintLog("MODUL User_Settings :: No new Settings Config Found Create new.");
+            SaveSettings();
+        }
         if (Logger.logIsEnabled == true)
         {
             DebuggerIcon.gameObject.SetActive(true);
@@ -107,6 +121,22 @@ public class SettingsManager : MonoBehaviour
         {
             DebuggerIcon.gameObject.SetActive(false);
         }
+    }
+
+    private void OnEnable()
+    {
+        Resulotion.onValueChanged.AddListener(delegate { ResulotiononValueChanged(); });
+        resolutions = Screen.resolutions;
+        foreach (Resolution resolution in resolutions)
+        {
+            Resulotion.options.Add(new Dropdown.OptionData(resolution.ToString()));
+        }
+    }
+
+    public void ResulotiononValueChanged()
+    {
+        Screen.SetResolution(resolutions[Resulotion.value].width, resolutions[Resulotion.value].height, Screen.fullScreen);
+        settingsData.Resulotion = Resulotion.value;
     }
 
     void Update()
@@ -299,7 +329,7 @@ public class SettingsManager : MonoBehaviour
         {
             command.Connection = dbConnection;
             command.CommandType = CommandType.Text;
-            command.CommandText = "UPDATE Settings  SET AUTOCHECK = @AUTOCHECK, TRAINS = @TRAINS , WAGONS = @WAGONS , DATENSEND = @DATENSEND , SOUNDS = @SOUNDS , INVENTORY = @INVENTORY , LOKLISTICONS = @LOKLISTICONS, IMAGETYPE = @IMAGETYPE, WARTUNGSINTERVALL = @WARTUNGSINTERVALL" ;
+            command.CommandText = "UPDATE Settings  SET AUTOCHECK = @AUTOCHECK, TRAINS = @TRAINS , WAGONS = @WAGONS , DATENSEND = @DATENSEND , SOUNDS = @SOUNDS , INVENTORY = @INVENTORY , LOKLISTICONS = @LOKLISTICONS, IMAGETYPE = @IMAGETYPE, WARTUNGSINTERVALL = @WARTUNGSINTERVALL";
             command.Parameters.AddWithValue("@AUTOCHECK", AutoUpdate.isOn);
             command.Parameters.AddWithValue("@TRAINS", ErstelleLokPrice.isOn);
             command.Parameters.AddWithValue("@WAGONS", ErstelleWagonPrice.isOn);
@@ -318,7 +348,7 @@ public class SettingsManager : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Settings :: ERROR by Save Settings: " + ex + "\n");
+                    Logger.Error("MODUL User_Settings :: SaveSettings: " + ex + "\n");
                     Debug.Log(ex);
                 }
             }
@@ -327,10 +357,25 @@ public class SettingsManager : MonoBehaviour
                 dbConnection.Close();
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Settings :: Save Finsch ");
+                    Logger.PrintLog("MODUL User_Settings :: Save Finsch ");
                 }
             }
         }
+        settingsData.Lang = lang.Lang;
+        settingsData.AutoUpdate = AutoUpdate.isOn;
+        settingsData.TrainPrice = ErstelleLokPrice.isOn;
+        settingsData.WagonPrice = ErstelleWagonPrice.isOn;
+        settingsData.InventoryPrice = ErstelleInvenoryPrice.isOn;
+        settingsData.Debug = Debugger.isOn;
+        settingsData.ListImages = ZeigeLokbilder.isOn;
+        settingsData.ImageCheck = ImagesAutoRead.isOn;
+        settingsData.ImageTypInt = ImageSetting.value;
+        settingsData.ImageFile = ImageType;
+        settingsData.MaintenanceInterval = WIntervall.value;
+        settingsData.Resulotion = Resulotion.value;
+        settingsData.Lang = lang.Lang;
+        string jsonData = JsonUtility.ToJson(settingsData, true);
+        File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml", jsonData);
     }
 
     public void CreateBackup()
@@ -499,8 +544,29 @@ public class SettingsManager : MonoBehaviour
         }
         Lokview.GetTrainPictures();
         Wagonview.GetTrainPictures();
+        Lokview.ReadCustomPic();
+        Wagonview.ReadCustomPic();
         Logger.Message((ImageCount / 4).ToString() + " Bilder neu Erstellt", "LILA");
         ImageCount = 1;
         CalculateImageSize();
+    }
+
+    public void LoadSettingsData()
+    {
+        settingsData = JsonUtility.FromJson<SettingsData>(File.ReadAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"));
+        Resulotion.RefreshShownValue();
+        settingsData.Lang = lang.Lang;
+        settingsData.Lang = lang.Lang;
+        settingsData.AutoUpdate = AutoUpdate.isOn;
+        settingsData.TrainPrice = ErstelleLokPrice.isOn;
+        settingsData.WagonPrice = ErstelleWagonPrice.isOn;
+        settingsData.InventoryPrice = ErstelleInvenoryPrice.isOn;
+        settingsData.Debug = Debugger.isOn;
+        settingsData.ListImages = ZeigeLokbilder.isOn;
+        settingsData.ImageCheck = ImagesAutoRead.isOn;
+        settingsData.ImageTypInt = ImageSetting.value;
+        settingsData.ImageFile = ImageType;
+        settingsData.MaintenanceInterval = WIntervall.value;
+        settingsData.Lang = lang.Lang;
     }
 }

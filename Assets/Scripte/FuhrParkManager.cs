@@ -70,7 +70,6 @@ public class FuhrParkManager : MonoBehaviour {
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Statistik List -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
         RowLoks = lokView.RowLoks;
         RowWagons = wagonview.RowLoks;

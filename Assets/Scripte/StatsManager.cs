@@ -35,7 +35,6 @@ public class StatsManager : MonoBehaviour {
             OS = SystemInfo.operatingSystemFamily.ToString();
             ProgrammVersion = loader.Version;
             Logger.PrintLog("ENABLE Stats_Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
             if (File.Exists(Application.dataPath + "/" + "Config" + "/" + "uuid.pub"))
             {
                 MiddleUUID = File.ReadAllText(Application.dataPath + "/" + "Config" + "/" + "uuid.pub");
@@ -129,7 +128,7 @@ public class StatsManager : MonoBehaviour {
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Stats_Manager :: ERROR by set New Userstart +1 ");
+                    Logger.Error("MODUL Stats_Manager :: RegisterNewUser(): no Connection to the Server \n");
                 }
             }
             else
@@ -151,7 +150,7 @@ public class StatsManager : MonoBehaviour {
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Stats_Manager :: ERROR by Write Programmversion: " + loader.Version + " to Statistik");
+                    Logger.Error("MODUL Stats_Manager :: SetProgrammVersion(): no Connection to the Server \n");
                 }
             }
             else
@@ -173,7 +172,7 @@ public class StatsManager : MonoBehaviour {
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Stats_Manager :: ERROR by set Windows +1 ");
+                    Logger.Error("MODUL Stats_Manager :: Windows(): no Connection to the Server \n");
                 }
             }
             else
@@ -195,7 +194,7 @@ public class StatsManager : MonoBehaviour {
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Stats_Manager :: ERROR by set Linux +1 ");
+                    Logger.Error("MODUL Stats_Manager :: Linux(): no Connection to the Server \n");
                 }
             }
             else
@@ -217,7 +216,7 @@ public class StatsManager : MonoBehaviour {
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Stats_Manager :: ERROR by set unknown OS +1 ");
+                    Logger.Error("MODUL Stats_Manager :: Sonstige(): no Connection to the Server \n");
                 }
             }
             else

@@ -49,7 +49,6 @@ public class NewTrain : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE AddTrain -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
     }
 
@@ -100,7 +99,7 @@ public class NewTrain : MonoBehaviour
                     StartManager.SystemMeldung.text = ("Error: 12 Write to Bank");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL AddTrain :: Save new Train: " + ex + "\n");
+                        Logger.Error("MODUL AddTrain :: SaveTrain():  " + ex + "\n");
                     }
                 }
                 finally

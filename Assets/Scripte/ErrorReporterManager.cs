@@ -28,7 +28,6 @@ public class ErrorReporterManager : MonoBehaviour {
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Error Reporter Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
     }
 
@@ -37,8 +36,12 @@ public class ErrorReporterManager : MonoBehaviour {
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error"))
         {
             Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error");
-            File.Copy(Logger.LogPfad + Logger.CurrentLogFile, (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "last.log"));
+            File.Copy(Logger.LogPfad + "OLD-Log.dump", (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "last0.log"));
+            File.Copy(Logger.LogPfad + "/current.log", (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "last1.log"));
+            File.Copy(Logger.LogPfad + "/error.dat", (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "error.dat"));
+            File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml", (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "config.xml"));
             File.Copy((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + SettingsManager.DatabasesName), (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "db.dll"));
+            Logger.PrintLog("MODUL Error_Reporter_Manager :: Report Created, Send this on 'kux.michael2@googlemail.com'");
         }
     }
 }

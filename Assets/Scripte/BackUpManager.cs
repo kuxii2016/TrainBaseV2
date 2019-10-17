@@ -60,7 +60,6 @@ public class BackUpManager : MonoBehaviour
         {
             IM.slots[u].GetComponentInChildren<Text>().color = Color.black;
             GetRows();
-            //unselectedID = u;
         }
         IM.slots[id].GetComponentInChildren<Text>().color = Color.blue;
         selectedID = id;
@@ -126,10 +125,5 @@ public class BackUpManager : MonoBehaviour
         }
         StartManager.SystemMeldung.GetComponent<Text>().color = Color.red;
         StartManager.SystemMeldung.GetComponent<Text>().text = ("Backup vom: " + Handler + " wurde Gelöscht.!");
-    }
-
-    public void RestoreDB()
-    {
-
     }
 }

@@ -115,7 +115,6 @@ public class InventoryManager : MonoBehaviour
             }
             Items = i + 1;
         }
-        Logger.PrintLogEnde();
     }
 
     public void RefreschSumme()
@@ -293,7 +292,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read all Items:  " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadAllItems:  " + ex + "\n");
             }
         }
         dbConnection.Close();
@@ -357,7 +356,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -422,7 +421,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -487,7 +486,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -552,7 +551,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -617,7 +616,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -682,7 +681,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -747,7 +746,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -812,7 +811,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -877,7 +876,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -943,7 +942,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Inventory_Manager :: ReadItemList: " + PageID + "" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -955,7 +954,6 @@ public class InventoryManager : MonoBehaviour
             Logger.PrintLog("MODUL Inventory_Manager :: Page " + PageID + " Found " + InVD.Count + " Rows");
         }
     }
-
 
     //Ident Fix **
     public void DeleteItem()
@@ -1005,7 +1003,7 @@ public class InventoryManager : MonoBehaviour
                     StartManager.SystemMeldung.text = ("Error: 12 Write to Bank");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Inventory_Manager :: ItemADD: ERROR by Save new Item:" + ex + "\n");
+                        Logger.Error("MODUL Inventory_Manager :: SaveItem() "  + ex + "\n");
                     }
                 }
                 finally
@@ -1072,7 +1070,7 @@ public class InventoryManager : MonoBehaviour
                 StartManager.SystemMeldung.text = ("Fehler beim Datenlesen CODE:12");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Inventory_Manager ::  ERROR by Edit the Item: " + ex + "\n");
+                    Logger.Error("MODUL Inventory_Manager :: UpdateItem(): "  + ex + "\n");
                 }
             }
             finally
@@ -1208,8 +1206,7 @@ public class InventoryManager : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Inventory_Manager :: ERROR by Save Settings: " + ex + "\n");
-                    Debug.Log(ex);
+                    Logger.Error("MODUL Inventory_Manager :: SaveSettings(): " + ex + "\n");
                 }
             }
             finally

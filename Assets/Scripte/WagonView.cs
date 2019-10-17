@@ -128,10 +128,15 @@ public class WagonView : MonoBehaviour
     private DatenExporter dataexporter;
     public Image ReadOn;
     public bool ShowImage = false;
-    private string filePath1;
+    private string filePath1 = "";
     public string[] tmpGuid;
     public int counter = 0;
     public int RcpItems;
+    [Header("WWW-Send")]
+    public GameObject Win;
+    public InputField SendOK;
+    public Texture2D[] TrainPic;
+    public string uniqueID = "";
 
     void Start()
     {
@@ -140,9 +145,7 @@ public class WagonView : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Train List -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
-
         ReadAllTrainsNew();
 
         if (Usettings.ImagesAutoReadBool == true)
@@ -196,12 +199,13 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read all Wagons" + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: ReadAllWagons(): " + ex + "\n");
             }
             Logger.Message("Fehler beim Laden der Wagonliste", "ROT");
         }
         dbConnection.Close();
         dbConnection = null;
+        ReadCustomPic();
     }
 
     void Update()
@@ -339,6 +343,17 @@ public class WagonView : MonoBehaviour
         Logger.PrintLogEnde();
     }
 
+    public void ReadCustomPic()
+    {
+        for (int i = 0; i < Trains.Count; i++)
+        {
+            StartCoroutine(setImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + Usettings.ImageType), i));
+        }
+        Logger.PrintLogEnde();
+
+        Logger.PrintLog("MODUL Wagon_View :: Loadet " + (Trains.Count + 1) + " Train Pictures.");
+    }
+
     public void GetTrainData1()
     {
         PageID = 1;
@@ -383,7 +398,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + (i + 1) + "." + Usettings.ImageType);
+                            //vBild[i].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + (i + 1) + "." + Usettings.ImageType);
+                            vBild[i].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count <= 24)
                         {
@@ -406,7 +422,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -463,7 +479,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 24].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 24].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 24].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 24)
                         {
@@ -485,7 +502,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -542,7 +559,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 48].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 48].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 48].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 48)
                         {
@@ -564,7 +582,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -621,7 +639,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 72].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 72].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 72].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 72)
                         {
@@ -643,7 +662,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -700,7 +719,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 96].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 96].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 96].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 96)
                         {
@@ -722,7 +742,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -779,7 +799,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 120].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 120].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 120].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 120)
                         {
@@ -801,7 +822,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -858,7 +879,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 144].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 144].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 144].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 144)
                         {
@@ -880,7 +902,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -937,7 +959,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 168].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 168].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 168].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 168)
                         {
@@ -959,7 +982,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1016,7 +1039,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 192].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 192].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 192].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 192)
                         {
@@ -1038,7 +1062,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1095,7 +1119,8 @@ public class WagonView : MonoBehaviour
                         Slot3[i - 216].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + vTag[Trains[i].DBKaufTag] + "." + vMonat[Trains[i].DBKaufMonat] + "" + vJahr[Trains[i].DBKaufJahr];
                         if (ShowImage == true)
                         {
-                            vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            //vBild[i - 216].GetComponent<RawImage>().texture = LoadPNG(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Waggons/" + ((i) + 1) + "." + Usettings.ImageType);
+                            vBild[i - 216].GetComponent<RawImage>().texture = TrainPic[i];
                         }
                         if (Trains.Count >= 216)
                         {
@@ -1117,7 +1142,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1177,7 +1202,7 @@ public class WagonView : MonoBehaviour
         GUUID.text = Trains[SelectedID].DBIdentifyer;
         TopWindow.text = vHersteller[Trains[SelectedID].DBHersteller] + " " + Trains[SelectedID].DBKatalognummer + " Bearbeiten";
         filePath1 = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + Usettings.ImageType);
-        trainBild.GetComponent<RawImage>().texture = LoadPNG(filePath1);
+        trainBild.GetComponent<RawImage>().texture = TrainPic[SelectedID];
         trainText.text = Katalognummer.text;
         if (Trains[SelectedID].DBKupplung == 1)
         {
@@ -1252,7 +1277,7 @@ public class WagonView : MonoBehaviour
                 Logger.Message("Fehler beim Bearbeiten des Wagons", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Wagon_View :: Fehler beim Bearbeiten " + ex + "\n");
+                    Logger.Error("MODUL Wagon_View :: UpdateWagon():  " + ex + "\n");
                 }
             }
             finally
@@ -1342,6 +1367,18 @@ public class WagonView : MonoBehaviour
         return tex;
     }
 
+    IEnumerator setImage(string url, int number)
+    {
+        Texture2D tex;
+        tex = new Texture2D(2, 2, TextureFormat.DXT1, false);
+        using (WWW www = new WWW("file:///" + url.Replace("\\", "/")))
+        {
+            yield return www;
+            www.LoadImageIntoTexture(tex);
+            TrainPic[number] = tex;
+        }
+    }
+
     public void SendTrainToClient()
     {
         NH.TrySendTrainData("WAGON" + "," + Trains[SelectedID].DBTyp.ToString() + "," + Trains[SelectedID].DBFarbe.ToString() + "," + Trains[SelectedID].DBHersteller.ToString() + "," + Trains[SelectedID].DBKatalognummer.ToString() + "," + Trains[SelectedID].DBSeriennummer.ToString() + "," + Trains[SelectedID].DBKaufTag.ToString() + "," + Trains[SelectedID].DBKaufMonat.ToString() + "," + Trains[SelectedID].DBKaufJahr.ToString() + "," + Trains[SelectedID].DBPreis.ToString() + "," + Trains[SelectedID].DBKupplung.ToString() + "," + Trains[SelectedID].DBLicht.ToString() + "," + Trains[SelectedID].DBPreiser.ToString() + "," + Trains[SelectedID].DBSpurweite.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString() + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE");
@@ -1349,6 +1386,12 @@ public class WagonView : MonoBehaviour
         {
             Logger.PrintLog("MODUL Wagon_View :: RPC-Send Wagon");
         }
+    }
+
+    public void SendWWW()
+    {
+        uniqueID = DateTime.Now.ToString("HHmmssddMMyyyy");
+        StartCoroutine(SendSelected());
     }
 
     public void verifyTrainData()
@@ -1503,7 +1546,7 @@ public class WagonView : MonoBehaviour
                 Logger.Message("Wagon Erfolgreich Empfangen, Fehler beim Update", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Wagon_View ::  RPC-Update Fehler beim Update " + ex + "\n");
+                    Logger.Error("MODUL Wagon_View :: UPDATERPCWAGON():  " + ex + "\n");
                 }
             }
             finally
@@ -1665,7 +1708,7 @@ public class WagonView : MonoBehaviour
                     Logger.Message("Wagon Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Wagon_View :: RPC-Wagon Fehler beim Speichern " + ex + "\n");
+                        Logger.Error("MODUL Wagon_View :: ADDRPCWAGON():  " + ex + "\n");
                     }
                 }
                 finally
@@ -1726,5 +1769,26 @@ public class WagonView : MonoBehaviour
         }
         Usettings.ReadSettings();
         RcpItems = Usettings.ImportRPC;
+    }
+
+    IEnumerator SendSelected()
+    {
+        string FinshURL = Settings.URL + "/insert.php?uniqueID=" + uniqueID + "&data=ISWAGON," + Trains[SelectedID].DBTyp.ToString() + "," + Trains[SelectedID].DBFarbe.ToString() + "," + Trains[SelectedID].DBHersteller.ToString() + "," + Trains[SelectedID].DBKatalognummer.ToString() + "," + Trains[SelectedID].DBSeriennummer.ToString() + "," + Trains[SelectedID].DBKaufTag.ToString() + "," + Trains[SelectedID].DBKaufMonat.ToString() + "," + Trains[SelectedID].DBKaufJahr.ToString() + "," + Trains[SelectedID].DBPreis.ToString() + "," + Trains[SelectedID].DBKupplung.ToString() + "," + Trains[SelectedID].DBLicht.ToString() + "," + Trains[SelectedID].DBPreiser.ToString() + "," + Trains[SelectedID].DBSpurweite.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString() + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE";
+        Debug.Log(FinshURL);
+        WWW insert = new WWW(FinshURL);
+
+        yield return insert;
+
+        if (insert.error != null)
+        {
+            Logger.PrintLog("MODUL Wagon_View :: Error by send Wagon over WWW! Check your Internet Connection.!");
+            Logger.PrintLog("MODUL Wagon_View :: " + insert.error);
+        }
+        if (insert.isDone)
+        {
+            Logger.PrintLog("MODUL Wagon_View :: Send Complete ExportKey = " + uniqueID);
+            Win.SetActive(true);
+            SendOK.text = uniqueID.ToString();
+        }
     }
 }

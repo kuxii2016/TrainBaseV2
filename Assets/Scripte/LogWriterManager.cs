@@ -55,6 +55,14 @@ public class LogWriterManager : MonoBehaviour {
         CurrentLogFile = "current" + "." + LogEndingLine;
         FidexLogPfad = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Logs/" + CurrentLogFile;
         LogRotate();
+        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/" + "error.dat"))
+        {
+            RotateLog = false;
+            FileStream fs = new FileStream(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/" + "error.dat", FileMode.Append, FileAccess.Write, FileShare.Write);
+            fs.Close();
+            StreamWriter sw = new StreamWriter(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/" + "error.dat", true, Encoding.ASCII);
+            sw.Close();
+        }
     }
 
     void Update()
@@ -89,7 +97,6 @@ public class LogWriterManager : MonoBehaviour {
         sw.Write("\n");
         sw.Close();
         PrintLog("ENABLE LogWriter_Manager -> Message is Normal.");
-        PrintLogEnde();
         if (RotateLog == true)
         {
             PrintLog("MODUL LogWriter_Manager :: Clear Old Log dumps,and Files.");
@@ -111,6 +118,15 @@ public class LogWriterManager : MonoBehaviour {
         fs.Close();
         StreamWriter sw = new StreamWriter(LogPfad + CurrentLogFile, true, Encoding.ASCII);
         sw.Write(DateTime.Now.ToString("HH:mm:ss : ") + log + " \n");
+        sw.Close();
+    }
+
+    public void Error(string log)
+    {
+        FileStream fs = new FileStream(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/" + "error.dat", FileMode.Append, FileAccess.Write, FileShare.Write);
+        fs.Close();
+        StreamWriter sw = new StreamWriter(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/" + "error.dat", true, Encoding.ASCII);
+        sw.Write(DateTime.Now.ToString("HH:mm - dd/MM/yyyy ")+ "***FATAL*** " + log + " \n");
         sw.Close();
     }
 

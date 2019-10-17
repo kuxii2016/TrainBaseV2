@@ -26,6 +26,8 @@ public class ProgrammSettings : MonoBehaviour {
     public int WagonLimit;
     public int InventoryLimit;
     public Text ProgrammVersion;
+    [Header("WWW-Exporter")]
+    public string URL ="";
 
     private void Start()
     {
