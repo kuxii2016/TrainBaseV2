@@ -77,8 +77,7 @@ public class NewWagon : MonoBehaviour
                     StartManager.SystemMeldung.text = ("Error: 12 Write to Bank");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL AddWagon :: Save new Wagon: ");
-                        Logger.PrintLog("MODUL AddWagon :: " + ex + "\n");
+                        Logger.Error("MODUL AddWagon :: SaveWagon():  " + ex + "\n");
                     }
                 }
                 finally

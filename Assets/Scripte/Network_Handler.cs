@@ -147,7 +147,7 @@ public class Network_Handler : MonoBehaviour
         NetworkTransport.Send(m_ClientSocket, m_ConnectionID, m_ChannelID, buffer, (int)message.Position, out error);
         if ((NetworkError)error != NetworkError.Ok)
         {
-            Logger.PrintLog("Message send error: " + (NetworkError)error);
+            Logger.Error("MODUL Network_Handler :: SendMyMessage() Message send error: " + (NetworkError)error + "\n");
         }
         Logger.PrintLog("Send to = " + m_ClientSocket + ", connectionId = " + m_ConnectionID + ", channelId = " + m_ChannelID + ", size = " + (int)message.Position + ", error = " + error.ToString());
         Logger.PrintLog("Send data = " + textInput);
@@ -278,6 +278,7 @@ public class Network_Handler : MonoBehaviour
         {
             StartManager.SystemMeldung.color = Color.red;
             StartManager.SystemMeldung.text = ("TrainBaseV2 Error: " + (NetworkError)error);
+            Logger.Error("MODUL Network_Handler :: OnConnect() Message error: " + (NetworkError)error + "\n");
         }
         StartManager.SystemMeldung.color = Color.green;
         StartManager.SystemMeldung.text = ("TrainBaseV2 Sender Connected on: " + USettings.IP);

@@ -152,7 +152,6 @@ public class ImportManager : MonoBehaviour
         {
             IM.slots[u].GetComponentInChildren<Text>().color = Color.black;
             GetRows();
-            //unselectedID = u;
         }
         IM.slots[id].GetComponentInChildren<Text>().color = Color.blue;
         selectedID = id;
@@ -277,7 +276,7 @@ public class ImportManager : MonoBehaviour
                 {
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Import_Manager :: Save new Train: " + "\n" + ex);
+                        Logger.Error("MODUL Import_Manager :: SaveTrain()  " + ex + "\n");
                     }
                 }
                 finally
@@ -340,7 +339,7 @@ public class ImportManager : MonoBehaviour
                 {
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Import_Manager :: Save new Wagon: " + ex + "\n");
+                        Logger.Error("MODUL Import_Manager :: SaveWagon()  " + ex + "\n");
                     }
                 }
                 finally
@@ -398,8 +397,7 @@ public class ImportManager : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Import_Manager :: ERROR by Save Settings: " + ex + "\n");
-                    Debug.Log(ex);
+                    Logger.Error("MODUL Import_Manager :: SaveSettings()  " + ex + "\n");
                 }
             }
             finally
@@ -430,6 +428,7 @@ public class ImportManager : MonoBehaviour
             Logger.PrintLogEnde();
             Logger.PrintLog("MODUL Import_Manager :: No Internet Connection to the Server.!");
             Logger.Message("Keine Internet Verbindung.!", "ROT");
+            Logger.Error("MODUL Import_Manager :: ReadData()  No Connection to the Server \n");
         }
         else
         {
@@ -441,6 +440,7 @@ public class ImportManager : MonoBehaviour
                 ImportKey.text = "Kein Artikel Gefunden.!";
                 Logger.PrintLog("MODUL Import_Manager :: Import key Correct?");
                 Logger.Message("Nichts Gefunden,Importkey Richtig?", "ROT");
+                Logger.Error("MODUL Import_Manager :: ReadData()  Wrong Key \n");
 
                 wwwTyp.color = Color.red;
                 wwwTyp.text = "Nichts Gefunden.!";
@@ -507,8 +507,6 @@ public class ImportManager : MonoBehaviour
                 wwwErfasst.text = CacheData20;
 
             }
-
-            Debug.Log(read.text);
         }
     }
 
@@ -774,7 +772,7 @@ public class ImportManager : MonoBehaviour
                         Logger.Message("Lok Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
                         if (Logger.logIsEnabled == true)
                         {
-                            Logger.PrintLog("MODUL Import_Manager :: WWW-Lok Fehler beim Speichern " + ex + "\n");
+                            Logger.Error("MODUL Import_Manager :: ImportWWWItem()  Train Import from WWW " + ex + " \n");
                         }
                     }
                     finally
@@ -947,7 +945,7 @@ public class ImportManager : MonoBehaviour
                         Logger.Message("Lok Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
                         if (Logger.logIsEnabled == true)
                         {
-                            Logger.PrintLog("MODUL Import_Manager :: WWW-Lok Fehler beim Speichern " + ex + "\n");
+                            Logger.Error("MODUL Import_Manager :: ImportWWWItem()  Wagon Import from WWW " + ex + " \n");
                         }
                     }
                     finally
@@ -990,6 +988,7 @@ public class ImportManager : MonoBehaviour
             Logger.PrintLogEnde();
             Logger.PrintLog("MODUL Import_Manager :: No Internet Connection to the Server.!");
             Logger.Message("Keine Internet Verbindung.!", "ROT");
+            Logger.Error("MODUL Import_Manager :: Clear()  No Connection to the Server \n");
         }
         else
         {

@@ -84,11 +84,9 @@ public class UpdateManager : MonoBehaviour {
                 ReadOn.color = Color.red;
                 StartManager.SystemMeldung.color = Color.red;
                 StartManager.SystemMeldung.text = ("Keine Aktive Internet Verbindung: Update Check Fehlgeschlagen.");
-                //StartManager.UpdateElement.gameObject.SetActive(false);
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Update Manager :: ERROR by Get Update Data");
-                    Logger.PrintLog("MODUL Update Manager :: No Internect Connection or Server is current Down.!");
+                    Logger.Error("MODUL Update Manager :: CheckNews(): no Connection to the Server");
                 }
             }
             else
@@ -111,11 +109,9 @@ public class UpdateManager : MonoBehaviour {
                 ReadOn.color = Color.red;
                 StartManager.SystemMeldung.color = Color.red;
                 StartManager.SystemMeldung.text = ("Keine Aktive Internet Verbindung: Update Check Fehlgeschlagen.");
-                //StartManager.UpdateElement.gameObject.SetActive(false);
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Update Manager :: ERROR by Get Update Data");
-                    Logger.PrintLog("MODUL Update Manager :: No Internect Connection or Server is current Down.!");
+                    Logger.Error("MODUL Update Manager :: CheckVersion(): no Connection to the Server");
                 }
             }
             else
@@ -136,8 +132,6 @@ public class UpdateManager : MonoBehaviour {
     {
         if (OnlineVersion == Version)
         {
-            //StartManager.SystemMeldung.color = Color.white;
-            //StartManager.SystemMeldung.text = ("Aktuellste Version.");
             if (Logger.logIsEnabled == true)
             {
                 Logger.PrintLog("MODUL Update Manager :: TrainBaseV2 Version is Up to Date.!!");
@@ -177,8 +171,7 @@ public class UpdateManager : MonoBehaviour {
                 StartManager.SystemMeldung.text = ("Keine Aktive Internet Verbindung: Update Check Fehlgeschlagen.");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Update Manager :: ERROR by Get Update Data");
-                    Logger.PrintLog("MODUL Update Manager :: No Internect Connection or Server is current Down.!");
+                    Logger.Error("MODUL Update Manager :: SettingsCheckVersion(): no Connection to the Server");
                 }
             }
             else

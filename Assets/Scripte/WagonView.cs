@@ -199,7 +199,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read all Wagons" + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: ReadAllWagons(): " + ex + "\n");
             }
             Logger.Message("Fehler beim Laden der Wagonliste", "ROT");
         }
@@ -422,7 +422,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -502,7 +502,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -582,7 +582,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -662,7 +662,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -742,7 +742,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -822,7 +822,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -902,7 +902,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -982,7 +982,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1062,7 +1062,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1142,7 +1142,7 @@ public class WagonView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Wagon_View :: ERROR by Read Wagons: Page: " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Wagon_View :: GetWagonData" + PageID + "():  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1277,7 +1277,7 @@ public class WagonView : MonoBehaviour
                 Logger.Message("Fehler beim Bearbeiten des Wagons", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Wagon_View :: Fehler beim Bearbeiten " + ex + "\n");
+                    Logger.Error("MODUL Wagon_View :: UpdateWagon():  " + ex + "\n");
                 }
             }
             finally
@@ -1546,7 +1546,7 @@ public class WagonView : MonoBehaviour
                 Logger.Message("Wagon Erfolgreich Empfangen, Fehler beim Update", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Wagon_View ::  RPC-Update Fehler beim Update " + ex + "\n");
+                    Logger.Error("MODUL Wagon_View :: UPDATERPCWAGON():  " + ex + "\n");
                 }
             }
             finally
@@ -1708,7 +1708,7 @@ public class WagonView : MonoBehaviour
                     Logger.Message("Wagon Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Wagon_View :: RPC-Wagon Fehler beim Speichern " + ex + "\n");
+                        Logger.Error("MODUL Wagon_View :: ADDRPCWAGON():  " + ex + "\n");
                     }
                 }
                 finally

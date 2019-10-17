@@ -8,6 +8,7 @@ public class Translator : MonoBehaviour
 {
     public bool German;
     public bool Other;
+    public string Lang;
     public LogWriterManager Logger;
     [Header("MainMenue")]
     public Text LokListe;
@@ -30,11 +31,13 @@ public class Translator : MonoBehaviour
             if (Application.systemLanguage == SystemLanguage.German)
             {
                 German = true;
+                Lang = "de_DE";
                 Logger.PrintLog("MODUL Translator_Manager :: Setze Sprache auf Deutsch." + "\n");
             }
             else
             {
                 Other = true;
+                Lang = "en_EN";
                 Logger.PrintLog("MODUL Translator_Manager :: Set Laguane to Englisch." + "\n");
 
             }

@@ -261,7 +261,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read all Items:  " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadALLItems()  " + ex + "\n");
             }
         }
         dbConnection.Close();
@@ -457,7 +457,7 @@ public class DecoderManager : MonoBehaviour
                     Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Decoder_Manager :: Save new Decoder: " + ex + "\n");
+                        Logger.Error("MODUL Decoder_Manager :: SaveS88()  " + ex + "\n");
                     }
                 }
                 finally
@@ -520,7 +520,7 @@ public class DecoderManager : MonoBehaviour
                     Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Decoder_Manager :: Save new Decoder: " + ex + "\n");
+                        Logger.Error("MODUL Decoder_Manager :: SaveM83()  " + ex + "\n");
                     }
                 }
                 finally
@@ -583,7 +583,7 @@ public class DecoderManager : MonoBehaviour
                     Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Decoder_Manager :: Save new Decoder: " + ex + "\n");
+                        Logger.Error("MODUL Decoder_Manager :: SaveM84()  " + ex + "\n");
                     }
                 }
                 finally
@@ -684,7 +684,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList1()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -773,7 +773,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList2()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -862,7 +862,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList3()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -951,7 +951,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList4()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1040,7 +1040,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList5()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1129,7 +1129,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList6()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1218,7 +1218,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList7()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1307,7 +1307,7 @@ public class DecoderManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Decoder_Manager :: ERROR by Read Items: Page# " + PageID + " " + ex + "\n");
+                Logger.Error("MODUL Decoder_Manager :: ReadItemList8()  " + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1438,7 +1438,7 @@ public class DecoderManager : MonoBehaviour
                         Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                         if (Logger.logIsEnabled == true)
                         {
-                            Logger.PrintLog("MODUL Decoder_Manager :: Error by Edit Decoder: " + ex + "\n");
+                            Logger.Error("MODUL Decoder_Manager :: SaveNewUpdate -> S88()  " + ex + "\n");
                         }
                     }
                     finally
@@ -1487,7 +1487,7 @@ public class DecoderManager : MonoBehaviour
                         Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                         if (Logger.logIsEnabled == true)
                         {
-                            Logger.PrintLog("MODUL Decoder_Manager :: Error by Edit Decoder: " + ex + "\n");
+                            Logger.Error("MODUL Decoder_Manager :: SaveNewUpdate -> M83()  " + ex + "\n");
                         }
                     }
                     finally
@@ -1536,7 +1536,7 @@ public class DecoderManager : MonoBehaviour
                         Logger.Message("Fehler beim Schreiben in die Datenbank", "ROT");
                         if (Logger.logIsEnabled == true)
                         {
-                            Logger.PrintLog("MODUL Decoder_Manager :: Error by Edit Decoder: " + ex + "\n");
+                            Logger.Error("MODUL Decoder_Manager :: SaveNewUpdate -> M84()  " + ex + "\n");
                         }
                     }
                     finally

@@ -57,7 +57,7 @@ public class StartUpManager : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Startup_Manager :: Error read the Last Update" + ex + "\n");
+                Logger.Error("MODUL Startup_Manager :: ReadLastUpdate(): " + ex + "\n");
             }
         }
         dbConnection.Close();
@@ -122,7 +122,6 @@ public class StartUpManager : MonoBehaviour
             {
                 Logger.PrintLog("MODUL Startup_Manager :: I do Nothing Database exist.");
             }
-            Debug.Log("Read");
             ReadLastUpdate();
             UpdateInstaller();
         }
@@ -133,7 +132,6 @@ public class StartUpManager : MonoBehaviour
                 Logger.PrintLog("MODUL Startup_Manager :: First Start, Create Database.");
             }
             CreateTrainDataBase();
-            Debug.Log("Create");
         }
     }
 
@@ -146,7 +144,6 @@ public class StartUpManager : MonoBehaviour
         Command.ExecuteNonQuery();
         dbConnection.Close();
         CreateWagonsDataBase();
-        Debug.Log("Trains Done");
     }
 
     public void CreateWagonsDataBase()
@@ -158,7 +155,6 @@ public class StartUpManager : MonoBehaviour
         Command.ExecuteNonQuery();
         dbConnection.Close();
         CreateSettingsDataBase();
-        Debug.Log("Wagons Done");
     }
 
     public void CreateSettingsDataBase()
@@ -170,7 +166,6 @@ public class StartUpManager : MonoBehaviour
         Command.ExecuteNonQuery();
         dbConnection.Close();
         CreateInventoryDataBase();
-        Debug.Log("Settings Done");
         SaveUpdate();
     }
 
@@ -182,7 +177,6 @@ public class StartUpManager : MonoBehaviour
         SqliteCommand Command = new SqliteCommand(sql, dbConnection);
         Command.ExecuteNonQuery();
         dbConnection.Close();
-        Debug.Log("Inventory Done");
         CreateDecoderDatabase();
     }
 
@@ -205,7 +199,7 @@ public class StartUpManager : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Startup_Manager :: ERROR Write Update Data: " + ex + "\n");
+                    Logger.Error("MODUL Startup_Manager :: SaveUpdate(): " + ex + "\n");
                 }
             }
             finally
@@ -267,7 +261,7 @@ public class StartUpManager : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Startup_Manager :: ERROR Write Update Data: " + ex + "\n");
+                    Logger.Error("MODUL Startup_Manager :: UpdateUpdate(): " + ex + "\n");
                 }
             }
             finally
@@ -347,8 +341,6 @@ public class StartUpManager : MonoBehaviour
         SqliteCommand Command = new SqliteCommand(sql, dbConnection);
         Command.ExecuteNonQuery();
         dbConnection.Close();
-        Debug.Log("Decoderdatabase Done");
-
         UpdateUpdate();
     }
 }

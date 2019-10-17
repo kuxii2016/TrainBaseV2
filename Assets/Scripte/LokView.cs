@@ -402,7 +402,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read all Trains" + ex + "\n");
+                Logger.Error("MODUL Lok_View :: ReadAllTrains()" + ex + "\n");
             }
             Logger.Message("Fehler beim Laden der Lokliste", "ROT");
         }
@@ -554,7 +554,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#1 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -676,7 +676,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -795,7 +795,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -915,7 +915,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1035,7 +1035,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1155,7 +1155,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1275,7 +1275,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1395,7 +1395,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1516,7 +1516,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex + "\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " + PageID, "ROT");
         }
@@ -1636,7 +1636,7 @@ public class LokView : MonoBehaviour
         {
             if (Logger.logIsEnabled == true)
             {
-                Logger.PrintLog("MODUL Lok_View :: ERROR by Read Trains: Page#10 " + ex +"\n");
+                Logger.Error("MODUL Lok_View :: GetTrainData" + PageID + "()" + ex + "\n");
             }
             Logger.Message("Fehler beim Lesen von Seite " +PageID, "ROT");
         }
@@ -1783,7 +1783,7 @@ public class LokView : MonoBehaviour
                 Logger.Message("Fehler beim Bearbeiten der Lok", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Lok_View :: Fehler beim Bearbeiten " + ex + "\n");
+                    Logger.Error("MODUL Lok_View :: UpdateTrain()" + ex + "\n");
                 }
             }
             finally
@@ -2205,7 +2205,7 @@ public class LokView : MonoBehaviour
                 Logger.Message("Lok Erfolgreich Empfangen, Fehler beim Update", "ROT");
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Lok_View ::  RPC-Update Fehler beim Update " + ex + "\n");
+                    Logger.Error("MODUL Lok_View :: UPDATERPCTRAIN()" + ex + "\n");
                 }
             }
             finally
@@ -2487,7 +2487,7 @@ public class LokView : MonoBehaviour
                     Logger.Message("Lok Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
                     if (Logger.logIsEnabled == true)
                     {
-                        Logger.PrintLog("MODUL Lok_View :: RPC-Lok Fehler beim Speichern " + ex + "\n");
+                        Logger.Error("MODUL Lok_View :: ADDRPCTRAIN" + ex + "\n");
                     }
                 }
                 finally
@@ -2532,8 +2532,7 @@ public class LokView : MonoBehaviour
             {
                 if (Logger.logIsEnabled == true)
                 {
-                    Logger.PrintLog("MODUL Lok_View :: ERROR by Save Settings: " + ex + "\n");
-                    Debug.Log(ex);
+                    Logger.Error("MODUL Lok_View :: SaveSettings()" + ex + "\n");
                 }
             }
             finally
@@ -2561,6 +2560,7 @@ public class LokView : MonoBehaviour
         {
             Logger.PrintLog("MODUL Lok_View :: Error by send Train over WWW! Check your Internet Connection.!");
             Logger.PrintLog("MODUL Lok_View :: " + insert.error);
+            Logger.Error("MODUL Lok_View :: SendSelected no Connection to the Server \n");
         }
         if(insert.isDone)
         { 
