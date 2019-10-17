@@ -9,6 +9,7 @@ public class SettingsData
     public string AutoGeneradetFileFromTrainBaseV2;
     public int Resulotion;
     public string Lang;
+    public bool Autodedect;
     public bool AutoUpdate;
     public bool TrainPrice;
     public bool WagonPrice;
