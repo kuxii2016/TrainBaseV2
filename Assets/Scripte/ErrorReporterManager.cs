@@ -28,7 +28,6 @@ public class ErrorReporterManager : MonoBehaviour {
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Error Reporter Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
     }
 
@@ -39,6 +38,7 @@ public class ErrorReporterManager : MonoBehaviour {
             Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error");
             File.Copy(Logger.LogPfad + Logger.CurrentLogFile, (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "last.log"));
             File.Copy((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + SettingsManager.DatabasesName), (System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error/" + "db.dll"));
+            Logger.PrintLog("MODUL Error_Reporter_Manager :: Report Created, Send this on 'kux.michael2@googlemail.com'");
         }
     }
 }

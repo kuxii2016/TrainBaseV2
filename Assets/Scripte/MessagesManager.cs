@@ -23,8 +23,7 @@ public class MessagesManager : MonoBehaviour {
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Message System -> Message is Normal.");
-            Logger.PrintLogEnde();
-            Logger.PrintLog("MODUL Message System :: 43 Messages Found.");
+            Logger.PrintLog("MODUL Message System :: 44 Messages Found.");
         }
     }
 
@@ -185,6 +184,7 @@ public class MessagesManager : MonoBehaviour {
     {
         Logger.Message("Exportiert es über das WWW", "GRUEN");
     }
+
     public void Send()
     {
         Logger.Message("Sendet den Ausgewählten Eintrag, zu einem anderen Empfänger (Verbindung Erforderlich)", "GRUEN");
@@ -194,6 +194,11 @@ public class MessagesManager : MonoBehaviour {
 
     public void ImportWWW()
     {
-        Logger.Message("Import Material via ImportKey", "lila");
+        Logger.Message("Import Material via ImportKey", "LILA");
+    }
+
+    public void CreateNew()
+    {
+        Logger.Message("Löscht alte Bilder, und erstellt neue.!", "ROT");
     }
 }

@@ -29,7 +29,6 @@ public class StartUpManager : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Startup_Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
         SavePfad = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + SettingsManager.DatabasesName;
         CheckUserFolder();

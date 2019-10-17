@@ -35,7 +35,6 @@ public class StatsManager : MonoBehaviour {
             OS = SystemInfo.operatingSystemFamily.ToString();
             ProgrammVersion = loader.Version;
             Logger.PrintLog("ENABLE Stats_Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
             if (File.Exists(Application.dataPath + "/" + "Config" + "/" + "uuid.pub"))
             {
                 MiddleUUID = File.ReadAllText(Application.dataPath + "/" + "Config" + "/" + "uuid.pub");

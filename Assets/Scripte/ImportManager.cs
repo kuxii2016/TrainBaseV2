@@ -805,6 +805,179 @@ public class ImportManager : MonoBehaviour
                 Logger.PrintLog("MODUL Import_Manager :: Material wird nicht am Server Gelöscht,bleibt erhalten bis User es Löscht (RE-Import)");
             }
         }
+
+
+        if (CacheData1 == "ISWAGON")
+        {
+            SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + Settings.DatabasesName));
+            using (SqliteCommand command = new SqliteCommand())
+            {
+                command.Connection = dbConnection;
+                command.CommandType = CommandType.Text;
+                command.CommandText = "INSERT into Wagons (TYP, FARBE, HERSTELLER, KATALOGNUMMER, SERIENNUMMER, KAUFDAY, KAUFMONAT, KAUFJAHR, PREIS, KUPPLUNG, LICHT, PREISER, SPURWEITE, LAGERORT, IDENTIFYER) VALUES" + " (@TYP, @FARBE, @HERSTELLER, @KATALOGNUMMER, @SERIENNUMMER, @KAUFDAY, @KAUFMONAT, @KAUFJAHR, @PREIS, @KUPPLUNG, @LICHT, @PREISER, @SPURWEITE, @LAGERORT, @IDENTIFYER)";
+                if (CacheData2 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@TYP", Convert.ToInt32(CacheData2));
+                }
+                else
+                {
+
+                }
+                if (CacheData3 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@FARBE", CacheData3);
+                }
+                else
+                {
+
+                }
+                if (CacheData4 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@HERSTELLER", Convert.ToInt32(CacheData4));
+                }
+                else
+                {
+
+                }
+                if (CacheData5 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@KATALOGNUMMER", CacheData5);
+                }
+                else
+                {
+
+                }
+                if (CacheData6 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@SERIENNUMMER", CacheData6);
+                }
+                else
+                {
+
+                }
+                if (CacheData7 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@KAUFDAY", Convert.ToInt32(CacheData7));
+                }
+                else
+                {
+
+                }
+                if (CacheData8 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@KAUFMONAT", Convert.ToInt32(CacheData8));
+                }
+                else
+                {
+
+                }
+                if (CacheData9 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@KAUFJAHR", Convert.ToInt32(CacheData9));
+                }
+                else
+                {
+
+                }
+                if (CacheData10 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@PREIS", Convert.ToInt32(CacheData10));
+                }
+                else
+                {
+
+                }
+                if (CacheData11 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@KUPPLUNG", Convert.ToInt32(CacheData11));
+                }
+                else
+                {
+
+                }
+                if (CacheData12 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@LICHT", Convert.ToInt32(CacheData12));
+                }
+                else
+                {
+
+                }
+                if (CacheData13 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@PREISER", Convert.ToInt32(CacheData13));
+                }
+                else
+                {
+
+                }
+                if (CacheData14 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@SPURWEITE", Convert.ToInt32(CacheData14));
+                }
+                else
+                {
+
+                }
+                if (CacheData16 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@LAGERORT", Convert.ToInt32(CacheData16));
+                }
+                else
+                {
+
+                }
+                if (CacheData15 != "NULL")
+                {
+                    command.Parameters.AddWithValue("@IDENTIFYER", CacheData15);
+                }
+                else
+                {
+
+                }
+                if (lokview.Trains.Count <= Settings.LokLimit)
+                {
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        Logger.Message("Lok Erfolgreich Empfangen, Fehler beim Speichern", "ROT");
+                        if (Logger.logIsEnabled == true)
+                        {
+                            Logger.PrintLog("MODUL Import_Manager :: WWW-Lok Fehler beim Speichern " + ex + "\n");
+                        }
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        if (Logger.logIsEnabled == true)
+                        {
+                            Logger.PrintLog("MODUL Import_Manager :: Lok erfolgreich Importiert  Gespeichert.!");
+                        }
+                    }
+                }
+                else
+                {
+                    Logger.Message("Lok Erfolgreich Empfangen, aber nicht Gespeichert Loklimit überschritten", "ROT");
+                    if (Logger.logIsEnabled == true)
+                    {
+                        Logger.PrintLog("MODUL Import_Manager ::  Import from WWW Current Train Limit is to Low for your Entry ");
+                    }
+                }
+                Logger.Message("Lok Erfolgreich Empfangen, und Gespeichert", "GRUEN");
+            }
+            if (DeleteToggle == DeleteToggle.isOn)
+            {
+                StartCoroutine(Clear());
+            }
+            else
+            {
+                Logger.PrintLog("MODUL Import_Manager :: Material wird nicht am Server Gelöscht,bleibt erhalten bis User es Löscht (RE-Import)");
+            }
+        }
     }
 
     IEnumerator Clear()
@@ -825,5 +998,4 @@ public class ImportManager : MonoBehaviour
             
         }
     }
-
 }

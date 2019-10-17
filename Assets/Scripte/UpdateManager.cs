@@ -39,7 +39,6 @@ public class UpdateManager : MonoBehaviour {
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Update Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
 
         if (settings.AutoUpdateBool == true)

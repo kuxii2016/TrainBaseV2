@@ -124,7 +124,6 @@ public class Network_Handler : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Network_Handler -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
         CreateNewConnection();
         m_ClientsActive = false;

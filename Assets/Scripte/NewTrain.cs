@@ -49,7 +49,6 @@ public class NewTrain : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE AddTrain -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
     }
 

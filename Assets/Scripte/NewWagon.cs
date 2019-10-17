@@ -38,7 +38,6 @@ public class NewWagon : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE AddWagon -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
     }
 

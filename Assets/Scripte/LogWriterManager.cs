@@ -89,7 +89,6 @@ public class LogWriterManager : MonoBehaviour {
         sw.Write("\n");
         sw.Close();
         PrintLog("ENABLE LogWriter_Manager -> Message is Normal.");
-        PrintLogEnde();
         if (RotateLog == true)
         {
             PrintLog("MODUL LogWriter_Manager :: Clear Old Log dumps,and Files.");

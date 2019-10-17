@@ -956,7 +956,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-
     //Ident Fix **
     public void DeleteItem()
     {

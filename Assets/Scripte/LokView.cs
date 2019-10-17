@@ -200,7 +200,6 @@ public class LokView : MonoBehaviour
     public InputField SendOK;
     public Texture2D[] TrainPic;
     public string uniqueID = "";
-    private int lel = 0;
 
     void Start()
     {
@@ -210,7 +209,6 @@ public class LokView : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Train List -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
         ReadAllTrainsNew();
 
@@ -410,6 +408,7 @@ public class LokView : MonoBehaviour
         }
         dbConnection.Close();
         dbConnection = null;
+        ReadCustomPic();
     }
 
     void readIntervall()
@@ -435,17 +434,17 @@ public class LokView : MonoBehaviour
             }
         }
         Logger.PrintLogEnde();
-        ReadCustomPic();
     }
 
-    void ReadCustomPic()
+    public void ReadCustomPic()
     {
         for (int i = 0; i < Trains.Count; i++)
         {
-            Logger.PrintLog("MODUL Lok_View :: Load Train Pic: " + (i + 1) + "." + Usettings.ImageType);
             StartCoroutine(setImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + Usettings.ImageType), i));
         }
         Logger.PrintLogEnde();
+
+        Logger.PrintLog("MODUL Lok_View :: Loadet " + (Trains.Count + 1) + " Train Pictures.");
     }
 
     public void GetTrainData1()
@@ -1712,7 +1711,7 @@ public class LokView : MonoBehaviour
         Lager.value = Trains[SelectedID].DBLagerort;
         TopWindow.text = Trains[SelectedID].DbBaureihe + " Bearbeitung";
         filePath1 = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (SelectedID + 1) + "." + Usettings.ImageType);
-        trainBild.GetComponent<RawImage>().texture = LoadPNG(filePath1);
+        trainBild.GetComponent<RawImage>().texture = TrainPic[SelectedID];
         trainText.text = EditBaureihe.text;
         Logger.Message("Lade Lok Daten zum Bearbeiten", "GELB");
         PresenceManager.UpdatePresence("Edit Train", Trains[SelectedID].DbBaureihe, DMU.Starttime, -1, "icon", "", "", "", "", -1, -1, "", "", "");

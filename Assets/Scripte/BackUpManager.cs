@@ -128,8 +128,4 @@ public class BackUpManager : MonoBehaviour
         StartManager.SystemMeldung.GetComponent<Text>().text = ("Backup vom: " + Handler + " wurde Gelöscht.!");
     }
 
-    public void RestoreDB()
-    {
-
-    }
 }

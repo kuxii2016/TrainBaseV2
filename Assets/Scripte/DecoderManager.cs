@@ -174,7 +174,6 @@ public class DecoderManager : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Decoder_Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
         }
         CleanScreen();
         ReadAllItems();

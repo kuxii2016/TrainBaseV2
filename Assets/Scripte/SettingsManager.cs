@@ -499,6 +499,8 @@ public class SettingsManager : MonoBehaviour
         }
         Lokview.GetTrainPictures();
         Wagonview.GetTrainPictures();
+        Lokview.ReadCustomPic();
+        Wagonview.ReadCustomPic();
         Logger.Message((ImageCount / 4).ToString() + " Bilder neu Erstellt", "LILA");
         ImageCount = 1;
         CalculateImageSize();

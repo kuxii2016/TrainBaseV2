@@ -27,7 +27,6 @@ public class Translator : MonoBehaviour
         if (Logger.logIsEnabled == true)
         {
             Logger.PrintLog("ENABLE Translator_Manager -> Message is Normal.");
-            Logger.PrintLogEnde();
             if (Application.systemLanguage == SystemLanguage.German)
             {
                 German = true;
