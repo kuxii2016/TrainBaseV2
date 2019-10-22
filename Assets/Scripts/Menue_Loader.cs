@@ -1,0 +1,229 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine;
+
+public class Menue_Loader : MonoBehaviour {
+
+    [Header("Depents")]
+    public Start_Manager startManager;
+    [Header("Buttons")]
+    public Button Train_List;
+    public Button Wagon_List;
+    public Button Inventory_List;
+    public Button Decoder_List;
+    public Button Settings_View;
+    public Button Stats_View;
+    public Button Backup_View;
+    public Button About_View;
+    public Button Version;
+    [Header("Menue-Button-LokList")]
+    public Button[] add;
+    public Button[] edit;
+    public Button[] remove;
+    public Button[] file;
+    public Button[] rpc;
+    public Button[] www;
+    [Header("Menue-Button-Lokedit")]
+    public Text[] Baureihe;
+    public Text[] Farbe;
+    public Text[] Hersteller;
+    public Text[] EnergyArt;
+    public Text[] Katalognummer;
+    public Text[] Decoder;
+    public Text[] Adresse;
+    public Text[] Seriennummer;
+    public Text[] Preis;
+    public Text[] Protokoll;
+    public Text[] Fahstufen;
+    public Text[] LagerOrt;
+    public Text[] Kauftag;
+    public Text[] WartungTag;
+    public Text[] Rauch;
+    public Text[] Telex;
+    public Text[] Sound;
+    public Text[] LichtWechsel;
+    public Text[] ElekKupplung;
+    public Text[] ElektPando;
+
+    void Start()
+    {
+        if (startManager.IsGerman == true)
+        {
+            Train_List.GetComponentInChildren<Text>().text = "Lok Liste";
+            Wagon_List.GetComponentInChildren<Text>().text = "Wagon Liste";
+            Inventory_List.GetComponentInChildren<Text>().text = "Inventar Liste";
+            Decoder_List.GetComponentInChildren<Text>().text = "Decoder Liste";
+            Settings_View.GetComponentInChildren<Text>().text = "Einstellungen";
+            Stats_View.GetComponentInChildren<Text>().text = "Statistik Übersicht";
+            Backup_View.GetComponentInChildren<Text>().text = "Backup Übersicht";
+            About_View.GetComponentInChildren<Text>().text = "Über TrainbaseV2";
+        }
+        if (startManager.IsEnglisch == true)
+        {
+            Train_List.GetComponentInChildren<Text>().text = "Locomotive list";
+            Wagon_List.GetComponentInChildren<Text>().text = "Wagon list";
+            Inventory_List.GetComponentInChildren<Text>().text = "Inventory list";
+            Decoder_List.GetComponentInChildren<Text>().text = "Decoder list";
+            Settings_View.GetComponentInChildren<Text>().text = "Settings";
+            Stats_View.GetComponentInChildren<Text>().text = "Statistics overview";
+            Backup_View.GetComponentInChildren<Text>().text = "Backup overview";
+            About_View.GetComponentInChildren<Text>().text = "About TrainBaseV2";
+        }
+        SetMenueButton();
+    }
+
+    public void OnklickTrainList()
+    {
+        startManager.Notify("Zeigt Gespeicherte Loks", "Shows Saved Locos", "blue", "blue");
+    }
+
+    public void OnklickWagonList()
+    {
+        startManager.Notify("Zeigt Gespeicherte Wagons", "Shows Saved Wagons", "blue", "blue");
+    }
+
+    public void OnklickInventoryList()
+    {
+        startManager.Notify("Zeigt Gespeicherte Einkäufe", "Shows Saved Purchases", "blue", "blue");
+    }
+
+    public void OnklickDecoderList()
+    {
+        startManager.Notify("Zeigt Gespeicherte Decoder", "Shows Saved Decoders", "blue", "blue");
+    }
+
+    public void OnklickSettings()
+    {
+        startManager.Notify("Öffnet das Einstellungs Fenster", "Opens the Settings Window", "blue", "blue");
+    }
+
+    public void OnklickStatsList()
+    {
+        startManager.Notify("Zeigt diverse Statistiken", "Shows Various Statistics", "blue", "blue");
+    }
+
+    public void OnklickBackupList()
+    {
+        startManager.Notify("Zeigt Gespeicherte Backups", "Shows Saved Backups", "blue", "blue");
+    }
+
+    public void OnklickAbout()
+    {
+        startManager.Notify("Infos über TrainBaseV2", "Information about TrainBaseV2", "blue", "blue");
+    }
+
+    public void OnklickDebuger()
+    {
+        startManager.Notify("Öffnet den Log-Reader", "Opens the Log Reader", "blue", "blue");
+    }
+
+    public void OnklickVersion()
+    {
+        Version.GetComponentInChildren<Text>().color = Color.yellow;
+        startManager.Notify("Öffnet den Änderungs Verlauf", "Opens the Change History", "blue", "blue");
+    }
+
+    public void OnklickVersionExit()
+    {
+        Version.GetComponentInChildren<Text>().color = Color.black;
+    }
+
+    public void OnEnterReCreateLocosImages()
+    {
+        startManager.Notify("Erstellt Standart Bilder für Loks neu", "Rebuilds Standard Images for Locos", "blue", "blue");
+    }
+
+    public void OnEnterReCreateWagonImages()
+    {
+        startManager.Notify("Erstellt Standart Bilder für Wagons neu", "Rebuilds Standard Images for Wagons", "blue", "blue");
+    }
+
+    public void OnEnterReFreshLocosImages()
+    {
+        startManager.Notify("Läd Eigene Lok  Bilder neu", "Reload own Locomotive images", "blue", "blue");
+    }
+
+    public void OnEnterReFreshWagonImages()
+    {
+        startManager.Notify("Läd Eigene Wagon Bilder neu", "Reload own Wagon images", "blue", "blue");
+    }
+
+    public void OnEnterCkeckVersion()
+    {
+        startManager.Notify("Schaue Online nach Neuer Version", "Watch Online for New Version", "blue", "blue");
+    }
+
+    public void OnEnterSaveSettings()
+    {
+        startManager.Notify("Speichert die Aktuellen Einstellungen", "Saves the Current Settings", "blue", "blue");
+    }
+
+    public void SetMenueButton()
+    {
+        if (startManager.IsGerman == true)
+        {
+            add[0].GetComponentInChildren<Text>().text = "Neue Lok";
+            edit[0].GetComponentInChildren<Text>().text = "Lok Bearbeiten";
+            remove[0].GetComponentInChildren<Text>().text = "Lok Löschen";
+            file[0].GetComponentInChildren<Text>().text = "als Datei";
+            file[1].GetComponentInChildren<Text>().text = "als Datei";
+            rpc[0].GetComponentInChildren<Text>().text = "über Rpc";
+            rpc[1].GetComponentInChildren<Text>().text = "über Rpc";
+            www[0].GetComponentInChildren<Text>().text = "über Web";
+            www[1].GetComponentInChildren<Text>().text = "über Web";
+            Baureihe[0].text = "Baureihe";
+            Farbe[0].text = "Farbe";
+            Hersteller[0].text = "Hersteller";
+            EnergyArt[0].text = "Antriebs System";
+            Katalognummer[0].text = "Katalognummer";
+            Decoder[0].text = "Decoder";
+            Adresse[0].text = "Adresse";
+            Seriennummer[0].text = "Seriennummer";
+            Preis[0].text = "Preis";
+            Protokoll[0].text = "Protokoll";
+            Fahstufen[0].text = "Fahrstufen";
+            LagerOrt[0].text = "Lagerort";
+            Kauftag[0].text = "Kauf Tag";
+            WartungTag[0].text = "Wartungs Tag";
+            Rauch[0].text = "hat Rauch";
+            Telex[0].text = "hat Telex";
+            Sound[0].text = "hat Sound";
+            LichtWechsel[0].text = "hat Lichtwechsel";
+            ElekKupplung[0].text = "hat Elektrische Kupplungen";
+            ElektPando[0].text = "hat Elektrische Pandos";
+        }
+        else
+        {
+            add[0].GetComponentInChildren<Text>().text = "Add Train";
+            edit[0].GetComponentInChildren<Text>().text = "Edit Train";
+            remove[0].GetComponentInChildren<Text>().text = "Delete Train";
+            file[0].GetComponentInChildren<Text>().text = "as File";
+            file[1].GetComponentInChildren<Text>().text = "as File";
+            rpc[0].GetComponentInChildren<Text>().text = "as Rpc";
+            rpc[1].GetComponentInChildren<Text>().text = "as Rpc";
+            www[0].GetComponentInChildren<Text>().text = "as Web";
+            www[1].GetComponentInChildren<Text>().text = "as Web";
+            Baureihe[0].text = "Model Series";
+            Farbe[0].text = "Color";
+            Hersteller[0].text = "Manufacturer";
+            EnergyArt[0].text = "Drive system";
+            Katalognummer[0].text = "Catalog Number";
+            Decoder[0].text = "Decoder";
+            Adresse[0].text = "Address";
+            Seriennummer[0].text = "Serial Number";
+            Preis[0].text = "Price";
+            Protokoll[0].text = "Protocol";
+            Fahstufen[0].text = "Speed Steps";
+            LagerOrt[0].text = "Storage Location";
+            Kauftag[0].text = "Buy day";
+            WartungTag[0].text = "Maintenance day";
+            Rauch[0].text = "has Smoke";
+            Telex[0].text = "has Telex";
+            Sound[0].text = "has Sound";
+            LichtWechsel[0].text = "has Lightchange";
+            ElekKupplung[0].text = "has Electrical couplings";
+            ElektPando[0].text = "has Electrical Pandos";
+        }
+    }
+}

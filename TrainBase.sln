@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainBase", "TrainBase.csproj", "{71A87441-99A1-A4F0-DD74-67EF944B5B5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainBase.Plugins", "TrainBase.Plugins.csproj", "{F82A6F1E-0772-245F-1089-A8F4330C33FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71A87441-99A1-A4F0-DD74-67EF944B5B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71A87441-99A1-A4F0-DD74-67EF944B5B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71A87441-99A1-A4F0-DD74-67EF944B5B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71A87441-99A1-A4F0-DD74-67EF944B5B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F82A6F1E-0772-245F-1089-A8F4330C33FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F82A6F1E-0772-245F-1089-A8F4330C33FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F82A6F1E-0772-245F-1089-A8F4330C33FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F82A6F1E-0772-245F-1089-A8F4330C33FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
