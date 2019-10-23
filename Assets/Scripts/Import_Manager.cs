@@ -13,6 +13,7 @@ public class Import_Manager : MonoBehaviour
     public Start_Manager startManager;
     public Import_Manager IM;
     public Train_List TL;
+    public Wagon_List WL;
 
     [Header("WorkFlow")]
     public int PageOffset = 0;
@@ -26,6 +27,7 @@ public class Import_Manager : MonoBehaviour
     public Text Page;
     public string[] Imports;
     public GameObject DataPanel;
+    public GameObject[] Wartung;
     public Text BaureiheText;
     public Text ColorText;
     public Text AdresseText;
@@ -185,13 +187,27 @@ public class Import_Manager : MonoBehaviour
                 WMonth.text = (WartungMonth + 1).ToString() + "." + (WartungYear + 1990).ToString();
                 WYear.text = "";
                 SeriennummerText.text = "Seriennummer: " + Seriennummer;
-                KatalogNummerText.text = "Katalognummer: " + Katalognummer + KatalogNummer;
+                KatalogNummerText.text = "Katalognummer: " + KatalogNummer;
                 //SaveTrain();
             }
             if (Type == "WAGON")
             {
                 AdresseText.gameObject.SetActive(false);
+                Wartung[0].SetActive(false);
+                Wartung[1].SetActive(false);
+                Wartung[2].SetActive(false);
                 //SaveWagon();
+                if (Typ == 0) { BaureiheText.text = "Wagon Art:  Personenwagon"; }
+                if (Typ == 1) { BaureiheText.text = "Wagon Art:  Güterwagon"; }
+                if (Typ == 2) { BaureiheText.text = "Wagon Art:  Sonstigerwagon"; }
+                ColorText.text = "Farbe: " + Farbe;
+                Day.text = "Kauftag: " + (KaufTag + 1) + ".";
+                Month.text = (KaufMonat + 1).ToString() + "." + (KaufJahr + 1990).ToString();
+                Year.text = "";
+
+                SeriennummerText.text = "Seriennummer: " + Seriennummer;
+                KatalogNummerText.text = "Katalognummer: " + Katalognummer;
+                // color, Katalognummer Typ 
             }
         }
     }
@@ -286,7 +302,7 @@ public class Import_Manager : MonoBehaviour
                 }
                 catch (SqliteException ex)
                 {
-                    startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Train_List :: SaveEditTrain().IsEditMode==False; Error: " + ex);
+                    startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Import_Manager :: SaveEditTrain().Type == 'TRAIN' Error: " + ex);
                 }
                 finally
                 {
@@ -310,7 +326,55 @@ public class Import_Manager : MonoBehaviour
         }
         else
         {
-
+            SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+            using (SqliteCommand command = new SqliteCommand())
+            {
+                command.Connection = dbConnection;
+                command.CommandType = CommandType.Text;
+                command.CommandText = "INSERT into Wagons  (TYP , FARBE , HERSTELLER ,  KATALOGNUMMER , SERIENNUMMER , KAUFDAY , KAUFMONAT , KAUFJAHR , PREIS , KUPPLUNG , LICHT , PREISER, SPURWEITE, IDENTIFYER , LAGERORT) VALUES" + " (@TYP , @FARBE , @HERSTELLER ,  @KATALOGNUMMER , @SERIENNUMMER , @KAUFDAY , @KAUFMONAT , @KAUFJAHR , @PREIS , @KUPPLUNG , @LICHT , @PREISER, @SPURWEITE, @IDENTIFYER , @LAGERORT)";
+                command.Parameters.AddWithValue("@FARBE", Farbe);
+                command.Parameters.AddWithValue("@TYP", Typ);
+                command.Parameters.AddWithValue("@HERSTELLER", Hersteller);
+                command.Parameters.AddWithValue("@KATALOGNUMMER", Katalognummer);
+                command.Parameters.AddWithValue("@SERIENNUMMER", Seriennummer);
+                command.Parameters.AddWithValue("@PREIS", Preis);
+                command.Parameters.AddWithValue("@KAUFDAY", KaufTag);
+                command.Parameters.AddWithValue("@KAUFMONAT", KaufMonat);
+                command.Parameters.AddWithValue("@KAUFJAHR", KaufJahr);
+                command.Parameters.AddWithValue("@SPURWEITE", Spurweite);
+                command.Parameters.AddWithValue("@LAGERORT", 0);
+                command.Parameters.AddWithValue("@IDENTIFYER", Guid.NewGuid().ToString());
+                command.Parameters.AddWithValue("@KUPPLUNG", Kupplung);
+                command.Parameters.AddWithValue("@LICHT", Licht);
+                command.Parameters.AddWithValue("@PREISER", Preiser);
+                try
+                {
+                    dbConnection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    startManager.LogError("Fehler beim Speichern.", "Error by Save.", " Import_Manager :: SaveEditTrain().Type == 'TRAIN' Error: " + ex);
+                }
+                finally
+                {
+                    if (ImageCopy.isOn == true)
+                    {
+                        File.WriteAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png", IMG);
+                    }
+                    else
+                    {
+                        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png"))
+                        {
+                            File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png");
+                        }
+                    }
+                    startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");
+                    WL.ReadTrains();
+                }
+                dbConnection.Close();
+                dbConnection = null;
+            }
         }
     }
 }

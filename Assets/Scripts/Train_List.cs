@@ -305,6 +305,41 @@ public class Train_List : MonoBehaviour
                 Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Gauge: " + vSpur[Trains[i].DbSpurweite] + " | INR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
                 Slot3[i - PageOffset].GetComponent<Text>().text = " Detected: " + Trains[i].DbAngelegt + " | Last Maintenance: " + Monat[Trains[i].DbWartungMonat] + "." + Tag[Trains[i].DbWartungTag] + "." + Jahr[Trains[i].DbWartungJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
+                if (Trains[i].Wartung == true)
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].SetActive(true);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].SetActive(false);
+
+                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    }
+                }
+                else
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    }
+                }
                 //Only Premium Not Finsch
                 /*
                 if (IsPremium == true)
@@ -335,23 +370,6 @@ public class Train_List : MonoBehaviour
                     Smoke[i - PageOffset].SetActive(false);
                 }
                 */
-                if (Trains[i].Wartung == true)
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
-                    }
-                }
-                else
-                {
-                    WartungsPic[i - PageOffset].SetActive(false);
-                    LightSwitch[i - PageOffset].SetActive(false);
-                    Smoke[i - PageOffset].SetActive(false);
-                }
             }
         }
     }
@@ -411,28 +429,32 @@ public class Train_List : MonoBehaviour
         {
             startManager.LogError("Fehler beim Laden der Lokdaten.", "Error Loading Locomotive Data", " Train_List :: ReadAllTrains(); Error: " + ex);
         }
-        dbConnection.Close();
-        dbConnection = null;
-        CacheImage = new Texture2D[Trains.Count];
-        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"))
+        finally
         {
-            Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains");
-        }
-        for (int i = 0; i < Trains.Count; i++)
-        {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png"))
+            CacheImage = new Texture2D[Trains.Count];
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png");
-                startManager.Log("Modul Train_List :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Train_List :: Lok ID: " + i + " No picture available, Create standard Picture");
+                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains");
             }
-            else
+
+            for (int i = 0; i < Trains.Count; i++)
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + ".png"), i));
+                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png"))
+                {
+                    File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png");
+                    startManager.Log("Modul Train_List :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Train_List :: Lok ID: " + i + " No picture available, Create standard Picture");
+                }
+                else
+                {
+                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + ".png"), i));
+                }
             }
+
+            dbConnection.Close();
+            dbConnection = null;
         }
         startManager.Notify("Alle Loks Eingelesen", "All Locos are Read", "green", "green");
         startManager.Log("Modul Train_List :: Alle Loks Eingelesen.", "Modul Train_List :: All Locos are Read");
-        //SetCurrentScreen();
     }
 
     IEnumerator LoadImage(string url, int i)
@@ -528,6 +550,9 @@ public class Train_List : MonoBehaviour
                 SqliteCommand Command = new SqliteCommand(sql, dbConnection);
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
+                Trains.RemoveAt(SelectedID);
+                readIntervall();
+                SetCurrentScreen();
                 File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (SelectedID + 1) + ".png");
                 SelectedID = -1;
             }
@@ -541,9 +566,7 @@ public class Train_List : MonoBehaviour
                 startManager.Log("Modul Train_List :: Lok wurde Gelöscht id:" + SelectedID, "Modul Train_List :: Train Removed id:" + SelectedID);
             }
             DeleteSchutz();
-            ReadTrains();
         }
-        SetCurrentScreen();
     }
 
     public void DeleteSchutz()
@@ -650,8 +673,9 @@ public class Train_List : MonoBehaviour
                 }
                 finally
                 {
+                    readIntervall();
+                    SetCurrentScreen();
                     startManager.Notify("Lok wurde Bearbeited", "Train edited", "green", "green");
-                    ReadTrains();
                 }
                 dbConnection.Close();
                 dbConnection = null;

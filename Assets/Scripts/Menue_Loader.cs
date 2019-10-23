@@ -45,6 +45,19 @@ public class Menue_Loader : MonoBehaviour {
     public Text[] LichtWechsel;
     public Text[] ElekKupplung;
     public Text[] ElektPando;
+    [Header("Menue-Button-Wagonedit")]
+    public Text WeditColor;
+    public Text WeditHersteller;
+    public Text WeditKatalognummer;
+    public Text WeditSeriennummer;
+    public Text WeditPreis;
+    public Text WEditWagonType;
+    public Text WeditLager;
+    public Text WeditKaufTag;
+    public Text WeditPreiser;
+    public Text WeditLicht;
+    public Text WeditStromKupplung;
+
 
     void Start()
     {
@@ -163,15 +176,24 @@ public class Menue_Loader : MonoBehaviour {
     {
         if (startManager.IsGerman == true)
         {
-            add[0].GetComponentInChildren<Text>().text = "Neue Lok";
-            edit[0].GetComponentInChildren<Text>().text = "Lok Bearbeiten";
-            remove[0].GetComponentInChildren<Text>().text = "Lok Löschen";
+            add[0].GetComponentInChildren<Text>().text = "Neuer Eintrag";
+            add[1].GetComponentInChildren<Text>().text = "Neuer Eintrag";
+            edit[0].GetComponentInChildren<Text>().text = "Bearbeiten";
+            edit[1].GetComponentInChildren<Text>().text = "Bearbeiten";
+            remove[0].GetComponentInChildren<Text>().text = "Löschen";
+            remove[1].GetComponentInChildren<Text>().text = "Löschen";
             file[0].GetComponentInChildren<Text>().text = "als Datei";
             file[1].GetComponentInChildren<Text>().text = "als Datei";
+            file[2].GetComponentInChildren<Text>().text = "als Datei";
+            file[3].GetComponentInChildren<Text>().text = "als Datei";
             rpc[0].GetComponentInChildren<Text>().text = "über Rpc";
             rpc[1].GetComponentInChildren<Text>().text = "über Rpc";
+            rpc[2].GetComponentInChildren<Text>().text = "über Rpc";
+            rpc[3].GetComponentInChildren<Text>().text = "über Rpc";
             www[0].GetComponentInChildren<Text>().text = "über Web";
             www[1].GetComponentInChildren<Text>().text = "über Web";
+            www[2].GetComponentInChildren<Text>().text = "über Web";
+            www[3].GetComponentInChildren<Text>().text = "über Web";
             Baureihe[0].text = "Baureihe";
             Farbe[0].text = "Farbe";
             Hersteller[0].text = "Hersteller";
@@ -192,18 +214,38 @@ public class Menue_Loader : MonoBehaviour {
             LichtWechsel[0].text = "hat Lichtwechsel";
             ElekKupplung[0].text = "hat Elektrische Kupplungen";
             ElektPando[0].text = "hat Elektrische Pandos";
+            WeditColor.text = " Farbe";
+            WeditHersteller.text = " Hersteller";
+            WeditKatalognummer.text = " Katalognummer";
+            WeditSeriennummer.text = " Seriennummer";
+            WeditPreis.text = "Preis";
+            WEditWagonType.text = "Wagon Typ";
+            WeditLager.text = "Lagerort";
+            WeditKaufTag.text = "Kauf Tag";
+            WeditPreiser.text = "Wagon ist mit Preiser";
+            WeditLicht.text = "Wagon hat Innenbeleuchtung";
+            WeditStromKupplung.text = "Wagon hat Stromführende Kupplung";
         }
         else
         {
-            add[0].GetComponentInChildren<Text>().text = "Add Train";
-            edit[0].GetComponentInChildren<Text>().text = "Edit Train";
-            remove[0].GetComponentInChildren<Text>().text = "Delete Train";
+            add[0].GetComponentInChildren<Text>().text = "Add";
+            edit[0].GetComponentInChildren<Text>().text = "Edit";
+            remove[0].GetComponentInChildren<Text>().text = "Delete";
+            add[1].GetComponentInChildren<Text>().text = "Add";
+            edit[1].GetComponentInChildren<Text>().text = "Edit";
+            remove[1].GetComponentInChildren<Text>().text = "Delete";
             file[0].GetComponentInChildren<Text>().text = "as File";
             file[1].GetComponentInChildren<Text>().text = "as File";
             rpc[0].GetComponentInChildren<Text>().text = "as Rpc";
             rpc[1].GetComponentInChildren<Text>().text = "as Rpc";
             www[0].GetComponentInChildren<Text>().text = "as Web";
             www[1].GetComponentInChildren<Text>().text = "as Web";
+            file[2].GetComponentInChildren<Text>().text = "as File";
+            file[3].GetComponentInChildren<Text>().text = "as File";
+            rpc[2].GetComponentInChildren<Text>().text = "as Rpc";
+            rpc[3].GetComponentInChildren<Text>().text = "as Rpc";
+            www[2].GetComponentInChildren<Text>().text = "as Web";
+            www[3].GetComponentInChildren<Text>().text = "as Web";
             Baureihe[0].text = "Model Series";
             Farbe[0].text = "Color";
             Hersteller[0].text = "Manufacturer";
@@ -224,6 +266,17 @@ public class Menue_Loader : MonoBehaviour {
             LichtWechsel[0].text = "has Lightchange";
             ElekKupplung[0].text = "has Electrical couplings";
             ElektPando[0].text = "has Electrical Pandos";
+            WeditColor.text = " Color";
+            WeditHersteller.text = " Manufacturer";
+            WeditKatalognummer.text = " Catalog Number";
+            WeditSeriennummer.text = " Serial Number";
+            WeditPreis.text = "Price";
+            WEditWagonType.text = "Wagon Type";
+            WeditLager.text = "Storage Location";
+            WeditKaufTag.text = "Buy day";
+            WeditPreiser.text = "has Preiser";
+            WeditLicht.text = "has Interiour Light";
+            WeditStromKupplung.text = "has Elec. Coupler";
         }
     }
 }

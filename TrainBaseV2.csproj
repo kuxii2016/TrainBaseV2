@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{71A87441-99A1-A4F0-DD74-67EF944B5B5C}</ProjectGuid>
+    <ProjectGuid>{F757F7E4-A3B4-F624-1CE1-F7D9725D9530}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -304,18 +304,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="TrainBase.Plugins.csproj">
-      <Project>{F82A6F1E-0772-245F-1089-A8F4330C33FF}</Project>
-      <Name>TrainBase.Plugins</Name>
+    <ProjectReference Include="TrainBaseV2.Plugins.csproj">
+      <Project>{4965F307-5169-D78F-DE40-EF6A6AFBE630}</Project>
+      <Name>TrainBaseV2.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Helper\config.cs" />
     <Compile Include="Assets\Helper\DataExporter.cs" />
     <Compile Include="Assets\Helper\DatenExporter.cs" />
-    <Compile Include="Assets\Scripts\Image_Manager.cs" />
     <Compile Include="Assets\Scripts\Import_Manager.cs" />
-    <Compile Include="Assets\Scripts\Inventory_Manager.cs" />
     <Compile Include="Assets\Scripts\Log_Viewer.cs" />
     <Compile Include="Assets\Scripts\Menue_Loader.cs" />
     <Compile Include="Assets\Scripts\Settings_Manager.cs" />

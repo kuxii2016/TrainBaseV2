@@ -15,41 +15,22 @@ using System.Threading;
 [System.Serializable]
 public class WagonData : System.Object
 {
-    public string DbBaureihe;
-    public string DbFarbe;
-    public int DbLokTyp;
-    public int DbHersteller;
-    public string DbKatalognummer;
-    public string DbSeriennummer;
-    public int DbKaufTag;
-    public int DbKaufMonat;
-    public int DbKaufJahr;
-    public int DbPreis;
-    public int DbWartungTag;
-    public int DbWartungMonat;
-    public int DbWartungJahr;
-    public string DbAdresse;
-    public int DbProtokoll;
-    public int DbFahrstufen;
-    public string DbDecHersteller;
-    public string DbDecID;
-    public string DbAngelegt;
-    public int DbRauch;
-    public int DbSound;
-    public int DbROTWEISS;
-    public int DbBeleuchtung;
-    public int DbPandos;
-    public int DbTelex;
-    public int DbElekKupplung;
-    public Int32 DbSpurweite;
-    public Int32 DbCV2;
-    public Int32 DbCV3;
-    public Int32 DbCV4;
-    public Int32 DbCV5;
+    public int DBTyp;
+    public string DBFarbe;
+    public int DBHersteller;
+    public string DBErstellt;
+    public string DBKatalognummer;
+    public string DBSeriennummer;
+    public int DBKaufTag;
+    public int DBKaufMonat;
+    public int DBKaufJahr;
+    public int DBPreis;
+    public int DBKupplung;
+    public int DBLicht;
+    public int DBPreiser;
+    public int DBSpurweite;
     public string DBIdentifyer;
     public int DBLagerort;
-    public bool Wartung;
-    public bool Checked;
 }
 
 public class Wagon_List : MonoBehaviour
@@ -58,7 +39,7 @@ public class Wagon_List : MonoBehaviour
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
     [Header("Lok View - Elemente")]
-    public List<TrainData> Trains;
+    public List<WagonData> Trains;
     public Texture2D[] CacheImage;
     public int PageOffset = 0;
     public int PageOffset2 = 12;
@@ -90,46 +71,42 @@ public class Wagon_List : MonoBehaviour
     public string[] Monat;
     [Tooltip("Jahre")]
     public string[] Jahr;
+    public string[] vTyp;
     public Toggle[] DeleteEditToggle;
     public bool[] EditDeleteToggle;
-    public GameObject[] WartungsPic;
-    public GameObject[] LightSwitch;
-    public GameObject[] Smoke;
     public Text CTrains;
     public Text WTrains;
     public Text NTrains;
     [Header("Edit-Panel-Inputs")]
-    public InputField EditBaureihe;
-    public InputField EditFarbe;
-    public Dropdown EditEnergy;
-    public Dropdown EditHersteller;
-    public Dropdown EditSpurweite;
-    public InputField EditKatalogNummer;
-    public InputField EditSeriennummer;
-    public Dropdown EditKDay;
-    public Dropdown EditKMonth;
-    public Dropdown EditKYear;
-    public InputField EditPreis;
-    public Dropdown EditWDay;
-    public Dropdown EditWMonth;
-    public Dropdown EditWYear;
-    public InputField EditAdresse;
-    public Dropdown EditProtokoll;
-    public Dropdown EditFahrstufen;
-    public InputField EditDecoderHersteller;
-    public Toggle EditRauch;
-    public Toggle EditTelex;
-    public Toggle EditSound;
-    public Toggle EditLichtWechsel;
-    public Toggle EditElektrischeKupplung;
-    public Toggle EditElektrischePandos;
-    public InputField CV1;
-    public InputField CV2;
-    public InputField CV3;
-    public InputField CV4;
-    public InputField CV5;
+    public InputField Farbe;
+    public Dropdown WagonTyp;
+    public Dropdown Hersteller;
+    public Dropdown Spurweite;
+    public InputField Katalognummer;
+    public InputField Seriennummer;
+    public Dropdown KaufdatumTag;
+    public Dropdown KaufdatumMonat;
+    public Dropdown KaufdatumJahr;
+    public InputField Preis;
+    public Toggle Kupplung;
+    public Toggle Licht;
+    public Toggle Preiser;
     public Dropdown Lager;
     public Text GUUID;
+    public Text TopWindow;
+    public string EditFarbe;
+    public int EditWagonTyp;
+    public int EditHersteller;
+    public int EditSpurweite;
+    public string EditKatalognummer;
+    public string EditSeriennummer;
+    public int EditKaufdatumTag;
+    public int EditKaufdatumMonat;
+    public int EditKaufdatumJahr;
+    public string EditPreis;
+    public int EditKupplung;
+    public int EditLicht;
+    public int EditPreiser;
     public RawImage TrainPic;
     public GameObject EditPanel;
     private DataExporter dataexporter;
@@ -147,14 +124,14 @@ public class Wagon_List : MonoBehaviour
     void Start()
     {
         dataexporter = new DataExporter();
-        startManager.Log("Lade Train_List -> Nachricht ist Normal.", "Load Train_List -> message is normal");
+        startManager.Log("Lade Wagon_List -> Nachricht ist Normal.", "Load Wagon_List -> message is normal");
         ReadTrains();
         IsPremium = UserSettings.Premium;
-        readIntervall();
     }
 
     void Update()
     {
+        CompleteTrains = Trains.Count;
         for (int i = 0; i < 12; i++)
         {
             EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
@@ -165,43 +142,6 @@ public class Wagon_List : MonoBehaviour
         }
     }
 
-    public void readIntervall()
-    {
-        for (int i = 0; i < Trains.Count; i++)
-        {
-            if (Trains[i].Checked == false)
-            {
-                DateTime date = DateTime.Now;
-                DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
-                Trains[i].Checked = true;
-                if (firstStart != 1)
-                {
-                    CompleteTrains = CompleteTrains + 1;
-                }
-                if (date1 >= date)
-                {
-                    if (firstStart != 1)
-                    {
-                        nonWartungsTrains = nonWartungsTrains + 1;
-                    }
-                    Trains[i].Wartung = false;
-                    startManager.Log("Modul Train_List :: Lok ID: " + (i + 1) + " Wartung am: " + date1.ToString("dd.MM.yyyy"), "Modul Train_List :: Lok ID: " + i + "  Maintenance at: " + date1.ToString("MM.DD.yyyy"));
-                }
-                else
-                {
-                    if (firstStart != 1)
-                    {
-                        WartungsTrains = WartungsTrains + 1;
-                    }
-                    Trains[i].Wartung = true;
-                    startManager.Log("Modul Train_List :: Lok ID: " + (i + 1) + " Hat das Maximal Datum Erreicht, Wartung Aktiv ***#WARNUNG#***", "Modul Train_List :: Lok ID: " + i + " Has reached the maximum date, maintenance active ***#WARNING#***");
-                }
-            }
-        }
-        startManager.Log("Modul Train_List :: Loks mit Wartung: " + WartungsTrains + " Loks ohne Wartung: " + nonWartungsTrains + " Gespeicherte Loks: " + CompleteTrains, "Modul Train_List :: Trains with Maintenance: " + WartungsTrains + " Trains without Maintenance: " + nonWartungsTrains + " Total Trains: " + CompleteTrains);
-        firstStart = 1;
-    }
-
     public void SetCurrentScreen()
     {
         ClearScreen();
@@ -210,16 +150,16 @@ public class Wagon_List : MonoBehaviour
         {
             if (startManager.IsGerman == true)
             {
-                CTrains.text = "Gefundene Loks: " + CompleteTrains;
-                WTrains.text = "Loks mit Wartung: " + WartungsTrains;
-                NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
+                CTrains.text = "Gefundene Wagons: " + CompleteTrains;
+                WTrains.text = "";
+                NTrains.text = "";
             }
             else
             {
 
-                CTrains.text = "Found Trains: " + CompleteTrains;
-                WTrains.text = "Trains with Maintenance: " + WartungsTrains;
-                NTrains.text = "Trains without Maintenance: " + nonWartungsTrains;
+                CTrains.text = "Found Wagons: " + CompleteTrains;
+                WTrains.text = "";
+                NTrains.text = "";
             }
         }
 
@@ -228,179 +168,66 @@ public class Wagon_List : MonoBehaviour
             if (startManager.IsGerman == true)
             {
                 Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "FARBE: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Spur: " + vSpur[Trains[i].DbSpurweite] + " | AtNR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "." + Jahr[Trains[i].DbWartungJahr];
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
-                if (Trains[i].Wartung == true)
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
 
-                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    }
-                }
-                else
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    }
-                }
-                //Only Premium Not Finsch
-                /*
                 if (IsPremium == true)
                 {
-                    if (Trains[i].DbSound == 1)
-                    {
-                        Smoke[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        Smoke[i - PageOffset].SetActive(false);
-                    }
-
-                    if (Trains[i].DbROTWEISS == 1)
-                    {
-                        LightSwitch[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        LightSwitch[i - PageOffset].SetActive(false);
-                    }
-
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
                 }
                 else
                 {
-                    WartungsPic[i - PageOffset].SetActive(false);
-                    LightSwitch[i - PageOffset].SetActive(false);
-                    Smoke[i - PageOffset].SetActive(false);
+
+                    Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
                 }
-                */
             }
             else
             {
                 Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "Color: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Gauge: " + vSpur[Trains[i].DbSpurweite] + " | INR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Detected: " + Trains[i].DbAngelegt + " | Last Maintenance: " + Monat[Trains[i].DbWartungMonat] + "." + Tag[Trains[i].DbWartungTag] + "." + Jahr[Trains[i].DbWartungJahr];
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
-                //Only Premium Not Finsch
-                /*
-                if (IsPremium == true)
-                {
-                    if (Trains[i].DbSound == 1)
-                    {
-                        Smoke[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        Smoke[i - PageOffset].SetActive(false);
-                    }
-
-                    if (Trains[i].DbROTWEISS == 1)
-                    {
-                        LightSwitch[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        LightSwitch[i - PageOffset].SetActive(false);
-                    }
-
-                }
-                else
-                {
-                    WartungsPic[i - PageOffset].SetActive(false);
-                    LightSwitch[i - PageOffset].SetActive(false);
-                    Smoke[i - PageOffset].SetActive(false);
-                }
-                */
-                if (Trains[i].Wartung == true)
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
-                    }
-                }
-                else
-                {
-                    WartungsPic[i - PageOffset].SetActive(false);
-                    LightSwitch[i - PageOffset].SetActive(false);
-                    Smoke[i - PageOffset].SetActive(false);
-                }
             }
         }
     }
 
     public void ReadTrains()
     {
-        Trains = new List<TrainData>();
+        Trains = new List<WagonData>();
         SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
         dbConnection.Open();
         try
         {
-            SqliteCommand cmd = new SqliteCommand("SELECT * FROM Trains", dbConnection);
+            SqliteCommand cmd = new SqliteCommand("SELECT * FROM Wagons", dbConnection);
             SqliteDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    TrainData trainData = new TrainData();
-                    trainData.DbBaureihe = reader.GetString(0);
-                    trainData.DbFarbe = reader.GetString(1);
-                    trainData.DbLokTyp = reader.GetInt32(2);
-                    trainData.DbHersteller = reader.GetInt32(3);
-                    trainData.DbAngelegt = reader.GetString(4);
-                    trainData.DbKatalognummer = reader.GetString(5);
-                    trainData.DbSeriennummer = reader.GetString(6);
-                    trainData.DbPreis = reader.GetChar(8);
-                    trainData.DbWartungTag = reader.GetInt32(9);
-                    trainData.DbWartungMonat = reader.GetInt32(10);
-                    trainData.DbWartungJahr = reader.GetInt32(11);
-                    trainData.DbAdresse = reader.GetString(12);
-                    trainData.DbProtokoll = reader.GetInt32(13);
-                    trainData.DbFahrstufen = reader.GetInt32(14);
-                    trainData.DbDecHersteller = reader.GetString(15);
-                    trainData.DbRauch = reader.GetInt32(16);
-                    trainData.DbSound = reader.GetInt32(17);
-                    trainData.DbROTWEISS = reader.GetInt32(18);
-                    trainData.DbPandos = reader.GetInt32(19);
-                    trainData.DbTelex = reader.GetInt32(20);
-                    trainData.DbElekKupplung = reader.GetInt32(21);
-                    trainData.DbKaufTag = reader.GetInt32(22);
-                    trainData.DbKaufMonat = reader.GetInt32(23);
-                    trainData.DbKaufJahr = reader.GetInt32(24);
-                    trainData.DbSpurweite = reader.GetInt32(25);
-                    trainData.DbCV2 = reader.GetInt32(26);
-                    trainData.DbCV3 = reader.GetInt32(27);
-                    trainData.DbCV4 = reader.GetInt32(28);
-                    trainData.DbCV5 = reader.GetInt32(29);
-                    trainData.DBIdentifyer = reader.GetString(31);
-                    trainData.DBLagerort = reader.GetInt32(32);
+                    WagonData trainData = new WagonData();
+                    trainData.DBTyp = reader.GetInt32(0);
+                    trainData.DBFarbe = reader.GetString(1);
+                    trainData.DBHersteller = reader.GetInt32(2);
+                    trainData.DBErstellt = reader.GetString(3);
+                    trainData.DBKatalognummer = reader.GetString(4);
+                    trainData.DBSeriennummer = reader.GetString(5);
+                    trainData.DBKaufTag = reader.GetInt32(6);
+                    trainData.DBKaufMonat = reader.GetInt32(7);
+                    trainData.DBKaufJahr = reader.GetInt32(8);
+                    trainData.DBPreis = reader.GetChar(9);
+                    trainData.DBKupplung = reader.GetInt32(10);
+                    trainData.DBLicht = reader.GetInt32(11);
+                    trainData.DBPreiser = reader.GetInt32(12);
+                    trainData.DBSpurweite = reader.GetInt32(13);
+                    trainData.DBIdentifyer = reader.GetString(16);
+                    trainData.DBLagerort = reader.GetInt32(15);
                     Trains.Add(trainData);
                 }
             }
@@ -409,30 +236,25 @@ public class Wagon_List : MonoBehaviour
         }
         catch (SqliteException ex)
         {
-            startManager.LogError("Fehler beim Laden der Lokdaten.", "Error Loading Locomotive Data", " Train_List :: ReadAllTrains(); Error: " + ex);
+            startManager.LogError("Fehler beim Laden der Wagondaten.", "Error Loading Wagondata Data", " Wagon_List :: ReadTrains(); Error: " + ex);
         }
         dbConnection.Close();
         dbConnection = null;
         CacheImage = new Texture2D[Trains.Count];
-        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"))
-        {
-            Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains");
-        }
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png"))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png");
-                startManager.Log("Modul Train_List :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Train_List :: Lok ID: " + i + " No picture available, Create standard Picture");
+                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png");
+                startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + ".png"), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + ".png"), i));
             }
         }
-        startManager.Notify("Alle Loks Eingelesen", "All Locos are Read", "green", "green");
-        startManager.Log("Modul Train_List :: Alle Loks Eingelesen.", "Modul Train_List :: All Locos are Read");
-        //SetCurrentScreen();
+        startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
+        startManager.Log("Modul Wagon_List :: Alle Wagons Eingelesen.", "Modul Wagon_List :: All Wagons are Read");
     }
 
     IEnumerator LoadImage(string url, int i)
@@ -491,8 +313,6 @@ public class Wagon_List : MonoBehaviour
             Slot2[i].GetComponent<Text>().text = "";
             Slot3[i].GetComponent<Text>().text = "";
             DeleteEditToggle[i].isOn = false;
-            LightSwitch[i].SetActive(false);
-            Smoke[i].SetActive(false);
         }
     }
 
@@ -500,14 +320,14 @@ public class Wagon_List : MonoBehaviour
     {
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png"))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png");
-                startManager.Log("Modul Train_List :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Train_List :: Lok ID: " + i + " No picture available, Create standard Picture");
+                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png");
+                startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + ".png"), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + ".png"), i));
             }
         }
     }
@@ -516,7 +336,7 @@ public class Wagon_List : MonoBehaviour
     {
         if (SelectedID == -1)
         {
-            startManager.Notify("Keine Lok ausgewählt", "No Train Selected", "red", "red");
+            startManager.Notify("Keinen Wagon ausgewählt", "No Wagon Selected", "red", "red");
         }
         else
         {
@@ -524,26 +344,26 @@ public class Wagon_List : MonoBehaviour
             {
                 SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
                 dbConnection.Open();
-                string sql = "DELETE FROM Trains WHERE IDENTIFYER='" + Trains[SelectedID].DBIdentifyer + "' AND  ERSTELLT='" + Trains[SelectedID].DbAngelegt + "'  ";
+                string sql = "DELETE FROM Wagons WHERE IDENTIFYER='" + Trains[SelectedID].DBIdentifyer + "' AND  ERSTELLT='" + Trains[SelectedID].DBErstellt + "'  ";
                 SqliteCommand Command = new SqliteCommand(sql, dbConnection);
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
-                File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (SelectedID + 1) + ".png");
+                Trains.RemoveAt(SelectedID);
+                File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + ".png");
                 SelectedID = -1;
             }
             catch (SqliteException ex)
             {
-                startManager.LogError("Modul Train_List :: Lok wurde Gelöscht id:" + SelectedID, "Modul Train_List :: Train Removed id:" + SelectedID, " Train_List :: DeleteTrain(); Error: " + ex);
+                startManager.LogError("Modul Wagon_List :: Wadon id:" + SelectedID + " wurde nicht Gelöscht", "Modul Wagon_List :: Wagon id:" + SelectedID + " can not Remove", " Wagon_List :: DeleteTrain(); Error: " + ex);
             }
             finally
             {
                 startManager.Notify("Lok wurde Gelöscht id:" + (SelectedID + 1), "Train Removed id:" + (SelectedID + 1), "green", "green");
-                startManager.Log("Modul Train_List :: Lok wurde Gelöscht id:" + SelectedID, "Modul Train_List :: Train Removed id:" + SelectedID);
+                startManager.Log("Modul Wagon_List :: Wagin id: " + SelectedID + " wurde Erfolgreich Gelöscht.!", "Modul Wagon_List :: Wagon id: " + SelectedID + " Removed.!");
             }
             DeleteSchutz();
-            ReadTrains();
+            SetCurrentScreen();
         }
-        SetCurrentScreen();
     }
 
     public void DeleteSchutz()
@@ -560,77 +380,19 @@ public class Wagon_List : MonoBehaviour
             {
                 command.Connection = dbConnection;
                 command.CommandType = CommandType.Text;
-                command.CommandText = "UPDATE Trains  SET BAUREIHE = @BAUREIHE, FARBE = @FARBE , TYP = @TYP , HERSTELLER = @HERSTELLER , KATALOGNUMMER = @KATALOGNUMMER , SERIENNUMMER = @SERIENNUMMER , PREIS = @PREIS , WARTUNGDAY = @WARTUNGDAY ,WARTUNGMONAT = @WARTUNGMONAT , WARTUNGJEAR = @WARTUNGJEAR , ADRESSE = @ADRESSE , PROTOKOLL = @PROTOKOLL , FAHRSTUFEN =@FAHRSTUFEN , DECHERSTELLER = @DECHERSTELLER , KTAG = @KTAG , KMONAT = @KMONAT , KJAHR = @KJAHR, SPURWEITE = @SPURWEITE, CV2 = @CV2,  CV3 = @CV3, CV4 = @CV4, CV5 = @CV5, RAUCH = @RAUCH , SOUND = @SOUND, ROTWEISS = @ROTWEISS, PANDO = @PANDO, TELEX = @TELEX, KUPPLUNG = @KUPPLUNG, LAGERORT = @LAGERORT WHERE IDENTIFYER='" + Trains[SelectedID].DBIdentifyer + "' AND ERSTELLT='" + Trains[SelectedID].DbAngelegt + "'  ";
-                command.Parameters.AddWithValue("@BAUREIHE", EditBaureihe.text);
-                command.Parameters.AddWithValue("@FARBE", EditFarbe.text);
-                command.Parameters.AddWithValue("@TYP", EditEnergy.value);
-                command.Parameters.AddWithValue("@HERSTELLER", EditHersteller.value);
-                command.Parameters.AddWithValue("@KATALOGNUMMER", EditKatalogNummer.text);
-                command.Parameters.AddWithValue("@SERIENNUMMER", EditSeriennummer.text);
-                command.Parameters.AddWithValue("@PREIS", EditPreis.text);
-                command.Parameters.AddWithValue("@WARTUNGDAY", EditWDay.value);
-                command.Parameters.AddWithValue("@WARTUNGMONAT", EditWMonth.value);
-                command.Parameters.AddWithValue("@WARTUNGJEAR", EditWYear.value);
-                command.Parameters.AddWithValue("@ADRESSE", EditAdresse.text);
-                command.Parameters.AddWithValue("@PROTOKOLL", EditProtokoll.value);
-                command.Parameters.AddWithValue("@FAHRSTUFEN", EditFahrstufen.value);
-                command.Parameters.AddWithValue("@DECHERSTELLER", EditDecoderHersteller.text);
-                command.Parameters.AddWithValue("@KTAG", EditKDay.value);
-                command.Parameters.AddWithValue("@KMONAT", EditKMonth.value);
-                command.Parameters.AddWithValue("@KJAHR", EditWYear.value);
-                command.Parameters.AddWithValue("@SPURWEITE", EditSpurweite.value);
-                command.Parameters.AddWithValue("@ADRESSE", CV1.text);
-                command.Parameters.AddWithValue("@CV2", CV2.text);
-                command.Parameters.AddWithValue("@CV3", CV3.text);
-                command.Parameters.AddWithValue("@CV4", CV4.text);
-                command.Parameters.AddWithValue("@CV5", CV5.text);
+                command.CommandText = "UPDATE Wagons  SET FARBE = @FARBE , TYP = @Typ , HERSTELLER = @HERSTELLER , KATALOGNUMMER = @KATALOGNUMMER , SERIENNUMMER = @SERIENNUMMER , KAUFDAY = @KAUFDAY , KAUFMONAT = @KAUFMONAT ,KAUFJAHR = @KAUFJAHR , PREIS = @PREIS ,KUPPLUNG = @KUPPLUNG , LICHT = @LICHT , PREISER =@PREISER, SPURWEITE = @SPURWEITE, LAGERORT = @LAGERORT  WHERE IDENTIFYER='" + Trains[SelectedID].DBIdentifyer + "' AND  ERSTELLT='" + Trains[SelectedID].DBErstellt + "'  ";
+                command.Parameters.AddWithValue("@FARBE", Farbe.text);
+                command.Parameters.AddWithValue("@TYP", WagonTyp.value);
+                command.Parameters.AddWithValue("@HERSTELLER", Hersteller.value);
+                command.Parameters.AddWithValue("@KATALOGNUMMER", Katalognummer.text);
+                command.Parameters.AddWithValue("@SERIENNUMMER", Seriennummer.text);
+                command.Parameters.AddWithValue("@PREIS", Preis.text);
+                command.Parameters.AddWithValue("@KAUFDAY", KaufdatumTag.value);
+                command.Parameters.AddWithValue("@KAUFMONAT", KaufdatumMonat.value);
+                command.Parameters.AddWithValue("@KAUFJAHR", KaufdatumJahr.value);
+                command.Parameters.AddWithValue("@SPURWEITE", Spurweite.value);
                 command.Parameters.AddWithValue("@LAGERORT", Lager.value);
-                if (EditRauch.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@RAUCH", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@RAUCH", 0);
-                }
-
-                if (EditSound.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@SOUND", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@SOUND", 0);
-                }
-
-                if (EditLichtWechsel.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@ROTWEISS", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@ROTWEISS", 0);
-                }
-
-                if (EditElektrischePandos.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@PANDO", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@PANDO", 0);
-                }
-
-                if (EditTelex.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@TELEX", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@TELEX", 0);
-                }
-
-                if (EditElektrischeKupplung.isOn == true)
+                if (Kupplung.isOn == true)
                 {
                     command.Parameters.AddWithValue("@KUPPLUNG", 1);
                 }
@@ -638,7 +400,22 @@ public class Wagon_List : MonoBehaviour
                 {
                     command.Parameters.AddWithValue("@KUPPLUNG", 0);
                 }
-
+                if (Licht.isOn == true)
+                {
+                    command.Parameters.AddWithValue("@LICHT", 1);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@LICHT", 0);
+                }
+                if (Preiser.isOn == true)
+                {
+                    command.Parameters.AddWithValue("@PREISER", 1);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@PREISER", 0);
+                }
                 try
                 {
                     dbConnection.Open();
@@ -646,18 +423,17 @@ public class Wagon_List : MonoBehaviour
                 }
                 catch (SqliteException ex)
                 {
-                    startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Train_List :: SaveEditTrain().IsEditMode==True; Error: " + ex);
+                    startManager.LogError("Fehler beim Speichern.", "Error by Save.", " Wagon_List :: SaveEditTrain().IsEditMode==True; Error: " + ex);
                 }
                 finally
                 {
-                    startManager.Notify("Lok wurde Bearbeited", "Train edited", "green", "green");
-                    ReadTrains();
+                    SetCurrentScreen();
+                    startManager.Notify("Wagon wurde Bearbeited", "Wagon edited", "green", "green");
                 }
                 dbConnection.Close();
                 dbConnection = null;
             }
             SelectedID = -1;
-            //SetCurrentScreen();
         }
         else
         {
@@ -666,78 +442,20 @@ public class Wagon_List : MonoBehaviour
             {
                 command.Connection = dbConnection;
                 command.CommandType = CommandType.Text;
-                command.CommandText = "INSERT into Trains (BAUREIHE , FARBE , TYP , HERSTELLER , KATALOGNUMMER , SERIENNUMMER , PREIS , WARTUNGDAY ,WARTUNGMONAT , WARTUNGJEAR ,ADRESSE , PROTOKOLL , FAHRSTUFEN , DECHERSTELLER , RAUCH , SOUND , ROTWEISS ,PANDO , TELEX , KUPPLUNG , KTAG , KMONAT , KJAHR, SPURWEITE, IDENTIFYER, LAGERORT, CV2, CV3, CV4, CV5) VALUES" + " " +
-                    "(@BAUREIHE , @FARBE , @TYP ,  @HERSTELLER ,  @KATALOGNUMMER , @SERIENNUMMER , @PREIS , @WARTUNGDAY , @WARTUNGMONAT , @WARTUNGJEAR , @ADRESSE , @PROTOKOLL , @FAHRSTUFEN , @DECHERSTELLER , @RAUCH , @SOUND , @ROTWEISS , @PANDO , @TELEX , @KUPPLUNG, @KTAG , @KMONAT , @KJAHR, @SPURWEITE, @IDENTIFYER, @LAGERORT, @CV2, @CV3, @CV4, @CV5)";
-                command.Parameters.AddWithValue("@BAUREIHE", EditBaureihe.text);
-                command.Parameters.AddWithValue("@FARBE", EditFarbe.text);
-                command.Parameters.AddWithValue("@TYP", EditEnergy.value);
-                command.Parameters.AddWithValue("@HERSTELLER", EditHersteller.value);
-                command.Parameters.AddWithValue("@KATALOGNUMMER", EditKatalogNummer.text);
-                command.Parameters.AddWithValue("@SERIENNUMMER", EditSeriennummer.text);
-                command.Parameters.AddWithValue("@PREIS", EditPreis.text);
-                command.Parameters.AddWithValue("@WARTUNGDAY", EditWDay.value);
-                command.Parameters.AddWithValue("@WARTUNGMONAT", EditWMonth.value);
-                command.Parameters.AddWithValue("@WARTUNGJEAR", EditWYear.value);
-                command.Parameters.AddWithValue("@ADRESSE", EditAdresse.text);
-                command.Parameters.AddWithValue("@PROTOKOLL", EditProtokoll.value);
-                command.Parameters.AddWithValue("@FAHRSTUFEN", EditFahrstufen.value);
-                command.Parameters.AddWithValue("@DECHERSTELLER", EditDecoderHersteller.text);
-                command.Parameters.AddWithValue("@KTAG", EditKDay.value);
-                command.Parameters.AddWithValue("@KMONAT", EditKMonth.value);
-                command.Parameters.AddWithValue("@KJAHR", EditWYear.value);
-                command.Parameters.AddWithValue("@SPURWEITE", EditSpurweite.value);
+                command.CommandText = "INSERT into Wagons  (TYP , FARBE , HERSTELLER ,  KATALOGNUMMER , SERIENNUMMER , KAUFDAY , KAUFMONAT , KAUFJAHR , PREIS , KUPPLUNG , LICHT , PREISER, SPURWEITE, IDENTIFYER , LAGERORT) VALUES" + " (@TYP , @FARBE , @HERSTELLER ,  @KATALOGNUMMER , @SERIENNUMMER , @KAUFDAY , @KAUFMONAT , @KAUFJAHR , @PREIS , @KUPPLUNG , @LICHT , @PREISER, @SPURWEITE, @IDENTIFYER , @LAGERORT)";
+                command.Parameters.AddWithValue("@FARBE", Farbe.text);
+                command.Parameters.AddWithValue("@TYP", WagonTyp.value);
+                command.Parameters.AddWithValue("@HERSTELLER", Hersteller.value);
+                command.Parameters.AddWithValue("@KATALOGNUMMER", Katalognummer.text);
+                command.Parameters.AddWithValue("@SERIENNUMMER", Seriennummer.text);
+                command.Parameters.AddWithValue("@PREIS", Preis.text);
+                command.Parameters.AddWithValue("@KAUFDAY", KaufdatumTag.value);
+                command.Parameters.AddWithValue("@KAUFMONAT", KaufdatumMonat.value);
+                command.Parameters.AddWithValue("@KAUFJAHR", KaufdatumJahr.value);
+                command.Parameters.AddWithValue("@SPURWEITE", Spurweite.value);
                 command.Parameters.AddWithValue("@LAGERORT", Lager.value);
-                command.Parameters.AddWithValue("@ADRESSE", CV1.text);
-                command.Parameters.AddWithValue("@CV2", 0);
-                command.Parameters.AddWithValue("@CV3", 0);
-                command.Parameters.AddWithValue("@CV4", 0);
-                command.Parameters.AddWithValue("@CV5", 0);
-                if (EditRauch.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@RAUCH", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@RAUCH", 0);
-                }
-
-                if (EditSound.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@SOUND", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@SOUND", 0);
-                }
-
-                if (EditLichtWechsel.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@ROTWEISS", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@ROTWEISS", 0);
-                }
-
-                if (EditElektrischePandos.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@PANDO", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@PANDO", 0);
-                }
-
-                if (EditTelex.isOn == true)
-                {
-                    command.Parameters.AddWithValue("@TELEX", 1);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@TELEX", 0);
-                }
-
-                if (EditElektrischeKupplung.isOn == true)
+                command.Parameters.AddWithValue("@IDENTIFYER", Guid.NewGuid().ToString());
+                if(Kupplung.isOn == true)
                 {
                     command.Parameters.AddWithValue("@KUPPLUNG", 1);
                 }
@@ -745,8 +463,22 @@ public class Wagon_List : MonoBehaviour
                 {
                     command.Parameters.AddWithValue("@KUPPLUNG", 0);
                 }
-
-                command.Parameters.AddWithValue("@IDENTIFYER", Guid.NewGuid().ToString());
+                if (Licht.isOn == true)
+                {
+                    command.Parameters.AddWithValue("@LICHT", 1);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@LICHT", 0);
+                }
+                if (Preiser.isOn == true)
+                {
+                    command.Parameters.AddWithValue("@PREISER", 1);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@PREISER", 0);
+                }
                 try
                 {
                     dbConnection.Open();
@@ -754,112 +486,57 @@ public class Wagon_List : MonoBehaviour
                 }
                 catch (SqliteException ex)
                 {
-                    startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Train_List :: SaveEditTrain().IsEditMode==False; Error: " + ex);
+                    startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Wagon_List :: SaveEditTrain().IsEditMode==false; Error: " + ex);
                 }
                 finally
                 {
-                    if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (Trains.Count + 1) + "." + "png"))
+                    if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + "png"))
                     {
-                        File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (Trains.Count + 1) + "." + "png");
+                        File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + "png");
                     }
-                    startManager.Notify("Lok Gespeichert", "Train Saved", "green", "green");
+                    SetCurrentScreen();
+                    startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");
                 }
                 dbConnection.Close();
                 dbConnection = null;
             }
             SelectedID = -1;
-            ReadTrains();
         }
-        SetCurrentScreen();
     }
 
     public void GetLokData()
     {
         if (SelectedID == -1)
         {
-            startManager.Notify("Keine Lok ausgewählt", "No Train Selected", "red", "red");
+            startManager.Notify("Keinen Wagon ausgewählt", "No Wagon Selected", "red", "red");
         }
         else
         {
             IsEditMode = true;
-            EditBaureihe.text = Trains[SelectedID].DbBaureihe;
-            EditFarbe.text = Trains[SelectedID].DbFarbe;
-            EditEnergy.value = Trains[SelectedID].DbLokTyp;
-            EditHersteller.value = Trains[SelectedID].DbHersteller;
-            EditSpurweite.value = Trains[SelectedID].DbSpurweite;
-            EditKatalogNummer.text = Trains[SelectedID].DbKatalognummer;
-            EditSeriennummer.text = Trains[SelectedID].DbSeriennummer;
-            EditKDay.value = Trains[SelectedID].DbKaufTag;
-            EditKMonth.value = Trains[SelectedID].DbKaufMonat;
-            EditKYear.value = Trains[SelectedID].DbKaufJahr;
-            EditPreis.text = Trains[SelectedID].DbPreis.ToString();
-            EditWDay.value = Trains[SelectedID].DbWartungTag;
-            EditWMonth.value = Trains[SelectedID].DbWartungMonat;
-            EditWYear.value = Trains[SelectedID].DbWartungJahr;
-            EditAdresse.text = Trains[SelectedID].DbAdresse;
-            EditProtokoll.value = Trains[SelectedID].DbProtokoll;
-            EditFahrstufen.value = Trains[SelectedID].DbFahrstufen;
-            EditDecoderHersteller.text = Trains[SelectedID].DbDecHersteller;
-            CV2.text = Trains[SelectedID].DbCV2.ToString();
-            CV3.text = Trains[SelectedID].DbCV3.ToString();
-            CV4.text = Trains[SelectedID].DbCV4.ToString();
-            CV5.text = Trains[SelectedID].DbCV5.ToString();
-            CV1.text = Trains[SelectedID].DbAdresse;
-            GUUID.text = Trains[SelectedID].DBIdentifyer;
+            WagonTyp.value = Trains[SelectedID].DBTyp;
+            Farbe.text = Trains[SelectedID].DBFarbe;
+            Hersteller.value = Trains[SelectedID].DBHersteller;
+            Spurweite.value = Trains[SelectedID].DBSpurweite;
+            Katalognummer.text = Trains[SelectedID].DBKatalognummer;
+            Seriennummer.text = Trains[SelectedID].DBSeriennummer;
+            KaufdatumTag.value = Trains[SelectedID].DBKaufTag;
+            KaufdatumMonat.value = Trains[SelectedID].DBKaufMonat;
+            KaufdatumJahr.value = Trains[SelectedID].DBKaufJahr;
+            Preis.text = Trains[SelectedID].DBPreis.ToString();
             Lager.value = Trains[SelectedID].DBLagerort;
-
-            if (Trains[SelectedID].DbRauch == 1)
+            GUUID.text = Trains[SelectedID].DBIdentifyer;
+            TrainPic.GetComponent<RawImage>().texture = CacheImage[SelectedID];
+            if (Trains[SelectedID].DBKupplung == 1)
             {
-                EditRauch.isOn = true;
+                Kupplung.isOn = true;
             }
-            else
+            if (Trains[SelectedID].DBLicht == 1)
             {
-                EditRauch.isOn = false;
+                Licht.isOn = true;
             }
-
-            if (Trains[SelectedID].DbSound == 1)
+            if (Trains[SelectedID].DBPreiser == 1)
             {
-                EditSound.isOn = true;
-            }
-            else
-            {
-                EditSound.isOn = false;
-            }
-
-            if (Trains[SelectedID].DbROTWEISS == 1)
-            {
-                EditLichtWechsel.isOn = true;
-            }
-            else
-            {
-                EditLichtWechsel.isOn = false;
-            }
-
-            if (Trains[SelectedID].DbPandos == 1)
-            {
-                EditElektrischePandos.isOn = true;
-            }
-            else
-            {
-                EditElektrischePandos.isOn = false;
-            }
-
-            if (Trains[SelectedID].DbTelex == 1)
-            {
-                EditTelex.isOn = true;
-            }
-            else
-            {
-                EditTelex.isOn = false;
-            }
-        
-            if (Trains[SelectedID].DbElekKupplung == 1)
-            {
-                EditElektrischeKupplung.isOn = true;
-            }
-            else
-            {
-                EditElektrischeKupplung.isOn = false;
+                Preiser.isOn = true;
             }
 
             TrainPic.GetComponent<RawImage>().texture = CacheImage[SelectedID];
@@ -878,7 +555,7 @@ public class Wagon_List : MonoBehaviour
 
     IEnumerator SendSelected()
     {
-        string FinshURL = startManager.WebExporterUrl + "/insert.php?uniqueID=" + uniqueID + "&data=ISTRAIN," + Trains[SelectedID].DbBaureihe.ToString() + "," + Trains[SelectedID].DbFarbe.ToString() + "," + Trains[SelectedID].DbLokTyp.ToString() + "," + Trains[SelectedID].DbHersteller.ToString() + "," + Trains[SelectedID].DbKatalognummer.ToString() + "," + Trains[SelectedID].DbSeriennummer.ToString() + "," + Trains[SelectedID].DbKaufTag.ToString() + "," + Trains[SelectedID].DbKaufMonat.ToString() + "," + Trains[SelectedID].DbKaufJahr.ToString() + "," + Trains[SelectedID].DbPreis.ToString() + "," + Trains[SelectedID].DbWartungTag.ToString() + "," + Trains[SelectedID].DbWartungMonat.ToString() + "," + Trains[SelectedID].DbWartungJahr.ToString() + "," + Trains[SelectedID].DbAdresse.ToString() + "," + Trains[SelectedID].DbProtokoll.ToString() + "," + Trains[SelectedID].DbFahrstufen.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbDecHersteller.ToString() + "," + Trains[SelectedID].DbAngelegt.ToString() + "," + Trains[SelectedID].DbRauch.ToString() + "," + Trains[SelectedID].DbSound.ToString() + "," + Trains[SelectedID].DbROTWEISS.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbPandos.ToString() + "," + Trains[SelectedID].DbTelex.ToString() + "," + Trains[SelectedID].DbElekKupplung.ToString() + "," + Trains[SelectedID].DbSpurweite.ToString() + "," + Trains[SelectedID].DbCV2.ToString() + "," + Trains[SelectedID].DbCV3.ToString() + "," + Trains[SelectedID].DbCV4.ToString() + "," + Trains[SelectedID].DbCV5.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString();
+        string FinshURL = startManager.WebExporterUrl + "/insert.php?uniqueID=" + uniqueID + "&data=ISWAGON," + Trains[SelectedID].DBTyp.ToString() + "," + Trains[SelectedID].DBFarbe.ToString() + "," + Trains[SelectedID].DBHersteller.ToString() + "," + Trains[SelectedID].DBKatalognummer.ToString() + "," + Trains[SelectedID].DBSeriennummer.ToString() + "," + Trains[SelectedID].DBKaufTag.ToString() + "," + Trains[SelectedID].DBKaufMonat.ToString() + "," + Trains[SelectedID].DBKaufJahr.ToString() + "," + Trains[SelectedID].DBPreis.ToString() + "," + Trains[SelectedID].DBKupplung.ToString() + "," + Trains[SelectedID].DBLicht.ToString() + "," + Trains[SelectedID].DBPreiser.ToString() + "," + Trains[SelectedID].DBSpurweite.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString() + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE";
         Debug.Log(FinshURL);
         WWW insert = new WWW(FinshURL);
 
@@ -890,7 +567,7 @@ public class Wagon_List : MonoBehaviour
         }
         if (insert.isDone)
         {
-            startManager.Notify("Lok Gesendet", "Train Send", "green", "green");
+            startManager.Notify("Wagon Gesendet", "Wagon Send", "green", "green");
             Win.SetActive(true);
             SendOK.text = uniqueID.ToString();
         }
@@ -898,41 +575,26 @@ public class Wagon_List : MonoBehaviour
 
     public void ExportTrain()
     {
-        dataexporter.Type = "TRAIN";
-        dataexporter.Baureihe = Trains[SelectedID].DbBaureihe;
-        dataexporter.Farbe = Trains[SelectedID].DbFarbe;
-        dataexporter.Energy = Trains[SelectedID].DbLokTyp;
-        dataexporter.Hersteller = Trains[SelectedID].DbHersteller;
-        dataexporter.Erstellt = Trains[SelectedID].DbAngelegt;
-        dataexporter.Spurweite = Trains[SelectedID].DbSpurweite;
-        dataexporter.KatalogNummer = Trains[SelectedID].DbKatalognummer;
-        dataexporter.Seriennummer = Trains[SelectedID].DbSeriennummer;
-        dataexporter.KaufDay = Trains[SelectedID].DbKaufTag;
-        dataexporter.KaufMonth = Trains[SelectedID].DbKaufMonat;
-        dataexporter.KaufYear = Trains[SelectedID].DbKaufJahr;
-        dataexporter.KaufPreis = Trains[SelectedID].DbPreis.ToString();
-        dataexporter.WartungDay = Trains[SelectedID].DbWartungTag;
-        dataexporter.WartungMonth = Trains[SelectedID].DbWartungMonat;
-        dataexporter.WartungYear = Trains[SelectedID].DbWartungJahr;
-        dataexporter.Adresse = Trains[SelectedID].DbAdresse;
-        dataexporter.Protokoll = Trains[SelectedID].DbProtokoll;
-        dataexporter.Fahrstufen = Trains[SelectedID].DbFahrstufen;
-        dataexporter.Fahrstufen = Trains[SelectedID].DbFahrstufen;
-        dataexporter.DecoderHersteller = Trains[SelectedID].DbDecHersteller;
-        dataexporter.Rauch = Trains[SelectedID].DbRauch;
-        dataexporter.Telex = Trains[SelectedID].DbTelex;
-        dataexporter.Sound = Trains[SelectedID].DbSound;
-        dataexporter.LichtWechsel = Trains[SelectedID].DbROTWEISS;
-        dataexporter.ElektrischeKupplung = Trains[SelectedID].DbElekKupplung;
-        dataexporter.ElektrischePandos = Trains[SelectedID].DbPandos;
-        dataexporter.CV2 = Trains[SelectedID].DbCV2.ToString();
-        dataexporter.CV3 = Trains[SelectedID].DbCV3.ToString();
-        dataexporter.CV4 = Trains[SelectedID].DbCV4.ToString();
-        dataexporter.CV5 = Trains[SelectedID].DbCV5.ToString();
-        dataexporter.Image = File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (SelectedID + 1) + "." + "png"));
+        dataexporter.Type = "WAGON";
+        dataexporter.Typ = Trains[SelectedID].DBTyp;
+        dataexporter.Farbe = Trains[SelectedID].DBFarbe;
+        dataexporter.Erstellt = Trains[SelectedID].DBErstellt;
+        dataexporter.Hersteller = Trains[SelectedID].DBHersteller;
+        dataexporter.Spurweite = Trains[SelectedID].DBSpurweite;
+        dataexporter.Katalognummer = Trains[SelectedID].DBKatalognummer;
+        dataexporter.Seriennummer = Trains[SelectedID].DBSeriennummer;
+        dataexporter.KaufTag = Trains[SelectedID].DBKaufTag;
+        dataexporter.KaufMonat = Trains[SelectedID].DBKaufMonat;
+        dataexporter.KaufJahr = Trains[SelectedID].DBKaufJahr;
+        dataexporter.Preis = Trains[SelectedID].DBPreis;
+        dataexporter.Spurweite = Trains[SelectedID].DBSpurweite;
+        dataexporter.Kupplung = Trains[SelectedID].DBKupplung;
+        dataexporter.Licht = Trains[SelectedID].DBLicht;
+        dataexporter.Preiser = Trains[SelectedID].DBPreiser;
+        dataexporter.Image = File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + "png"));
         string jsonData = JsonUtility.ToJson(dataexporter, true);
-        File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Exporter/" + vHersteller[Trains[SelectedID].DbHersteller] + "-" + Trains[SelectedID].DbKatalognummer + ".TRAIN", jsonData);
+        File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Exporter/" + vHersteller[Trains[SelectedID].DBHersteller] + "-" + Trains[SelectedID].DBKatalognummer + "-" + Trains[SelectedID].DBFarbe + ".TRAIN", jsonData);
         SelectedID = -1;
-        startManager.Notify("Lok als Datei Exportiert", "Train as File Exported", "green", "green");
+        startManager.Notify("Wagon als Datei Exportiert", "Wagon as File Exported", "green", "green");
     }
 }
