@@ -19,6 +19,7 @@ public class Image_Manager : MonoBehaviour
     public Settings_Manager UserSettings;
     public Train_List TL;
     public Wagon_List WL;
+    public Inventory_Manager IM;
     [Header("Elements")]
     public GameObject ImageView;
     public Text PageIndex;
@@ -105,9 +106,10 @@ public class Image_Manager : MonoBehaviour
 
         if (Type == 2)
         {
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (WL.SelectedID + 1) + "." + "png");
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (WL.SelectedID + 1) + "." + "png");
-            WL.GetLokData();
+            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + "png");
+            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + "png");
+            IM.CacheImage[IM.SelectedID] = Pic[id];
+            IM.PrintScreen();
         }
         ImageView.SetActive(false);
     }

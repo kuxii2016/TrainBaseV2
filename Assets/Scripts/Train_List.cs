@@ -163,6 +163,209 @@ public class Train_List : MonoBehaviour
                 SelectedID = (i + PageOffset);
             }
         }
+
+        if (IsPremium == true)
+        {
+            if (startManager.IsGerman == true)
+            {
+                CTrains.text = "Gefundene Loks: " + CompleteTrains;
+                WTrains.text = "Loks mit Wartung: " + WartungsTrains;
+                NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
+            }
+            else
+            {
+
+                CTrains.text = "Found Trains: " + CompleteTrains;
+                WTrains.text = "Trains with Maintenance: " + WartungsTrains;
+                NTrains.text = "Trains without Maintenance: " + nonWartungsTrains;
+            }
+        }
+
+        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
+        {
+            SlotBild[i - PageOffset].texture = CacheImage[i];
+        }
+
+        for (int i = 0; i < Trains.Count; i++)
+        {
+            if (Trains[i].Checked == false)
+            {
+                DateTime date = DateTime.Now;
+                DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
+                Trains[i].Checked = true;
+                if (firstStart != 1)
+                {
+                    CompleteTrains = CompleteTrains + 1;
+                }
+                if (date1 >= date)
+                {
+                    if (firstStart != 1)
+                    {
+                        nonWartungsTrains = nonWartungsTrains + 1;
+                    }
+                    Trains[i].Wartung = false;
+                }
+                else
+                {
+                    if (firstStart != 1)
+                    {
+                        WartungsTrains = WartungsTrains + 1;
+                    }
+                    Trains[i].Wartung = true;
+                }
+            }
+        }
+
+        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
+        {
+            if (startManager.IsGerman == true)
+            {
+                Slot[i - PageOffset].gameObject.SetActive(true);
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "FARBE: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Spur: " + vSpur[Trains[i].DbSpurweite] + " | AtNR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "." + Jahr[Trains[i].DbWartungJahr];
+                SlotBild[i - PageOffset].texture = CacheImage[i];
+                if (Trains[i].Wartung == true)
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].SetActive(true);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].SetActive(false);
+
+                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    }
+                }
+                else
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    }
+                }
+                //Only Premium Not Finsch
+                /*
+                if (IsPremium == true)
+                {
+                    if (Trains[i].DbSound == 1)
+                    {
+                        Smoke[i - PageOffset].SetActive(true);
+                    }
+                    else
+                    {
+                        Smoke[i - PageOffset].SetActive(false);
+                    }
+
+                    if (Trains[i].DbROTWEISS == 1)
+                    {
+                        LightSwitch[i - PageOffset].SetActive(true);
+                    }
+                    else
+                    {
+                        LightSwitch[i - PageOffset].SetActive(false);
+                    }
+
+                }
+                else
+                {
+                    WartungsPic[i - PageOffset].SetActive(false);
+                    LightSwitch[i - PageOffset].SetActive(false);
+                    Smoke[i - PageOffset].SetActive(false);
+                }
+                */
+            }
+            else
+            {
+                Slot[i - PageOffset].gameObject.SetActive(true);
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "Color: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Gauge: " + vSpur[Trains[i].DbSpurweite] + " | INR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Detected: " + Trains[i].DbAngelegt + " | Last Maintenance: " + Monat[Trains[i].DbWartungMonat] + "." + Tag[Trains[i].DbWartungTag] + "." + Jahr[Trains[i].DbWartungJahr];
+                SlotBild[i - PageOffset].texture = CacheImage[i];
+                if (Trains[i].Wartung == true)
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].SetActive(true);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].SetActive(false);
+
+                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    }
+                }
+                else
+                {
+                    if (IsPremium == true)
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    }
+                    else
+                    {
+                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    }
+                }
+                //Only Premium Not Finsch
+                /*
+                if (IsPremium == true)
+                {
+                    if (Trains[i].DbSound == 1)
+                    {
+                        Smoke[i - PageOffset].SetActive(true);
+                    }
+                    else
+                    {
+                        Smoke[i - PageOffset].SetActive(false);
+                    }
+
+                    if (Trains[i].DbROTWEISS == 1)
+                    {
+                        LightSwitch[i - PageOffset].SetActive(true);
+                    }
+                    else
+                    {
+                        LightSwitch[i - PageOffset].SetActive(false);
+                    }
+
+                }
+                else
+                {
+                    WartungsPic[i - PageOffset].SetActive(false);
+                    LightSwitch[i - PageOffset].SetActive(false);
+                    Smoke[i - PageOffset].SetActive(false);
+                }
+                */
+            }
+        }
+
     }
 
     public void readIntervall()
