@@ -129,14 +129,14 @@ public class Inventory_Manager : MonoBehaviour
             {
                 Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/");
             }
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + UserSettings.ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Item.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + "png");
+                File.Copy(Application.streamingAssetsPath + "/Resources/Item.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + UserSettings.ImageType);
                 startManager.Log("Modul Inventory_Manager :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Inventory_Manager :: Lok ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + ".png"), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + UserSettings.ImageType), i));
             }
         }
         dbConnection.Close();

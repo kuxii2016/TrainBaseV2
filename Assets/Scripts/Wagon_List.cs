@@ -142,6 +142,65 @@ public class Wagon_List : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (IsPremium == true)
+        {
+            if (startManager.IsGerman == true)
+            {
+                CTrains.text = "Gefundene Wagons: " + CompleteTrains;
+                WTrains.text = "";
+                NTrains.text = "";
+            }
+            else
+            {
+                CTrains.text = "Found Wagons: " + CompleteTrains;
+                WTrains.text = "";
+                NTrains.text = "";
+            }
+        }
+        else
+        {
+            CTrains.text = "";
+            WTrains.text = "";
+            NTrains.text = "";
+        }
+
+        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
+        {
+            if (startManager.IsGerman == true)
+            {
+                Slot[i - PageOffset].gameObject.SetActive(true);
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
+                SlotBild[i - PageOffset].texture = CacheImage[i];
+
+                if (IsPremium == true)
+                {
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                }
+                else
+                {
+
+                    Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                }
+            }
+            else
+            {
+                Slot[i - PageOffset].gameObject.SetActive(true);
+                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
+                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
+                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
+                SlotBild[i - PageOffset].texture = CacheImage[i];
+            }
+        }
+    }
+
     public void SetCurrentScreen()
     {
         ClearScreen();
@@ -243,14 +302,14 @@ public class Wagon_List : MonoBehaviour
         CacheImage = new Texture2D[Trains.Count];
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png");
+                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType);
                 startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + ".png"), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType), i));
             }
         }
         startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
@@ -320,14 +379,14 @@ public class Wagon_List : MonoBehaviour
     {
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png");
+                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType);
                 startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + ".png"), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType), i));
             }
         }
     }
@@ -349,7 +408,7 @@ public class Wagon_List : MonoBehaviour
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
                 Trains.RemoveAt(SelectedID);
-                File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + ".png");
+                File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + UserSettings.ImageType);
                 SelectedID = -1;
             }
             catch (SqliteException ex)
@@ -490,9 +549,9 @@ public class Wagon_List : MonoBehaviour
                 }
                 finally
                 {
-                    if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + "png"))
+                    if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + UserSettings.ImageType))
                     {
-                        File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + "png");
+                        File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + UserSettings.ImageType);
                     }
                     SetCurrentScreen();
                     startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");
@@ -591,7 +650,7 @@ public class Wagon_List : MonoBehaviour
         dataexporter.Kupplung = Trains[SelectedID].DBKupplung;
         dataexporter.Licht = Trains[SelectedID].DBLicht;
         dataexporter.Preiser = Trains[SelectedID].DBPreiser;
-        dataexporter.Image = File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + "png"));
+        dataexporter.Image = File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + UserSettings.ImageType));
         string jsonData = JsonUtility.ToJson(dataexporter, true);
         File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Exporter/" + vHersteller[Trains[SelectedID].DBHersteller] + "-" + Trains[SelectedID].DBKatalognummer + "-" + Trains[SelectedID].DBFarbe + ".TRAIN", jsonData);
         SelectedID = -1;

@@ -11,6 +11,7 @@ public class Import_Manager : MonoBehaviour
 {
     [Header("Depents")]
     public Start_Manager startManager;
+    public Settings_Manager UserSettings;
     public Import_Manager IM;
     public Train_List TL;
     public Wagon_List WL;
@@ -91,11 +92,6 @@ public class Import_Manager : MonoBehaviour
         ClearScreen();
         GetRows();
         dataexporter = new DataExporter();
-    }
-
-    void Update()
-    {
-
     }
 
     public void GetRows()
@@ -207,7 +203,6 @@ public class Import_Manager : MonoBehaviour
 
                 SeriennummerText.text = "Seriennummer: " + Seriennummer;
                 KatalogNummerText.text = "Katalognummer: " + Katalognummer;
-                // color, Katalognummer Typ 
             }
         }
     }
@@ -308,13 +303,13 @@ public class Import_Manager : MonoBehaviour
                 {
                     if (ImageCopy.isOn == true)
                     {
-                        File.WriteAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + "png", IMG);
+                        File.WriteAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + UserSettings.ImageType, IMG);
                     }
                     else
                     {
-                        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + "png"))
+                        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + UserSettings.ImageType))
                         {
-                            File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + "png");
+                            File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.Trains.Count + 1) + "." + UserSettings.ImageType);
                         }
                     }
                     startManager.Notify("Lok Importiert", "Train Importiert", "green", "green");
@@ -360,13 +355,13 @@ public class Import_Manager : MonoBehaviour
                 {
                     if (ImageCopy.isOn == true)
                     {
-                        File.WriteAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png", IMG);
+                        File.WriteAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + UserSettings.ImageType, IMG);
                     }
                     else
                     {
-                        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png"))
+                        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + UserSettings.ImageType))
                         {
-                            File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + "png");
+                            File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.Trains.Count + 1) + "." + UserSettings.ImageType);
                         }
                     }
                     startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");

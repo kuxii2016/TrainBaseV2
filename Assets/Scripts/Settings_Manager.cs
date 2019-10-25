@@ -142,6 +142,14 @@ public class Settings_Manager : MonoBehaviour
 	
 	void Update ()
     {
+        if(ImageTyp.value == 0)
+        {
+            ImageType = "png";
+        }
+        else
+        {
+            ImageType = "jpg";
+        }
         htmlValue0 = "#" + ColorUtility.TryParseHtmlString(WartungColor.text, out newCol0);
         htmlValue1 =  "#" + ColorUtility.TryParseHtmlString(NonWartungColor.text, out newCol1);
         WartungColorPic.color = newCol0;
@@ -276,7 +284,7 @@ public class Settings_Manager : MonoBehaviour
             }
 
             //Created the Train Pics New
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
             {
                 File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType);
                 startManager.Log("Modul Settings_Manager :: Lok ID: " + i + " Bild neu Erstellt.", "Modul Settings_Manager :: Lok ID: " + i + " Image new Created.");
@@ -301,7 +309,7 @@ public class Settings_Manager : MonoBehaviour
             }
 
             //Created the Wagon Pics New
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "png"))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
             {
                 File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType);
                 startManager.Log("Modul Settings_Manager :: Wagon ID: " + i + " Bild neu Erstellt.", "Settings_Manager Train_List :: Wagon ID: " + i + " Image new Created.");
