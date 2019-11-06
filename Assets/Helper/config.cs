@@ -1,18 +1,20 @@
 ﻿public class config
 {
-    public bool AutoDedectLanguage;
+    public bool AutoDedectLanguage = true;
     public bool IsGerman;
     public bool IsEnglisch;
-    public bool WriteLog;
-    public bool WriteErrorLog;
-    public bool UpdateCheck;
-    public bool ListImages;
-    public bool TrainPrice;
-    public bool WagonPrice;
-    public bool InventoryPrice;
-    public int MessageTimer;
+    public bool WriteLog = true;
+    public bool WriteErrorLog = true;
+    public bool UpdateCheck = true;
+    public bool ListImages = false;
+    public bool TrainPrice = false;
+    public bool WagonPrice = false;
+    public bool InventoryPrice = false;
+    public int MessageTimer = 19;
     public int Maintenance = 1;
-    public int ImageTyp;
+    public int ImageTyp = 0;
     public string NonMaintenanceColor = "#323232FF";
-    public string MaintenanceColor = "#AE8F0C00";
+    public string MaintenanceColor = "#DBB100FF";
+    public bool FullScreen = false;
+    public int Resolution = 0;
 }

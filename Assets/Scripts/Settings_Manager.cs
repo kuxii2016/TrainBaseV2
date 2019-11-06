@@ -76,6 +76,13 @@ public class Settings_Manager : MonoBehaviour
     public bool Premium = false;
     private config configData;
     int Message = 1;
+    [Header("Display")]
+    public Toggle Fullscreen;
+    public Dropdown Resulotion;
+    public Text Displaylabel;
+    public Text resolutionText;
+    public Text ToggleText;
+    public Resolution[] resolutions;
 
     void Start ()
     {
@@ -89,6 +96,9 @@ public class Settings_Manager : MonoBehaviour
             RefreshWagonImages.GetComponentInChildren<Text>().text = "Wagonbilder neu Einlesen";
             CheckVersion.GetComponentInChildren<Text>().text = "Auf neue Version Prüfen";
             SaveSettings.GetComponentInChildren<Text>().text = "Einstellungen Speichern";
+            Displaylabel.text = "Display Einstellungen";
+            resolutionText.text = "Auflösung:";
+            ToggleText.text = "Vollbild";
 
             WriteError.GetComponentInChildren<Text>().text = "Erstelle Fehler in einer Log Datei";
             WriteLog.GetComponentInChildren<Text>().text = "Erstelle System Log Files";
@@ -116,6 +126,9 @@ public class Settings_Manager : MonoBehaviour
             RefreshWagonImages.GetComponentInChildren<Text>().text = "Read Wagon Images new";
             CheckVersion.GetComponentInChildren<Text>().text = "Check for ah new Version";
             SaveSettings.GetComponentInChildren<Text>().text = "Save Settings";
+            Displaylabel.text = "Display Settings";
+            resolutionText.text = "Resolution:";
+            ToggleText.text = "Fullscreen";
 
             WriteError.GetComponentInChildren<Text>().text = "Create errors in a Log File";
             WriteLog.GetComponentInChildren<Text>().text = "Create System Log File";
@@ -135,9 +148,9 @@ public class Settings_Manager : MonoBehaviour
         }
         startManager.Log("Lade Settings_Manager -> Nachricht ist Normal.", "Load Settings_Manager -> message is normal");
         CalculateImageSize();
-        SetOutput();
         ReadSettings();
         LoadSettings();
+        SetOutput();
     }
 	
 	void Update ()
@@ -156,32 +169,57 @@ public class Settings_Manager : MonoBehaviour
         NonWartungColorPic.color = newCol1;
 }
 
+    private void OnEnable()
+    {
+        Resulotion.onValueChanged.AddListener(delegate { ResulotiononValueChanged(); });
+        resolutions = Screen.resolutions;
+        foreach (Resolution resolution in resolutions)
+        {
+            Resulotion.options.Add(new Dropdown.OptionData(resolution.ToString()));
+        }
+    }
+
+    public void ResulotiononValueChanged()
+    {
+        Screen.SetResolution(resolutions[Resulotion.value].width, resolutions[Resulotion.value].height, Screen.fullScreen);
+        configData.Resolution = Resulotion.value;
+    }
+
     public void LoadSettings()
     {
-        configData = JsonUtility.FromJson<config>(File.ReadAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"));
-        DedectLang.isOn = configData.AutoDedectLanguage;
-        if (configData.IsGerman == true)
+        if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"))
         {
-            Lang.value = 0;
+            configData = JsonUtility.FromJson<config>(File.ReadAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"));
+            DedectLang.isOn = configData.AutoDedectLanguage;
+            if (configData.IsGerman == true)
+            {
+                Lang.value = 0;
+            }
+            else
+            {
+                Lang.value = 1;
+            }
+
+            WriteError.isOn = configData.WriteErrorLog;
+            WriteLog.isOn = configData.WriteLog;
+            AutoUpdateCheck.isOn = configData.UpdateCheck;
+            ListenBilder.isOn = configData.ListImages;
+            PreisLoks.isOn = configData.TrainPrice;
+            PreisWagons.isOn = configData.WagonPrice;
+            PreisInventar.isOn = configData.InventoryPrice;
+            ImageTyp.value = configData.ImageTyp;
+            Wartungs.value = configData.Maintenance;
+            Maintenance = (configData.Maintenance) + 1;
+            MessageTimer.text = configData.MessageTimer.ToString();
+            WartungColor.text = configData.MaintenanceColor;
+            NonWartungColor.text = configData.NonMaintenanceColor;
+            Fullscreen.isOn = configData.FullScreen;
+            Resulotion.RefreshShownValue();
         }
         else
         {
-            Lang.value = 1;
+            SaveSettingsBTN();
         }
-
-        WriteError.isOn = configData.WriteErrorLog;
-        WriteLog.isOn = configData.WriteLog;
-        AutoUpdateCheck.isOn = configData.UpdateCheck;
-        ListenBilder.isOn = configData.ListImages;
-        PreisLoks.isOn = configData.TrainPrice;
-        PreisWagons.isOn = configData.WagonPrice;
-        PreisInventar.isOn = configData.InventoryPrice;
-        ImageTyp.value = configData.ImageTyp;
-        Wartungs.value = configData.Maintenance;
-        Maintenance = (configData.Maintenance) +1;
-        MessageTimer.text = configData.MessageTimer.ToString();
-        WartungColor.text = configData.MaintenanceColor;
-        NonWartungColor.text = configData.NonMaintenanceColor;
     }
 
     public void ReadSettings()
@@ -223,8 +261,8 @@ public class Settings_Manager : MonoBehaviour
         var fileInfo = new System.IO.FileInfo(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
         DateTime date1 = new DateTime((DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Year, (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Month, (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Day);
         DateTime date2 = DateTime.Today;
-        int daysDiff =  (date1 - date2).Days;
-        if(daysDiff <= 0)
+        int daysDiff = ((TimeSpan)(date1 - date2)).Days;
+        if (daysDiff <= 0)
         {
             ProgrammType.text = "Version: Public/Free";
             Premium = false;
@@ -243,8 +281,16 @@ public class Settings_Manager : MonoBehaviour
             DBProtokoll.text = "";
             DBPath.text = "Pfad: " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/" + "Database");
             KeyInfos.text = "Donation Key Info";
-            KeyNumber.text = "Key: " + startManager.DonateKey;
-            KeyDate.text = "Key Ablaufdatum: " + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Day +"."+ (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Year + " :  " + daysDiff + " Tage";
+            if (daysDiff <= 0)
+            {
+                KeyDate.text = "Key Ablaufdatum:  ";
+                KeyNumber.text = "Key: ";
+            }
+            else
+            {
+                KeyDate.text = "Key Ablaufdatum: " + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Day + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Year + " :  " + daysDiff + " Tage";
+                KeyNumber.text = "Key: " + startManager.DonateKey;
+            }
             UUID.text = "Serialnummer: " + startManager.UserUUID.ToString();
             ImageFolder.text = "Bilder Ordner Größe: " + ((WaggonPicSize + TrainPicSize) / 1000 / 1024).ToString() + " Mb";
             IPAdress.text = "IP Adresse: " + Network.player.ipAddress.ToString();
@@ -258,8 +304,16 @@ public class Settings_Manager : MonoBehaviour
             DBProtokoll.text = "";
             DBPath.text = "Path: " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/" + "Database");
             KeyInfos.text = "Donation Key Info";
-            KeyNumber.text = "Key: " + startManager.DonateKey;
-            KeyDate.text = "Key Expiry Date: " + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Day + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Year + " :  " + daysDiff + " Days";
+            if (daysDiff <= 0)
+            {
+                KeyDate.text = "Key Expiry Date:  ";
+                KeyNumber.text = "Key: ";
+            }
+            else
+            {
+                KeyDate.text = "Key Expiry Date: " + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Day + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(startManager.DonateDate))).Year + " :  " + daysDiff + " Days";
+                KeyNumber.text = "Key: " + startManager.DonateKey;
+            }
             UUID.text = "Serialnumber: " + startManager.UserUUID.ToString();
             ImageFolder.text = "Pictures Folder Size: " + ((WaggonPicSize + TrainPicSize) / 1000 / 1024).ToString() + " Mb";
             IPAdress.text = "IP Adress: " + Network.player.ipAddress.ToString();
@@ -411,7 +465,15 @@ public class Settings_Manager : MonoBehaviour
 
             configData.ImageTyp = ImageTyp.value;
             configData.Maintenance = Wartungs.value;
-
+            configData.Resolution = Resulotion.value;
+            if (Fullscreen.isOn == true)
+            {
+                configData.FullScreen = true;
+            }
+            else
+            {
+                configData.FullScreen = false;
+            }
             configData.MessageTimer = Int32.Parse((Message + Int32.Parse(MessageTimer.text)).ToString());
 
             configData.NonMaintenanceColor = NonWartungColor.text;

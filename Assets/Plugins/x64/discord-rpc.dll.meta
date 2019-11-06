@@ -23,7 +23,6 @@ PluginImporter:
         Exclude OSXUniversal: 0
         Exclude Win: 1
         Exclude Win64: 0
-        Exclude WindowsStoreApps: 0
   - first:
       '': OSXIntel
     second:
@@ -66,7 +65,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: AnyCPU
   - first:
       Standalone: Linux
     second:
@@ -78,7 +77,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: x86_64
   - first:
       Standalone: LinuxUniversal
     second:
@@ -90,7 +89,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: x86
+        CPU: x86_64
   - first:
       Standalone: Win
     second:
@@ -102,17 +101,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: None
-  - first:
-      Windows Store Apps: WindowsStoreApps
-    second:
-      enabled: 1
-      settings:
         CPU: AnyCPU
-        DontProcess: False
-        PlaceholderPath: 
-        SDK: AnySDK
-        ScriptingBackend: AnyScriptingBackend
   userData: 
   assetBundleName: 
   assetBundleVariant: 

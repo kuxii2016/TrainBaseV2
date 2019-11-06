@@ -49,11 +49,11 @@ public class Start_Manager : MonoBehaviour
     {
         configData = new config();
         LogPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/";
+        GetLanguage();
         CheckKey();
         CheckFolder();
         StartCoroutine(GetKey());
         LogRotate();
-        GetLanguage();
         SetScreen();
         Log("Lade Start_Manager -> Nachricht ist Normal.", "Load Start_Manager -> message is normal");
         Notify("TrainBaseV2 gestartet und Bereit ", "TrainBaseV2 Started and ready", "green", "green");
@@ -69,13 +69,7 @@ public class Start_Manager : MonoBehaviour
                 IsEnglisch = false;
                 AutoDedectLanguage = true;
             }
-            if (Application.systemLanguage == SystemLanguage.English)
-            {
-                IsEnglisch = true;
-                IsGerman = false;
-                AutoDedectLanguage = true;
-            }
-            else
+            if (Application.systemLanguage != SystemLanguage.German)
             {
                 IsEnglisch = true;
                 IsGerman = false;

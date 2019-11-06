@@ -77,6 +77,7 @@ public class Wagon_List : MonoBehaviour
     public Text CTrains;
     public Text WTrains;
     public Text NTrains;
+    public Text[] TrainID;
     [Header("Edit-Panel-Inputs")]
     public InputField Farbe;
     public Dropdown WagonTyp;
@@ -175,6 +176,7 @@ public class Wagon_List : MonoBehaviour
                 Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
                 Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
+                TrainID[i - PageOffset].text = "ID: " + (i + 1).ToString();
 
                 if (IsPremium == true)
                 {
@@ -231,6 +233,7 @@ public class Wagon_List : MonoBehaviour
                 Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
                 Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
+                TrainID[i - PageOffset].text = "ID: " + (i + 1).ToString();
 
                 if (IsPremium == true)
                 {
