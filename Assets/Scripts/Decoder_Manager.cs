@@ -54,16 +54,22 @@ public class Decoder_Manager : MonoBehaviour
     public Text[] Adresse;
     public Text[] Date;
     public Text[] ID;
+    public InputField[] InputFields;
+    public Text[] PlaceHolder;
     public Toggle[] SelectedToggle;
     public Text PageID;
+    public GameObject Edit_M83;
+    public GameObject Edit_M84;
+    public GameObject Edit_S88;
     [Header("Decoder List Items")]
     public List<DecoderData> dbDecoder;
     public int PageOffset = 0;
     public int PageOffset2 = 12;
     public int CurrentPage = 1;
     public int SelectedID = -1;
-
-
+    public string DecoderType = "Null";
+    public bool Edit = false;
+    
     private void FixedUpdate()
     {
         for (int i = PageOffset; i < dbDecoder.Count && i < PageOffset2; i++)
@@ -75,7 +81,7 @@ public class Decoder_Manager : MonoBehaviour
             Date[i - PageOffset].text = dbDecoder[i].dbDatum;
             ID[i - PageOffset].text = "ID: " + i;
 
-            if(dbDecoder[i].dbType == 0)
+            if (dbDecoder[i].dbType == 0)
             {
                 S88[i - PageOffset].gameObject.SetActive(true);
             }
@@ -92,14 +98,15 @@ public class Decoder_Manager : MonoBehaviour
         }
     }
 
-    void Start ()
+    void Start()
     {
         startManager.Log("Lade Decoder_Liste -> Nachricht ist Normal.", "Load Decoder_List -> message is normal");
         SetStartScreen();
         ReadAllItems();
+        IsS88();
     }
-	
-	void Update ()
+
+    void Update()
     {
         for (int i = 0; i < SelectedToggle.Length; i++)
         {
@@ -108,7 +115,7 @@ public class Decoder_Manager : MonoBehaviour
                 SelectedID = (i + PageOffset);
             }
         }
-	}
+    }
 
     public void Delete()
     {
@@ -137,9 +144,16 @@ public class Decoder_Manager : MonoBehaviour
             finally
             {
                 startManager.Notify("Decoder wurde Gelöscht id:" + (SelectedID + 1), "Decoder Removed id:" + (SelectedID + 1), "green", "green");
-                startManager.Log("Modul Decoder_Liste :: Decoder wurde Gelöscht id:" + SelectedID, "Modul Decoder_Liste :: Decoder Removed id:" + SelectedID);
             }
+            startManager.Log("Modul Decoder_Liste :: Decoder wurde Gelöscht id:" + SelectedID, "Modul Decoder_Liste :: Decoder Removed id:" + SelectedID);
         }
+        SelectedID = -1;
+        SelectedToggle[0].isOn = false;
+        SelectedToggle[1].isOn = false;
+        SelectedToggle[2].isOn = false;
+        SelectedToggle[3].isOn = false;
+        SelectedToggle[4].isOn = false;
+        SelectedToggle[5].isOn = false;
     }
 
     public void ReadAllItems()
@@ -201,6 +215,8 @@ public class Decoder_Manager : MonoBehaviour
 
         dbConnection.Close();
         dbConnection = null;
+
+        startManager.Log("Modul Decoder_Liste :: "+ (dbDecoder.Count) +" Gespeicherte Decoder Gefunden.", "Modul Decoder_List :: " + (dbDecoder.Count) + " Saved Decoder Found.");
     }
 
     public void PageVorward()
@@ -243,6 +259,428 @@ public class Decoder_Manager : MonoBehaviour
             m83[i].gameObject.SetActive(false);
             m84[i].gameObject.SetActive(false);
             S88[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void IsS88()
+    {
+        DecoderType = "S88";
+        InputFields[13].gameObject.SetActive(true);
+        InputFields[14].gameObject.SetActive(true);
+        InputFields[15].gameObject.SetActive(true);
+        InputFields[16].gameObject.SetActive(true);
+        InputFields[17].gameObject.SetActive(true);
+        PlaceHolder[0].text = "Port : 0 -> Masse";
+        PlaceHolder[1].text = "Port : 1";
+        PlaceHolder[2].text = "Port : 2";
+        PlaceHolder[3].text = "Port : 3";
+        PlaceHolder[4].text = "Port : 4";
+        PlaceHolder[5].text = "Port : 5";
+        PlaceHolder[6].text = "Port : 6";
+        PlaceHolder[7].text = "Port : 7";
+        PlaceHolder[8].text = "Port : 8";
+        PlaceHolder[9].text = "Port : 9";
+        PlaceHolder[10].text = "Port : 10";
+        PlaceHolder[11].text = "Port : 11";
+        PlaceHolder[12].text = "Port : 12";
+        PlaceHolder[13].text = "Port : 13";
+        PlaceHolder[14].text = "Port : 14";
+        PlaceHolder[15].text = "Port : 15";
+        PlaceHolder[16].text = "Port : 16";
+
+    }
+
+    public void IsM83()
+    {
+        DecoderType = "M83";
+        InputFields[13].gameObject.SetActive(false);
+        InputFields[14].gameObject.SetActive(false);
+        InputFields[15].gameObject.SetActive(false);
+        InputFields[16].gameObject.SetActive(false);
+        InputFields[17].gameObject.SetActive(false);
+        PlaceHolder[0].text = "Port : 1";
+        PlaceHolder[1].text = "Port : 1";
+        PlaceHolder[2].text = "Port : 1";
+        PlaceHolder[3].text = "Port : 2";
+        PlaceHolder[4].text = "Port : 2";
+        PlaceHolder[5].text = "Port : 2";
+        PlaceHolder[6].text = "Port : 3";
+        PlaceHolder[7].text = "Port : 3";
+        PlaceHolder[8].text = "Port : 3";
+        PlaceHolder[9].text = "Port : 4";
+        PlaceHolder[10].text = "Port : 4";
+        PlaceHolder[11].text = "Port : 4";
+    }
+
+    public void IsM84()
+    {
+        DecoderType = "M84";
+        InputFields[13].gameObject.SetActive(false);
+        InputFields[14].gameObject.SetActive(false);
+        InputFields[15].gameObject.SetActive(false);
+        InputFields[16].gameObject.SetActive(false);
+        InputFields[17].gameObject.SetActive(false);
+        PlaceHolder[0].text = "Port : 1";
+        PlaceHolder[1].text = "Port : 1";
+        PlaceHolder[2].text = "Port : 1";
+        PlaceHolder[3].text = "Port : 2";
+        PlaceHolder[4].text = "Port : 2";
+        PlaceHolder[5].text = "Port : 2";
+        PlaceHolder[6].text = "Port : 3";
+        PlaceHolder[7].text = "Port : 3";
+        PlaceHolder[8].text = "Port : 3";
+        PlaceHolder[9].text = "Port : 4";
+        PlaceHolder[10].text = "Port : 4";
+        PlaceHolder[11].text = "Port : 4";
+    }
+
+    public void SaveDecoder()
+    {
+        if (Edit == false)
+        {
+            if (DecoderType == "S88")
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into DECODER (BESCHREIBUNG , TYPE , OUT1 , OUT2 , OUT3 , OUT4 , OUT5 ,OUT6 , OUT7 ,OUT8 , OUT9 , OUT10 , OUT11 , OUT12 , OUT13 , OUT14 ,OUT15 , OUT16 , IDENTIFYER ) VALUES" + " (@BESCHREIBUNG , @TYPE , @OUT1 , @OUT2 , @OUT3 , @OUT4 , @OUT5 ,@OUT6 , @OUT7 ,@OUT8 , @OUT9 , @OUT10 , @OUT11 , @OUT12 , @OUT13 , @OUT14 ,@OUT15 , @OUT16 , @IDENTIFYER)";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 0);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", InputFields[13].text);
+                    command.Parameters.AddWithValue("@OUT14", InputFields[14].text);
+                    command.Parameters.AddWithValue("@OUT15", InputFields[15].text);
+                    command.Parameters.AddWithValue("@OUT16", InputFields[16].text);
+                    command.Parameters.AddWithValue("@OUT16", InputFields[17].text);
+                    command.Parameters.AddWithValue("@IDENTIFYER", System.Guid.NewGuid().ToString());
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::S88(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+
+            if (DecoderType == "M83")
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into DECODER (BESCHREIBUNG , TYPE , OUT1 , OUT2 , OUT3 , OUT4 , OUT5 ,OUT6 , OUT7 ,OUT8 , OUT9 , OUT10 , OUT11 , OUT12 , OUT13 , OUT14 ,OUT15 , OUT16 , IDENTIFYER ) VALUES" + " (@BESCHREIBUNG , @TYPE , @OUT1 , @OUT2 , @OUT3 , @OUT4 , @OUT5 ,@OUT6 , @OUT7 ,@OUT8 , @OUT9 , @OUT10 , @OUT11 , @OUT12 , @OUT13 , @OUT14 ,@OUT15 , @OUT16 , @IDENTIFYER)";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 1);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", "null");
+                    command.Parameters.AddWithValue("@OUT14", "null");
+                    command.Parameters.AddWithValue("@OUT15", "null");
+                    command.Parameters.AddWithValue("@OUT16", "null");
+                    command.Parameters.AddWithValue("@IDENTIFYER", System.Guid.NewGuid().ToString());
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::M83(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+
+            if (DecoderType == "M84")
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into DECODER (BESCHREIBUNG , TYPE , OUT1 , OUT2 , OUT3 , OUT4 , OUT5 ,OUT6 , OUT7 ,OUT8 , OUT9 , OUT10 , OUT11 , OUT12 , OUT13 , OUT14 ,OUT15 , OUT16 , IDENTIFYER  ) VALUES" + " (@BESCHREIBUNG , @TYPE , @OUT1 , @OUT2 , @OUT3 , @OUT4 , @OUT5 ,@OUT6 , @OUT7 ,@OUT8 , @OUT9 , @OUT10 , @OUT11 , @OUT12 , @OUT13 , @OUT14 ,@OUT15 , @OUT16 , @IDENTIFYER )";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 2);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", "null");
+                    command.Parameters.AddWithValue("@OUT14", "null");
+                    command.Parameters.AddWithValue("@OUT15", "null");
+                    command.Parameters.AddWithValue("@OUT16", "null");
+                    command.Parameters.AddWithValue("@IDENTIFYER", System.Guid.NewGuid().ToString());
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::M84(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+        }
+        else
+        {
+            Edit = false;
+            if (dbDecoder[SelectedID].dbType == 0)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE DECODER SET BESCHREIBUNG = @BESCHREIBUNG, OUT1 = @OUT1, OUT2 = @OUT2 , OUT3 = @OUT3 , OUT4 = @OUT4 , OUT5 = @OUT5 ,OUT6 = @OUT6 , OUT7 = @OUT7 ,OUT8 = @OUT8 , OUT9 = @OUT9 , OUT10 = @OUT10 , OUT11 = @OUT11 , OUT12 = @OUT12 , OUT13 = @OUT13 , OUT14 = @OUT14 ,OUT15 = @OUT15 , OUT16 = @OUT16  WHERE IDENTIFYER='" + dbDecoder[SelectedID].dbIdentifyer + "' AND DATUM='" + dbDecoder[SelectedID].dbDatum + "'  ";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 0);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", InputFields[13].text);
+                    command.Parameters.AddWithValue("@OUT14", InputFields[14].text);
+                    command.Parameters.AddWithValue("@OUT15", InputFields[15].text);
+                    command.Parameters.AddWithValue("@OUT16", InputFields[16].text);
+                    command.Parameters.AddWithValue("@OUT16", InputFields[17].text);
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; S88(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+
+            if (dbDecoder[SelectedID].dbType == 1)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE DECODER SET BESCHREIBUNG = @BESCHREIBUNG, OUT1 = @OUT1, OUT2 = @OUT2 , OUT3 = @OUT3 , OUT4 = @OUT4 , OUT5 = @OUT5 ,OUT6 = @OUT6 , OUT7 = @OUT7 ,OUT8 = @OUT8 , OUT9 = @OUT9 , OUT10 = @OUT10 , OUT11 = @OUT11 , OUT12 = @OUT12 , OUT13 = @OUT13 , OUT14 = @OUT14 ,OUT15 = @OUT15 , OUT16 = @OUT16  WHERE IDENTIFYER='" + dbDecoder[SelectedID].dbIdentifyer + "' AND DATUM='" + dbDecoder[SelectedID].dbDatum + "'  ";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 1);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", "null");
+                    command.Parameters.AddWithValue("@OUT14", "null");
+                    command.Parameters.AddWithValue("@OUT15", "null");
+                    command.Parameters.AddWithValue("@OUT16", "null");
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; M83(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+
+            if (dbDecoder[SelectedID].dbType == 2)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE DECODER SET BESCHREIBUNG = @BESCHREIBUNG, OUT1 = @OUT1, OUT2 = @OUT2 , OUT3 = @OUT3 , OUT4 = @OUT4 , OUT5 = @OUT5 ,OUT6 = @OUT6 , OUT7 = @OUT7 ,OUT8 = @OUT8 , OUT9 = @OUT9 , OUT10 = @OUT10 , OUT11 = @OUT11 , OUT12 = @OUT12 , OUT13 = @OUT13 , OUT14 = @OUT14 ,OUT15 = @OUT15 , OUT16 = @OUT16  WHERE IDENTIFYER='" + dbDecoder[SelectedID].dbIdentifyer + "' AND DATUM='" + dbDecoder[SelectedID].dbDatum + "'  ";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", InputFields[0].text);
+                    command.Parameters.AddWithValue("@TYPE", 2);
+                    command.Parameters.AddWithValue("@OUT1", InputFields[1].text);
+                    command.Parameters.AddWithValue("@OUT2", InputFields[2].text);
+                    command.Parameters.AddWithValue("@OUT3", InputFields[3].text);
+                    command.Parameters.AddWithValue("@OUT4", InputFields[4].text);
+                    command.Parameters.AddWithValue("@OUT5", InputFields[5].text);
+                    command.Parameters.AddWithValue("@OUT6", InputFields[6].text);
+                    command.Parameters.AddWithValue("@OUT7", InputFields[7].text);
+                    command.Parameters.AddWithValue("@OUT8", InputFields[8].text);
+                    command.Parameters.AddWithValue("@OUT9", InputFields[9].text);
+                    command.Parameters.AddWithValue("@OUT10", InputFields[10].text);
+                    command.Parameters.AddWithValue("@OUT11", InputFields[11].text);
+                    command.Parameters.AddWithValue("@OUT12", InputFields[12].text);
+                    command.Parameters.AddWithValue("@OUT13", "null");
+                    command.Parameters.AddWithValue("@OUT14", "null");
+                    command.Parameters.AddWithValue("@OUT15", "null");
+                    command.Parameters.AddWithValue("@OUT16", "null");
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; M84(); Error: " + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Decoder_Liste :: Decoder Gespeichert", "Modul Decoder_List :: Decoder Saved");
+                    }
+                }
+            }
+        }
+        SelectedID = -1;
+        SelectedToggle[0].isOn = false;
+        SelectedToggle[1].isOn = false;
+        SelectedToggle[2].isOn = false;
+        SelectedToggle[3].isOn = false;
+        SelectedToggle[4].isOn = false;
+        SelectedToggle[5].isOn = false;
+    }
+
+    public void GetSelcetedData()
+    {
+        Edit = true;
+        if (dbDecoder[SelectedID].dbType == 0) //S88 Decoder 
+        {
+            Edit_S88.gameObject.SetActive(true);
+            Edit_M84.gameObject.SetActive(false);
+            Edit_M83.gameObject.SetActive(false);
+            IsS88();
+            InputFields[2].text = dbDecoder[SelectedID].db1;
+            InputFields[3].text = dbDecoder[SelectedID].db2;
+            InputFields[4].text = dbDecoder[SelectedID].db3;
+            InputFields[5].text = dbDecoder[SelectedID].db4;
+            InputFields[6].text = dbDecoder[SelectedID].db5;
+            InputFields[7].text = dbDecoder[SelectedID].db6;
+            InputFields[8].text = dbDecoder[SelectedID].db7;
+            InputFields[9].text = dbDecoder[SelectedID].db8;
+            InputFields[10].text = dbDecoder[SelectedID].db9;
+            InputFields[11].text = dbDecoder[SelectedID].db10;
+            InputFields[12].text = dbDecoder[SelectedID].db11;
+            InputFields[13].text = dbDecoder[SelectedID].db12;
+            InputFields[14].text = dbDecoder[SelectedID].db13;
+            InputFields[15].text = dbDecoder[SelectedID].db14;
+            InputFields[16].text = dbDecoder[SelectedID].db15;
+            InputFields[17].text = dbDecoder[SelectedID].db16;
+            InputFields[0].text = dbDecoder[SelectedID].dbBeschreibung;
+        }
+
+        if (dbDecoder[SelectedID].dbType == 1) //M83 Decoder
+        {
+            IsM83();
+            Edit_M83.gameObject.SetActive(true);
+            Edit_M84.gameObject.SetActive(false);
+            Edit_S88.gameObject.SetActive(false);
+            InputFields[1].text = dbDecoder[SelectedID].db1;
+            InputFields[2].text = dbDecoder[SelectedID].db2;
+            InputFields[3].text = dbDecoder[SelectedID].db3;
+            InputFields[4].text = dbDecoder[SelectedID].db4;
+            InputFields[5].text = dbDecoder[SelectedID].db5;
+            InputFields[6].text = dbDecoder[SelectedID].db6;
+            InputFields[7].text = dbDecoder[SelectedID].db7;
+            InputFields[8].text = dbDecoder[SelectedID].db8;
+            InputFields[9].text = dbDecoder[SelectedID].db9;
+            InputFields[10].text = dbDecoder[SelectedID].db10;
+            InputFields[11].text = dbDecoder[SelectedID].db11;
+            InputFields[12].text = dbDecoder[SelectedID].db12;
+            InputFields[0].text = dbDecoder[SelectedID].dbBeschreibung;
+        }
+
+        if (dbDecoder[SelectedID].dbType == 2) //M84 Decoder
+        {
+            IsM84();
+            Edit_M84.gameObject.SetActive(true);
+            Edit_M83.gameObject.SetActive(false);
+            Edit_S88.gameObject.SetActive(false);
+            InputFields[1].text = dbDecoder[SelectedID].db1;
+            InputFields[2].text = dbDecoder[SelectedID].db2;
+            InputFields[3].text = dbDecoder[SelectedID].db3;
+            InputFields[4].text = dbDecoder[SelectedID].db4;
+            InputFields[5].text = dbDecoder[SelectedID].db5;
+            InputFields[6].text = dbDecoder[SelectedID].db6;
+            InputFields[7].text = dbDecoder[SelectedID].db7;
+            InputFields[8].text = dbDecoder[SelectedID].db8;
+            InputFields[9].text = dbDecoder[SelectedID].db9;
+            InputFields[10].text = dbDecoder[SelectedID].db10;
+            InputFields[11].text = dbDecoder[SelectedID].db11;
+            InputFields[12].text = dbDecoder[SelectedID].db12;
+            InputFields[0].text = dbDecoder[SelectedID].dbBeschreibung;
         }
     }
 }

@@ -319,6 +319,7 @@ public class Settings_Manager : MonoBehaviour
             IPAdress.text = "IP Adress: " + Network.player.ipAddress.ToString();
             Sonstiges.text = "Other";
         }
+        startManager.Log("Modul Settings_Manager :: Einstellungen Geladen set: ERROR:"+WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ", "Modul Settings_Manager :: Settings Loadet set: ERROR:" + WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ");
     }
 
     public void ReCreateTrainPic()

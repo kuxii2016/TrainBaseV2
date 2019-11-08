@@ -142,6 +142,7 @@ public class Train_List : MonoBehaviour
     public int CompleteTrains = 0;
     public bool IsEditMode;
     public string uniqueID;
+    public int TotalSumme = 0;
     public GameObject Win;
     public InputField SendOK;
 
@@ -535,6 +536,7 @@ public class Train_List : MonoBehaviour
                     trainData.DbCV5 = reader.GetInt32(29);
                     trainData.DBIdentifyer = reader.GetString(31);
                     trainData.DBLagerort = reader.GetInt32(32);
+                    TotalSumme = TotalSumme + reader.GetChar(8);
                     Trains.Add(trainData);
                 }
             }
@@ -801,6 +803,19 @@ public class Train_List : MonoBehaviour
             }
             DeleteSchutz();
         }
+        SelectedID = -1;
+        DeleteEditToggle[0].isOn = false;
+        DeleteEditToggle[1].isOn = false;
+        DeleteEditToggle[2].isOn = false;
+        DeleteEditToggle[3].isOn = false;
+        DeleteEditToggle[4].isOn = false;
+        DeleteEditToggle[5].isOn = false;
+        DeleteEditToggle[6].isOn = false;
+        DeleteEditToggle[7].isOn = false;
+        DeleteEditToggle[8].isOn = false;
+        DeleteEditToggle[9].isOn = false;
+        DeleteEditToggle[10].isOn = false;
+        DeleteEditToggle[11].isOn = false;
     }
 
     public void DeleteSchutz()
@@ -914,8 +929,20 @@ public class Train_List : MonoBehaviour
                 dbConnection.Close();
                 dbConnection = null;
             }
-            SelectedID = -1;
             IsEditMode = false;
+            SelectedID = -1;
+            DeleteEditToggle[0].isOn = false;
+            DeleteEditToggle[1].isOn = false;
+            DeleteEditToggle[2].isOn = false;
+            DeleteEditToggle[3].isOn = false;
+            DeleteEditToggle[4].isOn = false;
+            DeleteEditToggle[5].isOn = false;
+            DeleteEditToggle[6].isOn = false;
+            DeleteEditToggle[7].isOn = false;
+            DeleteEditToggle[8].isOn = false;
+            DeleteEditToggle[9].isOn = false;
+            DeleteEditToggle[10].isOn = false;
+            DeleteEditToggle[11].isOn = false;
         }
         else
         {
@@ -1025,10 +1052,22 @@ public class Train_List : MonoBehaviour
                 dbConnection.Close();
                 dbConnection = null;
             }
-            SelectedID = -1;
             ReadTrains();
         }
         SetCurrentScreen();
+        SelectedID = -1;
+        DeleteEditToggle[0].isOn = false;
+        DeleteEditToggle[1].isOn = false;
+        DeleteEditToggle[2].isOn = false;
+        DeleteEditToggle[3].isOn = false;
+        DeleteEditToggle[4].isOn = false;
+        DeleteEditToggle[5].isOn = false;
+        DeleteEditToggle[6].isOn = false;
+        DeleteEditToggle[7].isOn = false;
+        DeleteEditToggle[8].isOn = false;
+        DeleteEditToggle[9].isOn = false;
+        DeleteEditToggle[10].isOn = false;
+        DeleteEditToggle[11].isOn = false;
     }
 
     public void GetLokData()
@@ -1136,7 +1175,7 @@ public class Train_List : MonoBehaviour
 
     IEnumerator SendSelected()
     {
-        string FinshURL = startManager.WebExporterUrl + "/insert.php?uniqueID=" + uniqueID + "&data=ISTRAIN," + Trains[SelectedID].DbBaureihe.ToString() + "," + Trains[SelectedID].DbFarbe.ToString() + "," + Trains[SelectedID].DbLokTyp.ToString() + "," + Trains[SelectedID].DbHersteller.ToString() + "," + Trains[SelectedID].DbKatalognummer.ToString() + "," + Trains[SelectedID].DbSeriennummer.ToString() + "," + Trains[SelectedID].DbKaufTag.ToString() + "," + Trains[SelectedID].DbKaufMonat.ToString() + "," + Trains[SelectedID].DbKaufJahr.ToString() + "," + Trains[SelectedID].DbPreis.ToString() + "," + Trains[SelectedID].DbWartungTag.ToString() + "," + Trains[SelectedID].DbWartungMonat.ToString() + "," + Trains[SelectedID].DbWartungJahr.ToString() + "," + Trains[SelectedID].DbAdresse.ToString() + "," + Trains[SelectedID].DbProtokoll.ToString() + "," + Trains[SelectedID].DbFahrstufen.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbDecHersteller.ToString() + "," + Trains[SelectedID].DbAngelegt.ToString() + "," + Trains[SelectedID].DbRauch.ToString() + "," + Trains[SelectedID].DbSound.ToString() + "," + Trains[SelectedID].DbROTWEISS.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbPandos.ToString() + "," + Trains[SelectedID].DbTelex.ToString() + "," + Trains[SelectedID].DbElekKupplung.ToString() + "," + Trains[SelectedID].DbSpurweite.ToString() + "," + Trains[SelectedID].DbCV2.ToString() + "," + Trains[SelectedID].DbCV3.ToString() + "," + Trains[SelectedID].DbCV4.ToString() + "," + Trains[SelectedID].DbCV5.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString();
+        string FinshURL = startManager.WebExporterUrl + "exporter" + "/insert.php?uniqueID=" + uniqueID + "&data=ISTRAIN," + Trains[SelectedID].DbBaureihe.ToString() + "," + Trains[SelectedID].DbFarbe.ToString() + "," + Trains[SelectedID].DbLokTyp.ToString() + "," + Trains[SelectedID].DbHersteller.ToString() + "," + Trains[SelectedID].DbKatalognummer.ToString() + "," + Trains[SelectedID].DbSeriennummer.ToString() + "," + Trains[SelectedID].DbKaufTag.ToString() + "," + Trains[SelectedID].DbKaufMonat.ToString() + "," + Trains[SelectedID].DbKaufJahr.ToString() + "," + Trains[SelectedID].DbPreis.ToString() + "," + Trains[SelectedID].DbWartungTag.ToString() + "," + Trains[SelectedID].DbWartungMonat.ToString() + "," + Trains[SelectedID].DbWartungJahr.ToString() + "," + Trains[SelectedID].DbAdresse.ToString() + "," + Trains[SelectedID].DbProtokoll.ToString() + "," + Trains[SelectedID].DbFahrstufen.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbDecHersteller.ToString() + "," + Trains[SelectedID].DbAngelegt.ToString() + "," + Trains[SelectedID].DbRauch.ToString() + "," + Trains[SelectedID].DbSound.ToString() + "," + Trains[SelectedID].DbROTWEISS.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbPandos.ToString() + "," + Trains[SelectedID].DbTelex.ToString() + "," + Trains[SelectedID].DbElekKupplung.ToString() + "," + Trains[SelectedID].DbSpurweite.ToString() + "," + Trains[SelectedID].DbCV2.ToString() + "," + Trains[SelectedID].DbCV3.ToString() + "," + Trains[SelectedID].DbCV4.ToString() + "," + Trains[SelectedID].DbCV5.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString();
         Debug.Log(FinshURL);
         WWW insert = new WWW(FinshURL);
 

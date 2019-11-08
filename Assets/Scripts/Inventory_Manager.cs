@@ -142,6 +142,7 @@ public class Inventory_Manager : MonoBehaviour
         dbConnection.Close();
         dbConnection = null;
         startManager.Log("Modul Inventory_Manager :: Alle Items Gelesen.", "Modul Inventory_Manager :: All Items are Read");
+        startManager.Log("Modul Inventory_Manager :: " +Item.Count + " Items Gefunden", "Modul Inventory_Manager :: " + Item.Count + " Items Found");
     }
 
     public void PrintScreen()
@@ -258,6 +259,16 @@ public class Inventory_Manager : MonoBehaviour
             }
         }
         SelectedID = -1;
+        Selected[0].isOn = false;
+        Selected[1].isOn = false;
+        Selected[2].isOn = false;
+        Selected[3].isOn = false;
+        Selected[4].isOn = false;
+        Selected[5].isOn = false;
+        Selected[6].isOn = false;
+        Selected[7].isOn = false;
+        Selected[8].isOn = false;
+        Selected[9].isOn = false;
     }
 
     public void SaveItem()
@@ -287,6 +298,17 @@ public class Inventory_Manager : MonoBehaviour
                 startManager.Log("Modul Inventory_Manager :: Item Gespeichert.", "Modul Inventory_Manager :: Item Saved");
             }
         }
+        SelectedID = -1;
+        Selected[0].isOn = false;
+        Selected[1].isOn = false;
+        Selected[2].isOn = false;
+        Selected[3].isOn = false;
+        Selected[4].isOn = false;
+        Selected[5].isOn = false;
+        Selected[6].isOn = false;
+        Selected[7].isOn = false;
+        Selected[8].isOn = false;
+        Selected[9].isOn = false;
     }
     
     void Update()

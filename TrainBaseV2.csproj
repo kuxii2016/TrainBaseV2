@@ -321,6 +321,7 @@
     <Compile Include="Assets\Scripts\Menue_Loader.cs" />
     <Compile Include="Assets\Scripts\Settings_Manager.cs" />
     <Compile Include="Assets\Scripts\Start_Manager.cs" />
+    <Compile Include="Assets\Scripts\Stats_Manager.cs" />
     <Compile Include="Assets\Scripts\Train_List.cs" />
     <Compile Include="Assets\Scripts\Wagon_List.cs" />
   </ItemGroup>

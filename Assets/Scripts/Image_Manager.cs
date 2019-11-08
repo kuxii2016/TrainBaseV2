@@ -117,7 +117,7 @@ public class Image_Manager : MonoBehaviour
     public void SetImageRecorder(int id)
     {
         Type = id;
-        startManager.Log("Modul Image_Manager :: Start Image Loader, Typ ist: " + Type + " |0=Lok|1=Wagon|3=Inventar|", "Modul Image_Manager :: Start Image Loader, Typ is: " + Type + " |0=Train|1=Wagon|3=Inventory|");
+        startManager.Log("Modul Image_Manager :: Start Image Loader, Typ ist: " + Type + " |0=Lok|1=Wagon|2=Inventar|", "Modul Image_Manager :: Start Image Loader, Typ is: " + Type + " |0=Train|1=Wagon|2=Inventory|");
         startManager.Notify("Zeige Verfügbare Bilder an", "List Valid Images", "blue", "blue");
     }
 

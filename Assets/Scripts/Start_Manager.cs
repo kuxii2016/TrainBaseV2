@@ -57,6 +57,11 @@ public class Start_Manager : MonoBehaviour
         SetScreen();
         Log("Lade Start_Manager -> Nachricht ist Normal.", "Load Start_Manager -> message is normal");
         Notify("TrainBaseV2 gestartet und Bereit ", "TrainBaseV2 Started and ready", "green", "green");
+        if(Application.isEditor == true)
+        {
+            ProgrammIsInEditorMode = true;
+            Log("Modul Start_Manager :: Programm ist im Editor Mode, Keine Statistik, Update Check Verfügbar.", "Modul Start_Manager :: Programm is im Editor Mode, No Statistik, Update Check");
+        }
     }
 
     void GetLanguage()
@@ -404,7 +409,7 @@ public class Start_Manager : MonoBehaviour
 
     IEnumerator GetKey()
     {
-        WWW read = new WWW("http://" + KeyURL + "/check.php?uuid=" + UserUUID);
+        WWW read = new WWW("http://" + KeyURL + "key" + "/check.php?uuid=" + UserUUID);
         yield return read;
 
         if(read.error != null)

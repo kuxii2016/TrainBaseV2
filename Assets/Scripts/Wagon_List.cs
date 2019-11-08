@@ -119,6 +119,7 @@ public class Wagon_List : MonoBehaviour
     public int CompleteTrains = 0;
     public bool IsEditMode;
     public string uniqueID;
+    public int TotalSumme = 0;
     public GameObject Win;
     public InputField SendOK;
 
@@ -290,6 +291,7 @@ public class Wagon_List : MonoBehaviour
                     trainData.DBSpurweite = reader.GetInt32(13);
                     trainData.DBIdentifyer = reader.GetString(16);
                     trainData.DBLagerort = reader.GetInt32(15);
+                    TotalSumme = TotalSumme + reader.GetChar(9);
                     Trains.Add(trainData);
                 }
             }
@@ -317,6 +319,7 @@ public class Wagon_List : MonoBehaviour
         }
         startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
         startManager.Log("Modul Wagon_List :: Alle Wagons Eingelesen.", "Modul Wagon_List :: All Wagons are Read");
+        startManager.Log("Modul Wagon_List :: " +Trains.Count+" Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
     }
 
     IEnumerator LoadImage(string url, int i)
@@ -426,6 +429,19 @@ public class Wagon_List : MonoBehaviour
             DeleteSchutz();
             SetCurrentScreen();
         }
+        SelectedID = -1;
+        DeleteEditToggle[0].isOn = false;
+        DeleteEditToggle[1].isOn = false;
+        DeleteEditToggle[2].isOn = false;
+        DeleteEditToggle[3].isOn = false;
+        DeleteEditToggle[4].isOn = false;
+        DeleteEditToggle[5].isOn = false;
+        DeleteEditToggle[6].isOn = false;
+        DeleteEditToggle[7].isOn = false;
+        DeleteEditToggle[8].isOn = false;
+        DeleteEditToggle[9].isOn = false;
+        DeleteEditToggle[10].isOn = false;
+        DeleteEditToggle[11].isOn = false;
     }
 
     public void DeleteSchutz()
@@ -496,6 +512,18 @@ public class Wagon_List : MonoBehaviour
                 dbConnection = null;
             }
             SelectedID = -1;
+            DeleteEditToggle[0].isOn = false;
+            DeleteEditToggle[1].isOn = false;
+            DeleteEditToggle[2].isOn = false;
+            DeleteEditToggle[3].isOn = false;
+            DeleteEditToggle[4].isOn = false;
+            DeleteEditToggle[5].isOn = false;
+            DeleteEditToggle[6].isOn = false;
+            DeleteEditToggle[7].isOn = false;
+            DeleteEditToggle[8].isOn = false;
+            DeleteEditToggle[9].isOn = false;
+            DeleteEditToggle[10].isOn = false;
+            DeleteEditToggle[11].isOn = false;
         }
         else
         {
@@ -563,6 +591,18 @@ public class Wagon_List : MonoBehaviour
                 dbConnection = null;
             }
             SelectedID = -1;
+            DeleteEditToggle[0].isOn = false;
+            DeleteEditToggle[1].isOn = false;
+            DeleteEditToggle[2].isOn = false;
+            DeleteEditToggle[3].isOn = false;
+            DeleteEditToggle[4].isOn = false;
+            DeleteEditToggle[5].isOn = false;
+            DeleteEditToggle[6].isOn = false;
+            DeleteEditToggle[7].isOn = false;
+            DeleteEditToggle[8].isOn = false;
+            DeleteEditToggle[9].isOn = false;
+            DeleteEditToggle[10].isOn = false;
+            DeleteEditToggle[11].isOn = false;
         }
     }
 
