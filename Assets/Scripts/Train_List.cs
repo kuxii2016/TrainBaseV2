@@ -150,6 +150,7 @@ public class Train_List : MonoBehaviour
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Train_List -> Nachricht ist Normal.", "Load Train_List -> message is normal");
+        ClearScreen();
         ReadTrains();
         IsPremium = UserSettings.Premium;
         readIntervall();

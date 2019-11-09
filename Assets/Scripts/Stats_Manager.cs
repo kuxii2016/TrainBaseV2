@@ -300,7 +300,7 @@ public class Stats_Manager : MonoBehaviour
         CompletePrice = 0;
         TotalSaved = 0;
         ReadDataValues();
-        startManager.Notify("Generiere Daten & Diagramm", "TrainBaseV2 Started and ready", "green", "green");
+        startManager.Notify("Generiere Daten & Diagramm", "Generated data and diagram", "yellow", "yellow");
         IsLoadet = true;
     }
 

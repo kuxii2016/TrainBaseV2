@@ -48,6 +48,7 @@ public class Settings_Manager : MonoBehaviour
     public Toggle PreisLoks;
     public Toggle PreisWagons;
     public Toggle PreisInventar;
+    public Toggle AnnonPrice;
     public Dropdown Lang;
     public Dropdown ImageTyp;
     public Dropdown Wartungs;
@@ -75,6 +76,8 @@ public class Settings_Manager : MonoBehaviour
     public long WaggonPicSize = 0;
     public bool Premium = false;
     private config configData;
+    public string DB_Protokoll;
+    public string DB_Update;
     int Message = 1;
     [Header("Display")]
     public Toggle Fullscreen;
@@ -96,6 +99,7 @@ public class Settings_Manager : MonoBehaviour
             RefreshWagonImages.GetComponentInChildren<Text>().text = "Wagonbilder neu Einlesen";
             CheckVersion.GetComponentInChildren<Text>().text = "Auf neue Version Prüfen";
             SaveSettings.GetComponentInChildren<Text>().text = "Einstellungen Speichern";
+            AnnonPrice.GetComponentInChildren<Text>().text = "Anonyme Preis erfassung";
             Displaylabel.text = "Display Einstellungen";
             resolutionText.text = "Auflösung:";
             ToggleText.text = "Vollbild";
@@ -126,6 +130,7 @@ public class Settings_Manager : MonoBehaviour
             RefreshWagonImages.GetComponentInChildren<Text>().text = "Read Wagon Images new";
             CheckVersion.GetComponentInChildren<Text>().text = "Check for ah new Version";
             SaveSettings.GetComponentInChildren<Text>().text = "Save Settings";
+            AnnonPrice.GetComponentInChildren<Text>().text = "Anonym Price entry";
             Displaylabel.text = "Display Settings";
             resolutionText.text = "Resolution:";
             ToggleText.text = "Fullscreen";
@@ -200,6 +205,7 @@ public class Settings_Manager : MonoBehaviour
                 Lang.value = 1;
             }
 
+            AnnonPrice.isOn = configData.AVGPrice;
             WriteError.isOn = configData.WriteErrorLog;
             WriteLog.isOn = configData.WriteLog;
             AutoUpdateCheck.isOn = configData.UpdateCheck;
@@ -236,11 +242,11 @@ public class Settings_Manager : MonoBehaviour
                 {
                     if (reader[6].GetType() != typeof(DBNull))
                     {
-                        DBUpdate.text = "Update: " + reader.GetString(6);
+                        DB_Update = reader.GetString(6);
                     }
                     if (reader[10].GetType() != typeof(DBNull))
                     {
-                        DBProtokoll.text = "Protokoll: " + reader.GetString(10);
+                        DB_Protokoll = reader.GetString(10);
                     }
                 }
                 //startManager.Log("Modul Settings_Manager ::" + AutoUpdateBool + " | ZeigeBilder = " + ZeigeLokbilderBool + " | ErstelleLokPreis = " + ErstelleLokPriceBool + " | ErstelleWagonPreis = " + ErstelleWagonPriceBool + " | ErstelleItemPreis = " + ErstelleInvenoryPriceBool + " | Debugger = " + DebuggerBool + " | BilderAutomatischPrüfen = " + ImagesAutoReadBool + " | BilderType: " + ImageType + " | Wartungsintervall: " + (WartungsInterVall + 1) + " Jahr", ("Modul Settings_Manager :: AutoUpdateCheck: " + AutoUpdateBool + " | LokListIcon = " + ZeigeLokbilderBool + " | GenerateLokPrice = " + ErstelleLokPriceBool + " | GenerateWagonPrice = " + ErstelleWagonPriceBool + " | GenerateItemPrice = " + ErstelleInvenoryPriceBool + " | Debugger = " + DebuggerBool + " | ImageAutoCheck = " + ImagesAutoReadBool + " | ImageType: " + ImageType + " | Maintenance: " + (WartungsInterVall + 1) + " Years"));
@@ -320,6 +326,9 @@ public class Settings_Manager : MonoBehaviour
             Sonstiges.text = "Other";
         }
         startManager.Log("Modul Settings_Manager :: Einstellungen Geladen set: ERROR:"+WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ", "Modul Settings_Manager :: Settings Loadet set: ERROR:" + WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ");
+
+        DBProtokoll.text = "Protokoll: " + DB_Protokoll;
+        DBUpdate.text = "Update: " + DB_Update;
     }
 
     public void ReCreateTrainPic()
@@ -462,6 +471,15 @@ public class Settings_Manager : MonoBehaviour
             else
             {
                 configData.InventoryPrice = false;
+            }
+
+            if(AnnonPrice.isOn == true)
+            {
+                configData.AVGPrice = true;
+            }
+            else
+            {
+                configData.AVGPrice = true;
             }
 
             configData.ImageTyp = ImageTyp.value;

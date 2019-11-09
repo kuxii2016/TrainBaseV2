@@ -313,6 +313,7 @@
     <Compile Include="Assets\Helper\config.cs" />
     <Compile Include="Assets\Helper\DataExporter.cs" />
     <Compile Include="Assets\Helper\DatenExporter.cs" />
+    <Compile Include="Assets\Scripts\AVG_Manager.cs" />
     <Compile Include="Assets\Scripts\Decoder_Manager.cs" />
     <Compile Include="Assets\Scripts\Image_Manager.cs" />
     <Compile Include="Assets\Scripts\Import_Manager.cs" />

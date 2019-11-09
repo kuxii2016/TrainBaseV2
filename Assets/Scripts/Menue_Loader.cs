@@ -279,4 +279,19 @@ public class Menue_Loader : MonoBehaviour {
             WeditStromKupplung.text = "has Elec. Coupler";
         }
     }
+
+    public void AnonPrice()
+    {
+        startManager.Notify("Wird für den Durchschnittswert des Artikel Erfasst (Verkaufs Hilfe)", "Recorded for the product's average value (Sales Help)", "blue", "blue");
+    }
+
+    public void WActive()
+    {
+        startManager.Notify("HTML Color Code Für Aktive Wartung", "HTML Color Code For Active Maintenance", "blue", "blue");
+    }
+
+    public void WNonActive()
+    {
+        startManager.Notify("HTML Color Code Für Normale Anzeige", "HTML Color Code For Normal Display", "blue", "blue");
+    }
 }

@@ -17,4 +17,5 @@
     public string MaintenanceColor = "#DBB100FF";
     public bool FullScreen = false;
     public int Resolution = 0;
+    public bool AVGPrice = false;
 }

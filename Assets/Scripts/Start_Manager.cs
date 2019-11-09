@@ -18,6 +18,7 @@ public class Start_Manager : MonoBehaviour
     public string WebExporterUrl;
     public string StatsUrl;
     public string KeyURL;
+    public string AVGPriceURL;
     public string Language;
     public string ConfigLanguage;
     public string CopyrightLine;
@@ -167,6 +168,11 @@ public class Start_Manager : MonoBehaviour
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database"))
         {
             Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database");
+        }
+
+        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"))
+        {
+            File.Copy(Application.streamingAssetsPath + "/Resources/clear.db", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
         }
 
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Exporter"))
@@ -433,6 +439,10 @@ public class Start_Manager : MonoBehaviour
                 DateTime date2 = DateTime.Today;
                 int daysDiff = ((TimeSpan)(date1 - date2)).Days;
                 Log("Modul Settings_Manager :: Regestrierte Version Key bis: " + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Day + "." + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Year + " | " + daysDiff + " Tage Verbleibend", "Modul Settings_Manager :: Regestrated Version Key up: " + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Day + "." + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Month + "." + (DateTime.Now.AddDays(Int32.Parse(DonateDate))).Year + " | " + daysDiff + " Days Remaining");
+                if(daysDiff <= 10)
+                {
+                    Log("Modul Settings_Manager :: Version Lauft in: " + daysDiff + " ab, ab dann steht nur noch das Programm mit der Grundversion zur Verfügung, Key kann Verlängert werden.!", "Modul Settings_Manager :: Version Runs Into: " + daysDiff + " From then on, only the program with the basic version is available, Key can be extended.!");
+                }
             }
         }
     }
