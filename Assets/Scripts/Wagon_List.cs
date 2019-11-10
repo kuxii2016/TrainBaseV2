@@ -309,6 +309,11 @@ public class Wagon_List : MonoBehaviour
         CacheImage = new Texture2D[Trains.Count];
         for (int i = 0; i < Trains.Count; i++)
         {
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons"))
+            {
+                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons");
+            }
+
             if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
             {
                 File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType);

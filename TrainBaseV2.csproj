@@ -325,6 +325,7 @@
     <Compile Include="Assets\Scripts\Start_Manager.cs" />
     <Compile Include="Assets\Scripts\Stats_Manager.cs" />
     <Compile Include="Assets\Scripts\Train_List.cs" />
+    <Compile Include="Assets\Scripts\Update_Manager.cs" />
     <Compile Include="Assets\Scripts\Wagon_List.cs" />
     <Compile Include="Assets\Scripts\WebImport_Manager.cs" />
   </ItemGroup>

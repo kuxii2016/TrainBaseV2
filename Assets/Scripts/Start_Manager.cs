@@ -51,9 +51,9 @@ public class Start_Manager : MonoBehaviour
     {
         configData = new config();
         LogPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "Logs/";
-        GetLanguage();
-        CheckKey();
         CheckFolder();
+        CheckKey();
+        GetLanguage();
         StartCoroutine(GetKey());
         LogRotate();
         SetScreen();
@@ -154,6 +154,16 @@ public class Start_Manager : MonoBehaviour
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images"))
         {
             Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images");
+        }
+
+        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"))
+        {
+            Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains");
+        }
+
+        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons"))
+        {
+            Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/" + "Images/" + "Wagons");
         }
 
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups"))

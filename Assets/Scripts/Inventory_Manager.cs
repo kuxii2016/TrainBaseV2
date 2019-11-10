@@ -315,8 +315,7 @@ public class Inventory_Manager : MonoBehaviour
     {
         for (int i = 0; i < Selected.Length; i++)
         {
-            SelectedBool[i] = Selected[i].isOn;
-            if (SelectedBool[i] == true)
+            if (Selected[i].isOn == true)
             {
                 SelectedID = (i + PageOffset);
             }
