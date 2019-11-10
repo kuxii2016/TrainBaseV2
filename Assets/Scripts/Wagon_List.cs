@@ -122,6 +122,7 @@ public class Wagon_List : MonoBehaviour
     public int TotalSumme = 0;
     public GameObject Win;
     public InputField SendOK;
+    public string ImageType;
 
     void Start()
     {
@@ -133,6 +134,7 @@ public class Wagon_List : MonoBehaviour
 
     void Update()
     {
+        ImageType = UserSettings.ImageType;
         CompleteTrains = Trains.Count;
         for (int i = 0; i < 12; i++)
         {
@@ -307,14 +309,14 @@ public class Wagon_List : MonoBehaviour
         CacheImage = new Texture2D[Trains.Count];
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType))
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType);
+                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType);
                 startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
             }
             else
             {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType), i));
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType), i));
             }
         }
         startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
@@ -657,7 +659,7 @@ public class Wagon_List : MonoBehaviour
 
     IEnumerator SendSelected()
     {
-        string FinshURL = startManager.WebExporterUrl + "/insert.php?uniqueID=" + uniqueID + "&data=ISWAGON," + Trains[SelectedID].DBTyp.ToString() + "," + Trains[SelectedID].DBFarbe.ToString() + "," + Trains[SelectedID].DBHersteller.ToString() + "," + Trains[SelectedID].DBKatalognummer.ToString() + "," + Trains[SelectedID].DBSeriennummer.ToString() + "," + Trains[SelectedID].DBKaufTag.ToString() + "," + Trains[SelectedID].DBKaufMonat.ToString() + "," + Trains[SelectedID].DBKaufJahr.ToString() + "," + Trains[SelectedID].DBPreis.ToString() + "," + Trains[SelectedID].DBKupplung.ToString() + "," + Trains[SelectedID].DBLicht.ToString() + "," + Trains[SelectedID].DBPreiser.ToString() + "," + Trains[SelectedID].DBSpurweite.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString() + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE";
+        string FinshURL = "http://" + startManager.WebExporterUrl + "exporter" + "/insert.php?uniqueID=" + uniqueID + "&data=ISWAGON," + Trains[SelectedID].DBTyp.ToString() + "," + Trains[SelectedID].DBFarbe.ToString() + "," + Trains[SelectedID].DBHersteller.ToString() + "," + Trains[SelectedID].DBKatalognummer.ToString() + "," + Trains[SelectedID].DBSeriennummer.ToString() + "," + Trains[SelectedID].DBKaufTag.ToString() + "," + Trains[SelectedID].DBKaufMonat.ToString() + "," + Trains[SelectedID].DBKaufJahr.ToString() + "," + Trains[SelectedID].DBPreis.ToString() + "," + Trains[SelectedID].DBKupplung.ToString() + "," + Trains[SelectedID].DBLicht.ToString() + "," + Trains[SelectedID].DBPreiser.ToString() + "," + Trains[SelectedID].DBSpurweite.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString() + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE" + "," + "NONE";
         Debug.Log(FinshURL);
         WWW insert = new WWW(FinshURL);
 

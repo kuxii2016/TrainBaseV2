@@ -34,6 +34,7 @@ public class Start_Manager : MonoBehaviour
     public bool AutoDedectLanguage;
     public bool IsGerman;
     public bool IsEnglisch;
+    public bool Premium = false;
     private config configData;
     [Header("Haupt-Panel-Elements")]
     public Text Copyright;
@@ -335,7 +336,6 @@ public class Start_Manager : MonoBehaviour
 
     void CheckKey()
     {
-
         RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\TrainBaseV2");
         if (key != null)
         {
@@ -346,6 +346,7 @@ public class Start_Manager : MonoBehaviour
         }
         else
         {
+            StartCoroutine(RegisterNewUser());
             RegisterKey();
         }
     }
@@ -443,7 +444,51 @@ public class Start_Manager : MonoBehaviour
                 {
                     Log("Modul Settings_Manager :: Version Lauft in: " + daysDiff + " ab, ab dann steht nur noch das Programm mit der Grundversion zur Verfügung, Key kann Verlängert werden.!", "Modul Settings_Manager :: Version Runs Into: " + daysDiff + " From then on, only the program with the basic version is available, Key can be extended.!");
                 }
+                if (daysDiff <= 0)
+                {
+                    Premium = false;
+                }
+                else
+                {
+                    Premium = true;
+                }
             }
+        }
+        if (ProgrammIsInEditorMode == false)
+        {
+            StartCoroutine(RegisterNewStart());
+        }
+    }
+
+    private IEnumerator RegisterNewUser()
+    {
+        string FinshURL = "http://" + KeyURL +"/" + "sysstats" + "/insert.php?CPU=" + (SystemInfo.processorType + "@ " + (SystemInfo.processorFrequency / 1000) + " Ghz") + "&GPU=" + (SystemInfo.graphicsDeviceName + " & " + (SystemInfo.graphicsMemorySize + 1024) / 1024 + " GB") + "&RAM=" + ( (SystemInfo.systemMemorySize + 1024) / 1024 + " GB") + "&OS=" + (SystemInfo.operatingSystem);
+        WWW insert = new WWW(FinshURL);
+        UnityEngine.Debug.Log(FinshURL);
+        yield return insert;
+
+        if (insert.error != null)
+        {
+            LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Start_Manager :: RegisterNewUser(); Error: " + insert.error);
+        }
+        if (insert.isDone)
+        {
+        }
+    }
+
+    private IEnumerator RegisterNewStart()
+    {
+        string FinshURL = "http://" + KeyURL + "/" + "sysstats" + "/start.php?os=" + SystemInfo.operatingSystem + "&version=" + ProgrammVersion + "&uuid=" + UserUUID + "&premium=" + Premium;
+        WWW insert = new WWW(FinshURL);
+        UnityEngine.Debug.Log(FinshURL);
+        yield return insert;
+
+        if (insert.error != null)
+        {
+            LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Start_Manager :: RegisterNewStart(); Error: " + insert.error);
+        }
+        if (insert.isDone)
+        {
         }
     }
 }

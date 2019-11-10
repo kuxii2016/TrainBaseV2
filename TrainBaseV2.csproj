@@ -314,6 +314,7 @@
     <Compile Include="Assets\Helper\DataExporter.cs" />
     <Compile Include="Assets\Helper\DatenExporter.cs" />
     <Compile Include="Assets\Scripts\AVG_Manager.cs" />
+    <Compile Include="Assets\Scripts\Backup_Manager.cs" />
     <Compile Include="Assets\Scripts\Decoder_Manager.cs" />
     <Compile Include="Assets\Scripts\Image_Manager.cs" />
     <Compile Include="Assets\Scripts\Import_Manager.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Assets\Scripts\Stats_Manager.cs" />
     <Compile Include="Assets\Scripts\Train_List.cs" />
     <Compile Include="Assets\Scripts\Wagon_List.cs" />
+    <Compile Include="Assets\Scripts\WebImport_Manager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
