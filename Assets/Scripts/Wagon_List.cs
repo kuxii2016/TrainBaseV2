@@ -183,16 +183,16 @@ public class Wagon_List : MonoBehaviour
 
                 if (IsPremium == true)
                 {
-                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
                 }
                 else
                 {
 
-                    Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
                 }
             }
             else
@@ -240,16 +240,16 @@ public class Wagon_List : MonoBehaviour
 
                 if (IsPremium == true)
                 {
-                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
                 }
                 else
                 {
 
-                    Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
                 }
             }
             else

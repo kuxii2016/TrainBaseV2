@@ -18,4 +18,5 @@
     public bool FullScreen = false;
     public int Resolution = 0;
     public bool AVGPrice = false;
+    public bool Autosync = false;
 }

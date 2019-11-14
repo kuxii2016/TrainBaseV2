@@ -57,6 +57,7 @@ public class Train_List : MonoBehaviour
     [Header("Depents")]
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
+    public Network_Manager NM;
     [Header("Lok View - Elemente")]
     public List<TrainData> Trains;
     public Texture2D[] CacheImage;
@@ -99,6 +100,7 @@ public class Train_List : MonoBehaviour
     public Text CTrains;
     public Text WTrains;
     public Text NTrains;
+    public Texture2D StandartPic;
     [Header("Edit-Panel-Inputs")]
     public InputField EditBaureihe;
     public InputField EditFarbe;
@@ -146,6 +148,7 @@ public class Train_List : MonoBehaviour
     public GameObject Win;
     public InputField SendOK;
     public string ImageType;
+    byte[] Image;
 
     void Start()
     {
@@ -554,33 +557,30 @@ public class Train_List : MonoBehaviour
         finally
         {
             CacheImage = new Texture2D[Trains.Count];
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"))
-            {
-                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains");
-            }
-
             for (int i = 0; i < Trains.Count; i++)
             {
-                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + UserSettings.ImageType))
+                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
                 {
-                    File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + UserSettings.ImageType);
-                    startManager.Log("Modul Train_List :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Train_List :: Lok ID: " + i + " No picture available, Create standard Picture");
+                    CacheImage[i] = StandartPic;
                 }
                 else
                 {
-                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + UserSettings.ImageType), i));
+                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
                 }
             }
-            dbConnection.Close();
+                dbConnection.Close();
             dbConnection = null;
         }
         startManager.Notify("Alle Loks Eingelesen", "All Locos are Read", "green", "green");
         startManager.Log("Modul Train_List :: Alle Loks Eingelesen.", "Modul Train_List :: All Locos are Read");
     }
 
-    public void RefreschTrains()
+    public void RefreshIntervall()
     {
         Trains.Clear();
+        CompleteTrains = 0;
+        nonWartungsTrains = 0;
+        WartungsTrains = 0;
         SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
         dbConnection.Open();
         try
@@ -627,19 +627,48 @@ public class Train_List : MonoBehaviour
                     Trains.Add(trainData);
                 }
             }
+            reader.Close();
+            reader = null;
         }
         catch (SqliteException ex)
         {
-            startManager.LogError("Fehler beim Laden der Lokdaten.", "Error Loading Locomotive Data", " Train_List :: RefreschTrains(); Error: " + ex);
         }
         finally
         {
-            CacheImage = new Texture2D[Trains.Count];
             dbConnection.Close();
             dbConnection = null;
         }
-        startManager.Notify("Alle Loks Aktualisiert", "All Locos are Refreshed", "green", "green");
-        RefreschImages();
+
+        CacheImage = new Texture2D[Trains.Count];
+        for (int i = 0; i < Trains.Count; i++)
+        {
+            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
+            {
+                CacheImage[i] = StandartPic;
+            }
+            else
+            {
+                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
+            }
+
+            if (Trains[i].Checked == false)
+            {
+                DateTime date = DateTime.Now;
+                DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
+                Trains[i].Checked = true;
+                CompleteTrains = CompleteTrains + 1;
+                if (date1 >= date)
+                {
+                    nonWartungsTrains = nonWartungsTrains + 1;
+                    Trains[i].Wartung = false;
+                }
+                else
+                {
+                    WartungsTrains = WartungsTrains + 1;
+                    Trains[i].Wartung = true;
+                }
+            }
+        }
     }
 
     public void SetArrayNew()
@@ -713,7 +742,7 @@ public class Train_List : MonoBehaviour
     {
         for (int i = 0; i < Trains.Count; i++)
         {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
+            StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
         }
     }
 
@@ -990,10 +1019,6 @@ public class Train_List : MonoBehaviour
                 }
                 finally
                 {
-                    if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (Trains.Count + 1) + "." + UserSettings.ImageType))
-                    {
-                        File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (Trains.Count + 1) + "." + UserSettings.ImageType);
-                    }
                     startManager.Notify("Lok Gespeichert", "Train Saved", "green", "green");
                 }
                 dbConnection.Close();
@@ -1096,7 +1121,7 @@ public class Train_List : MonoBehaviour
             {
                 EditTelex.isOn = false;
             }
-        
+
             if (Trains[SelectedID].DbElekKupplung == 1)
             {
                 EditElektrischeKupplung.isOn = true;
@@ -1178,5 +1203,11 @@ public class Train_List : MonoBehaviour
         File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Exporter/" + vHersteller[Trains[SelectedID].DbHersteller] + "-" + Trains[SelectedID].DbKatalognummer + ".TRAIN", jsonData);
         SelectedID = -1;
         startManager.Notify("Lok als Datei Exportiert", "Train as File Exported", "green", "green");
+    }
+
+    public void SendTrain(int id)
+    {
+        Image = File.ReadAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (id + 1) + "." + ImageType);
+       NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (id + 1) + "." + UserSettings.ImageType)));
     }
 }

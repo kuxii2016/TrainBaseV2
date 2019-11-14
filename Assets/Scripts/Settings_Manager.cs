@@ -49,6 +49,7 @@ public class Settings_Manager : MonoBehaviour
     public Toggle PreisWagons;
     public Toggle PreisInventar;
     public Toggle AnnonPrice;
+    public Toggle Autosync;
     public Dropdown Lang;
     public Dropdown ImageTyp;
     public Dropdown Wartungs;
@@ -59,6 +60,7 @@ public class Settings_Manager : MonoBehaviour
     public Text LangText;
     public Text ImageText;
     public Text WartungText;
+    public InputField SenderIP;
     [Header("Color-Settings")]
     public InputField WartungColor;
     public InputField NonWartungColor;
@@ -204,7 +206,7 @@ public class Settings_Manager : MonoBehaviour
             {
                 Lang.value = 1;
             }
-
+            Autosync.isOn = configData.Autosync;
             AnnonPrice.isOn = configData.AVGPrice;
             WriteError.isOn = configData.WriteErrorLog;
             WriteLog.isOn = configData.WriteLog;
@@ -346,13 +348,6 @@ public class Settings_Manager : MonoBehaviour
             {
                 File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + "jpg");
             }
-
-            //Created the Train Pics New
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
-            {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType);
-                startManager.Log("Modul Settings_Manager :: Lok ID: " + i + " Bild neu Erstellt.", "Modul Settings_Manager :: Lok ID: " + i + " Image new Created.");
-            }
         }
     }
 
@@ -371,19 +366,12 @@ public class Settings_Manager : MonoBehaviour
             {
                 File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + "jpg");
             }
-
-            //Created the Wagon Pics New
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
-            {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType);
-                startManager.Log("Modul Settings_Manager :: Wagon ID: " + i + " Bild neu Erstellt.", "Settings_Manager Train_List :: Wagon ID: " + i + " Image new Created.");
-            }
         }
     }
 
     public void RefreshTrainPic()
     {
-        trainList.ReadTrains();
+        trainList.RefreshIntervall();
     }
 
     public void SaveSettingsBTN()
@@ -480,6 +468,15 @@ public class Settings_Manager : MonoBehaviour
             else
             {
                 configData.AVGPrice = true;
+            }
+
+            if (Autosync.isOn == true)
+            {
+                configData.Autosync = true;
+            }
+            else
+            {
+                configData.Autosync = true;
             }
 
             configData.ImageTyp = ImageTyp.value;

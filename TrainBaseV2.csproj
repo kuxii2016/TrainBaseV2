@@ -321,6 +321,7 @@
     <Compile Include="Assets\Scripts\Inventory_Manager.cs" />
     <Compile Include="Assets\Scripts\Log_Viewer.cs" />
     <Compile Include="Assets\Scripts\Menue_Loader.cs" />
+    <Compile Include="Assets\Scripts\Network_Manager.cs" />
     <Compile Include="Assets\Scripts\Settings_Manager.cs" />
     <Compile Include="Assets\Scripts\Start_Manager.cs" />
     <Compile Include="Assets\Scripts\Stats_Manager.cs" />

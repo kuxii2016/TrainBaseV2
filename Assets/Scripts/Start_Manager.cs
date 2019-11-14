@@ -488,7 +488,7 @@ public class Start_Manager : MonoBehaviour
 
     private IEnumerator RegisterNewStart()
     {
-        string FinshURL = "http://" + KeyURL + "/" + "sysstats" + "/start.php?os=" + SystemInfo.operatingSystem + "&version=" + ProgrammVersion + "&uuid=" + UserUUID + "&premium=" + Premium;
+        string FinshURL = "http://" + KeyURL + "/" + "sysstats" + "/start.php?os=" + SystemInfo.operatingSystemFamily + "&version=" + ProgrammVersion + "&uuid=" + UserUUID + "&premium=" + Premium;
         WWW insert = new WWW(FinshURL);
         UnityEngine.Debug.Log(FinshURL);
         yield return insert;
