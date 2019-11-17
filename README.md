@@ -35,6 +35,9 @@ CPU: min Intel Core Duo E7300<br>
 Ram: 1GB Besser 2 oder 4GB<br>
 GPU mit 3d Beschleuniger und Aktiven Treiber<br>
 <br><br>
+# - Android Experimental Version:
+https://github.com/kuxii2016/TrainBaseV2-Mobile
+<br>
 # - Achtung habe einen Download Pool eingerichtet
 da mehr Leute probleme bein Download haben.
 Downloads sind nun hier zu finden:
