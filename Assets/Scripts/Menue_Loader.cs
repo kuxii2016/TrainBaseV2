@@ -154,7 +154,7 @@ public class Menue_Loader : MonoBehaviour {
 
     public void OnEnterReFreshLocosImages()
     {
-        startManager.Notify("Läd Eigene Lok  Bilder neu", "Reload own Locomotive images", "blue", "blue");
+        startManager.Notify("Läd Eigene Bilder neu", "Reload own images new", "blue", "blue");
     }
 
     public void OnEnterReFreshWagonImages()
@@ -293,5 +293,15 @@ public class Menue_Loader : MonoBehaviour {
     public void WNonActive()
     {
         startManager.Notify("HTML Color Code Für Normale Anzeige", "HTML Color Code For Normal Display", "blue", "blue");
+    }
+
+    public void Sender()
+    {
+        startManager.Notify("Startet bei erfolgreicher Verbindung das Senden der Gesamten Listen zum Empfänger", "If successful, starts sending the entire lists to the recipient", "blue", "blue");
+    }
+
+    public void Receiver()
+    {
+        startManager.Notify("Startet den Empfänger zum Empfänger der gesendeten Listen", "Starts the receiver to the recipient of the sent lists", "blue", "blue");
     }
 }

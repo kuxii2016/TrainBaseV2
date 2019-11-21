@@ -29,6 +29,7 @@ public class Inventory_Manager : MonoBehaviour
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
     public List<InventoryData> Item;
+    public Network_Manager NM;
     [Header("Elements")]
     public GameObject[] Slot;
     public RawImage[] SlotImage;
@@ -57,12 +58,12 @@ public class Inventory_Manager : MonoBehaviour
     public int SiteSumm = 0;
     public Color Normal;
     public Texture2D[] CacheImage;
+    public Texture2D StandArtPic;
 
     void Start()
     {
         startManager.Log("Lade Inventory_Manager -> Nachricht ist Normal.", "Load Inventory_Manager -> message is normal");
-        ReadAllItems();
-        PrintScreen();
+        RefreschIndex();
         for (int i = 0; i < Item.Count; i++)
         {
             CompleteSumm = CompleteSumm + Item[i].dbPreis;
@@ -79,15 +80,7 @@ public class Inventory_Manager : MonoBehaviour
         }
     }
 
-    void SetDefaultScreen()
-    {
-        for (int i = 0; i < Slot.Length; i++)
-        {
-            Slot[i].SetActive(false);
-        }
-    }
-
-    public void ReadAllItems()
+    public void RefreschIndex()
     {
         Item = new List<InventoryData>();
         SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
@@ -115,6 +108,7 @@ public class Inventory_Manager : MonoBehaviour
         catch (SqliteException ex)
         {
             startManager.LogError("Fehler beim Laden der Items.", "Error Loading Item Data", " Inventory_Manager :: ReadAllItems(); Error: " + ex);
+            startManager.Error("RefreshIndex(InventoryList);", "" + ex);
         }
         SelectedBool = new bool[Item.Count];
         CacheImage = new Texture2D[Item.Count];
@@ -125,14 +119,9 @@ public class Inventory_Manager : MonoBehaviour
 
         for (int i = 0; i < Item.Count; i++)
         {
-            if (!Directory.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/"))
-            {
-                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/");
-            }
             if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + UserSettings.ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Item.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (i + 1) + "." + UserSettings.ImageType);
-                startManager.Log("Modul Inventory_Manager :: Lok ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Inventory_Manager :: Lok ID: " + i + " No picture available, Create standard Picture");
+                CacheImage[i] = StandArtPic;
             }
             else
             {
@@ -145,49 +134,19 @@ public class Inventory_Manager : MonoBehaviour
         startManager.Log("Modul Inventory_Manager :: " +Item.Count + " Items Gefunden", "Modul Inventory_Manager :: " + Item.Count + " Items Found");
     }
 
-    public void PrintScreen()
-    {
-        SetDefaultScreen();
-        for (int i = PageOffset; i < Item.Count && i < PageOffset2; i++)
-        {
-            Slot[i - PageOffset].SetActive(true);
-            Created[i - PageOffset].text = "Gespeichert: " + Item[i].dbDatum;
-            Description[i - PageOffset].text = "Titel: " + Item[i].dbBeschreibung;
-            Stock[i - PageOffset].text = "Stück: " + Item[i].dbStueck;
-            Number[i - PageOffset].text = "Artikel NR: " + Item[i].dbArtkNR;
-            Price[i - PageOffset].text = "Preis: " + Item[i].dbPreis.ToString() + " €";
-            SlotImage[i - PageOffset].texture = CacheImage[i];
-            SiteSumm = SiteSumm + Item[i].dbPreis;
-            SeitenWert.text = "Total Items: " + Item.Count + " Seitenwert: " + SiteSumm + "€ Gesammt Wert: " + CompleteSumm + "€";
-            if (UserSettings.Premium == true)
-            {
-                Created[i - PageOffset].color = UserSettings.newCol1;
-                Description[i - PageOffset].color = UserSettings.newCol1;
-                Stock[i - PageOffset].color = UserSettings.newCol1;
-                Number[i - PageOffset].color = UserSettings.newCol1;
-                Price[i - PageOffset].color = UserSettings.newCol1;
-            }
-            else
-            {
-                Created[i - PageOffset].color = Normal;
-                Description[i - PageOffset].color = Normal;
-                Stock[i - PageOffset].color = Normal;
-                Number[i - PageOffset].color = Normal;
-                Price[i - PageOffset].color = Normal;
-            }
-        }
-        SiteSumm = 0;
-    }
-
     public void PageVorward()
     {
+        for (int i = 0; i < Slot.Length; i++)
+        {
+            Slot[i].SetActive(false);
+            Selected[i].isOn = false;
+        }
         if (Item.Count >= PageOffset)
         {
             PageOffset2 = PageOffset2 + 10;
             PageOffset = PageOffset + 10;
             CurrentPage = CurrentPage + 1;
             PageIndex.text = CurrentPage.ToString();
-            PrintScreen();
         }
         else
         {
@@ -195,12 +154,16 @@ public class Inventory_Manager : MonoBehaviour
             PageOffset = 0;
             CurrentPage = 1;
             PageIndex.text = CurrentPage.ToString();
-            PrintScreen();
         }
     }
 
     public void PageBack()
     {
+        for (int i = 0; i < Slot.Length; i++)
+        {
+            Slot[i].SetActive(false);
+            Selected[i].isOn = false;
+        }
         if (PageOffset == 0)
         {
         }
@@ -210,7 +173,6 @@ public class Inventory_Manager : MonoBehaviour
             PageOffset = PageOffset - 10;
             CurrentPage = CurrentPage - 1;
             PageIndex.text = CurrentPage.ToString();
-            PrintScreen();
         }
     }
 
@@ -247,28 +209,24 @@ public class Inventory_Manager : MonoBehaviour
                 SqliteCommand Command = new SqliteCommand(sql, dbConnection);
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
-                SelectedID = -1;
             }
             catch (Exception ex)
             {
                 startManager.LogError("Fehler beim Löschen des Items.", "Error Delete Item Data", " Inventory_Manager :: DeleteItem(); Error: " + ex);
+                startManager.Error("Delete(InventoryList);", "" + ex);
             }
             finally
             {
                 startManager.Log("Modul Inventory_Manager :: Item Geloescht.", "Modul Inventory_Manager :: Item Removed");
             }
         }
+        RefreschIndex();
         SelectedID = -1;
-        Selected[0].isOn = false;
-        Selected[1].isOn = false;
-        Selected[2].isOn = false;
-        Selected[3].isOn = false;
-        Selected[4].isOn = false;
-        Selected[5].isOn = false;
-        Selected[6].isOn = false;
-        Selected[7].isOn = false;
-        Selected[8].isOn = false;
-        Selected[9].isOn = false;
+        for (int i = 0; i < Slot.Length; i++)
+        {
+            Slot[i].SetActive(false);
+            Selected[i].isOn = false;
+        }
     }
 
     public void SaveItem()
@@ -291,6 +249,7 @@ public class Inventory_Manager : MonoBehaviour
             catch (SqliteException ex)
             {
                 startManager.LogError("Fehler beim Speichern des Items.", "Error Saving Item Data", " Inventory_Manager :: SaveItem(); Error: " + ex);
+                startManager.Error("Save(InventoryList);", "" + ex);
             }
             finally
             {
@@ -298,17 +257,13 @@ public class Inventory_Manager : MonoBehaviour
                 startManager.Log("Modul Inventory_Manager :: Item Gespeichert.", "Modul Inventory_Manager :: Item Saved");
             }
         }
+        RefreschIndex();
         SelectedID = -1;
-        Selected[0].isOn = false;
-        Selected[1].isOn = false;
-        Selected[2].isOn = false;
-        Selected[3].isOn = false;
-        Selected[4].isOn = false;
-        Selected[5].isOn = false;
-        Selected[6].isOn = false;
-        Selected[7].isOn = false;
-        Selected[8].isOn = false;
-        Selected[9].isOn = false;
+        for (int i = 0; i < Slot.Length; i++)
+        {
+            Slot[i].SetActive(false);
+            Selected[i].isOn = false;
+        }
     }
     
     void Update()
@@ -350,5 +305,10 @@ public class Inventory_Manager : MonoBehaviour
             }
         }
         SiteSumm = 0;
+    }
+
+    public void SendItem(int id)
+    {
+        NM.TrySendTrainData("ITEM" + "?" + Item[id].dbStueck.ToString() + "?" + Item[id].dbBeschreibung.ToString() + "?" + Item[id].dbArtkNR.ToString() + "?" + Item[id].dbPreis.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
     }
 }

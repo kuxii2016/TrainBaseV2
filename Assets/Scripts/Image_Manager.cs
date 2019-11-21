@@ -30,47 +30,40 @@ public class Image_Manager : MonoBehaviour
     public RawImage WagonEditPic;
     public List<string> Images = new List<string>();
     public List<string> ImageExtensions = new List<string> { ".JPG", ".jpg", ".BMP", ".bmp", ".PNG", ".png" };
+    public Dropdown Folder;
     public int Type = 0;
     [Header("Workflow")]
-    public string DirPath;
+    public string DirPath1;
+    public string DirPath2;
+    public string DirPath3;
+    public string DirPath4;
+    public string DirPath5;
     public int PageOffset = 0;
     public int PageOffset2 = 12;
     public int CurrentPage = 1;
     public int SelectedID = -1;
-    
+    public string Image = "png";
+
     void Start ()
     {
         startManager.Log("Lade Image_Manager -> Nachricht ist Normal.", "Load Image_Manager -> message is normal");
-        DirPath = (System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).Replace("\\", "/") + "/");
-        Path.text = DirPath.ToString();
+        DirPath1 = (System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).Replace("\\", "/") + "/");
+        DirPath2 = (System.Environment.GetFolderPath(Environment.SpecialFolder.MyPictures).Replace("\\", "/") + "/");
+        DirPath3 = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains").Replace("\\", "/") + "/";
+        DirPath4 = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons").Replace("\\", "/") + "/";
+        DirPath5 = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory").Replace("\\", "/") + "/";
+        Path.text = DirPath1.ToString();
+        Folder.options[0].text = DirPath1.ToString();
+        Folder.options[1].text = DirPath2.ToString();
+        Folder.options[2].text = DirPath3.ToString();
+        Folder.options[3].text = DirPath4.ToString();
+        Folder.options[4].text = DirPath5.ToString();
+        GetRows();
     }
 
-    private void Update()
+    void FixedUpdate()
     {
-        SetScreen();
-    }
-
-    public void GetRows()
-    {
-        Images.Clear();
-        string[] imports = Directory.GetFiles(DirPath);
-        foreach (var f in imports)
-        {
-            if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
-            {
-                Images.Add(f);
-                for (int i = 0; i < Images.Count; i++)
-                {
-                    StartCoroutine(setImage(Images[i], i));
-                    Pic = new Texture2D[Images.Count];
-                }
-            }
-        }
-        startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
-    }
-
-    public void SetScreen()
-    {
+        Image = UserSettings.ImageType;
         for (int i = 0; i < Slots.Length; i++)
         {
             Slots[i].gameObject.SetActive(false);
@@ -83,33 +76,128 @@ public class Image_Manager : MonoBehaviour
         }
     }
 
+    public void GetRows()
+    {
+        if (Folder.value == 0)
+        {
+            Images.Clear();
+            string[] imports = Directory.GetFiles(DirPath1);
+            foreach (var f in imports)
+            {
+                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                {
+                    Images.Add(f);
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        Pic = new Texture2D[Images.Count];
+                        StartCoroutine(setImage(Images[i], i));
+                    }
+                }
+            }
+            startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+        }
+
+        if (Folder.value == 1)
+        {
+            Images.Clear();
+            string[] imports = Directory.GetFiles(DirPath2);
+            foreach (var f in imports)
+            {
+                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                {
+                    Images.Add(f);
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        StartCoroutine(setImage(Images[i], i));
+                        Pic = new Texture2D[Images.Count];
+                    }
+                }
+            }
+            startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+        }
+
+        if (Folder.value == 2)
+        {
+            Images.Clear();
+            string[] imports = Directory.GetFiles(DirPath3);
+            foreach (var f in imports)
+            {
+                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                {
+                    Images.Add(f);
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        Pic = new Texture2D[Images.Count];
+                        StartCoroutine(setImage(Images[i], i));
+                    }
+                }
+            }
+            startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+        }
+
+        if (Folder.value == 3)
+        {
+            Images.Clear();
+            string[] imports = Directory.GetFiles(DirPath4);
+            foreach (var f in imports)
+            {
+                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                {
+                    Images.Add(f);
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        Pic = new Texture2D[Images.Count];
+                        StartCoroutine(setImage(Images[i], i));
+                    }
+                }
+            }
+            startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+        }
+
+        if (Folder.value == 4)
+        {
+            Images.Clear();
+            string[] imports = Directory.GetFiles(DirPath5);
+            foreach (var f in imports)
+            {
+                if (ImageExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                {
+                    Images.Add(f);
+                    for (int i = 0; i < Images.Count; i++)
+                    {
+                        Pic = new Texture2D[Images.Count];
+                        StartCoroutine(setImage(Images[i], i));
+                    }
+                }
+            }
+            startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+        }
+    }
+
     public void CopyImage(int id)
     {
         if (Type == 0)
         {
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + "png");
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + "png");
+            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image);
             TL.CacheImage[TL.SelectedID] = Pic[id];
             TrainEditPic.texture = Pic[id];
-            TL.GetLokData();
+            TL.RefreshIndex();
 
         }
 
         if (Type == 1)
         {
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + "png");
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + "png");
+            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + Image);
             WL.CacheImage[WL.SelectedID] = Pic[id];
             WagonEditPic.texture = Pic[id];
-            WL.GetLokData();
+            WL.RefreschIndex();
         }
 
         if (Type == 2)
         {
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + "png");
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + "png");
+            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + Image);
             IM.CacheImage[IM.SelectedID] = Pic[id];
-            IM.PrintScreen();
+            IM.RefreschIndex();
         }
         ImageView.SetActive(false);
     }

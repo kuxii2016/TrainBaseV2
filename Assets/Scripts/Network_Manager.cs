@@ -64,6 +64,7 @@ public class Network_Manager : MonoBehaviour
     public string CacheData32 = null;
     public string CacheData33 = null;
     public string CacheData34 = null;
+    public string CacheData35 = null;
     byte[] Image;
     [Header("")]
     [Header("Network Settings")]
@@ -86,12 +87,16 @@ public class Network_Manager : MonoBehaviour
     public int DecoderTick = 0;
     public int ItemTick = 0;
     public bool Semmel = false;
+    public bool Train = false;
+    public bool Wagon = false;
+    public bool Item = false;
+    public bool Decoder = false;
 
     void Start()
     {
         startManager.Log("Lade Network_Manager -> Nachricht ist Normal.", "Load Network_Manager -> Nachricht ist Normal.");
         m_ClientsActive = false;
-        myText = "Please Type Message Here...";
+        myText = "";
         ConnectionConfig config = new ConnectionConfig();
         m_ChannelID = config.AddChannel(QosType.Reliable);
         m_HostTopology = new HostTopology(config, 20);
@@ -117,6 +122,7 @@ public class Network_Manager : MonoBehaviour
             case NetworkEventType.ConnectEvent:
                 {
                     OnConnect(outHostId, outConnectionId, (NetworkError)error);
+                    startManager.Notify("Verbindung Gestartet.", "Connection Started.", "green", "green");
                     ConnectionIsReady = true;
                     Screen.sleepTimeout = -1;
                     break;
@@ -129,13 +135,14 @@ public class Network_Manager : MonoBehaviour
             case NetworkEventType.Nothing:
                 break;
             default:
+                startManager.Notify("Verbindung Getrennt", "Connection Closed", "red", "red");
                 break;
         }
         m_InputField.gameObject.SetActive(m_ClientsActive);
         if (m_ClientsActive)
         {
-            //m_ClientButton.gameObject.SetActive(false);
-            //m_ServerButton.gameObject.SetActive(false);
+            m_ClientButton.gameObject.SetActive(false);
+            m_ServerButton.gameObject.SetActive(false);
         }
         if (CacheData0 == "IP")
         {
@@ -175,8 +182,8 @@ public class Network_Manager : MonoBehaviour
         Stream serializedMessage = new MemoryStream(data);
         BinaryFormatter formatter = new BinaryFormatter();
         string message = formatter.Deserialize(serializedMessage).ToString();
-        Debug.Log("Modul Network_Manager :: Receive from = " + hostId + ", connectionId = " + connectionId + ", channelId = " + channelId + ", size = " + size + ", error = " + error.ToString());
-        Debug.Log("Modul Network_Manager :: Receive data = " + message);
+        //Debug.Log("Modul Network_Manager :: Receive from = " + hostId + ", connectionId = " + connectionId + ", channelId = " + channelId + ", size = " + size + ", error = " + error.ToString());
+        //Debug.Log("Modul Network_Manager :: Receive data = " + message);
         m_InputField.text = "Incomming = " + message;
         RecieveData = message;
         string strOne = message;
@@ -217,23 +224,20 @@ public class Network_Manager : MonoBehaviour
         CacheData32 = strArrayOne[32];
         CacheData33 = strArrayOne[33];
         CacheData34 = strArrayOne[34];
+        CacheData35 = strArrayOne[35];
+
         if (CacheData0 == "TRAIN")
         {
             for (int i = 0; i < trainList.Trains.Count; i++)
             {
                 if (CacheData32 == trainList.Trains[i].DBIdentifyer)
                 {
-                    Debug.Log(CacheData32);
-                    Debug.Log("Semmel Found: " + i);
                     Semmel = true;
                 }
             }
             if (Semmel == true)
             {
-                Debug.Log("Semmel is here");
-
-               // startManager.Log("Modul Network_Manager :: Ok, Empfange TRAIN daten..!");
-                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (Application.persistentDataPath + "/" + "Database/" + "TrainBase.ext2db"));
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
                 using (SqliteCommand command = new SqliteCommand())
                 {
                     command.Connection = dbConnection;
@@ -275,24 +279,18 @@ public class Network_Manager : MonoBehaviour
                     }
                     catch (SqliteException ex)
                     {
-                        //startManager.LogError("Fehler beim Speichern des Lok Updates.", " Network_Manager :: SaveEditTrain().IsEditMode==False; Error: " + ex);
-                    }
-                    finally
-                    {
-                        //startManager.Log("Modul Network_Manager :: Lok Upgedated");
+                        startManager.LogError("Fehler beim Speichern des Lok Updates.", "Error by Save the Train Update", " Network_Manager :: SaveEditTrain().IsEditMode==False; Error: " + ex);
+                        startManager.Error("UpdateTrain(Network_Manager);", "" + ex);
                     }
                     dbConnection.Close();
                     dbConnection = null;
-                    trainList.RefreshIntervall();
+                    trainList.RefreshIndex();
                     Semmel = false;
                 }
             }
             else
             {
-                Debug.Log("Semmel is not here");
-
-                //startManager.Log("Modul Network_Manager :: Ok, Empfange TRAIN daten..!");
-                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (Application.persistentDataPath + "/" + "Database/" + "TrainBase.ext2db"));
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
                 using (SqliteCommand command = new SqliteCommand())
                 {
                     command.Connection = dbConnection;
@@ -336,49 +334,266 @@ public class Network_Manager : MonoBehaviour
                     }
                     catch (SqliteException ex)
                     {
-                        //startManager.LogError("Fehler beim Speichern des Lok Updates.", " Network_Manager :: SaveEditTrain().IsEditMode==False; Error: " + ex);
-                    }
-                    finally
-                    {
-                        //startManager.Log("Modul Network_Manager :: Lok Upgedated");
+                        startManager.LogError("Fehler beim Speichern des Lok Updates.", "Fehler beim Speichern des Lok Updates.", " Network_Manager :: SaveEditTrain().IsEditMode==False; Error: " + ex);
+                        startManager.Error("SaveTrain(Network_Manager);", "" + ex);
                     }
                     dbConnection.Close();
                     dbConnection = null;
-                    trainList.RefreshIntervall();
+                    trainList.RefreshIndex();
                 }
             }
             Semmel = false;
         }
+
         else
+			
         if (CacheData0 == "WAGON")
         {
-            //startManager.Log("Modul Network_Manager :: Ok, Empfange WAGON daten..!");
+            for (int i = 0; i < wagonList.Trains.Count; i++)
+            {
+                if (CacheData15 == wagonList.Trains[i].DBIdentifyer)
+                {
+                    Semmel = true;
+                }
+            }
+            if (Semmel == true)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE Wagons  SET FARBE = @FARBE , TYP = @Typ , HERSTELLER = @HERSTELLER , KATALOGNUMMER = @KATALOGNUMMER , SERIENNUMMER = @SERIENNUMMER , KAUFDAY = @KAUFDAY , KAUFMONAT = @KAUFMONAT ,KAUFJAHR = @KAUFJAHR , PREIS = @PREIS ,KUPPLUNG = @KUPPLUNG , LICHT = @LICHT , PREISER =@PREISER, SPURWEITE = @SPURWEITE, LAGERORT = @LAGERORT  WHERE IDENTIFYER='" + CacheData15 + "' AND  IDENTIFYER='" + CacheData15 + "'  ";
+                    command.Parameters.AddWithValue("@FARBE", CacheData2);
+                    command.Parameters.AddWithValue("@TYP", Int32.Parse(CacheData1));
+                    command.Parameters.AddWithValue("@HERSTELLER", Int32.Parse(CacheData3));
+                    command.Parameters.AddWithValue("@KATALOGNUMMER", CacheData5);
+                    command.Parameters.AddWithValue("@SERIENNUMMER", CacheData6);
+                    command.Parameters.AddWithValue("@PREIS", CacheData10);
+                    command.Parameters.AddWithValue("@KAUFDAY", Int32.Parse(CacheData7));
+                    command.Parameters.AddWithValue("@KAUFMONAT", Int32.Parse(CacheData8));
+                    command.Parameters.AddWithValue("@KAUFJAHR", Int32.Parse(CacheData9));
+                    command.Parameters.AddWithValue("@SPURWEITE", Int32.Parse(CacheData14));
+                    command.Parameters.AddWithValue("@LAGERORT", Int32.Parse(CacheData16));
+                    command.Parameters.AddWithValue("@KUPPLUNG", Int32.Parse(CacheData11));
+                    command.Parameters.AddWithValue("@LICHT", Int32.Parse(CacheData12));
+                    command.Parameters.AddWithValue("@PREISER", Int32.Parse(CacheData13));
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern.", "Error by Edit the Wagon Update.", " Network_Manager :: SaveEditWagon().Semmel==True; Error: " + ex);
+                        startManager.Error("UpdateWagon(Network_Manager);", "" + ex);
+                    }
+                        dbConnection.Close();
+                        dbConnection = null;
+                }
+                Semmel = false;
+            }
+            else
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into Wagons  (TYP , FARBE , HERSTELLER ,  KATALOGNUMMER , SERIENNUMMER , KAUFDAY , KAUFMONAT , KAUFJAHR , PREIS , KUPPLUNG , LICHT , PREISER, SPURWEITE, IDENTIFYER , LAGERORT) VALUES" + " (@TYP , @FARBE , @HERSTELLER ,  @KATALOGNUMMER , @SERIENNUMMER , @KAUFDAY , @KAUFMONAT , @KAUFJAHR , @PREIS , @KUPPLUNG , @LICHT , @PREISER, @SPURWEITE, @IDENTIFYER , @LAGERORT)";
+                    command.Parameters.AddWithValue("@FARBE", CacheData2);
+                    command.Parameters.AddWithValue("@TYP", Int32.Parse(CacheData1));
+                    command.Parameters.AddWithValue("@HERSTELLER", Int32.Parse(CacheData3));
+                    command.Parameters.AddWithValue("@KATALOGNUMMER", CacheData5);
+                    command.Parameters.AddWithValue("@SERIENNUMMER", CacheData6);
+                    command.Parameters.AddWithValue("@PREIS", CacheData10);
+                    command.Parameters.AddWithValue("@KAUFDAY", Int32.Parse(CacheData7));
+                    command.Parameters.AddWithValue("@KAUFMONAT", Int32.Parse(CacheData8));
+                    command.Parameters.AddWithValue("@KAUFJAHR", Int32.Parse(CacheData9));
+                    command.Parameters.AddWithValue("@SPURWEITE", Int32.Parse(CacheData14));
+                    command.Parameters.AddWithValue("@LAGERORT", Int32.Parse(CacheData16));
+                    command.Parameters.AddWithValue("@KUPPLUNG", Int32.Parse(CacheData11));
+                    command.Parameters.AddWithValue("@LICHT", Int32.Parse(CacheData12));
+                    command.Parameters.AddWithValue("@PREISER", Int32.Parse(CacheData13));
+                    command.Parameters.AddWithValue("@IDENTIFYER", CacheData15);
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                       startManager.LogError("Fehler beim Speichern des Wagon.", "Error by Insert the Wagon.", " Network_Manager :: SaveEditWagon().Semmel" + "==false; Error: " + ex);
+                        startManager.Error("UpdateWagon(Network_Manager);", "" + ex);
+                    }
+                    dbConnection.Close();
+                    dbConnection = null;
+                }
+                Semmel = false;
+            }
         }
+
         else
+
         if (CacheData0 == "ITEM")
         {
-            //startManager.Log("Modul Network_Manager :: Ok, Empfange ITEM daten..!");
+            for (int i = 0; i < itemManager.Item.Count; i++)
+            {
+                if (CacheData2 == itemManager.Item[i].dbBeschreibung)
+                {
+                    Semmel = true;
+                }
+            }
+            if (Semmel == false)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (Application.persistentDataPath + "/" + "Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into Inventory (ARTKNR , STUECK , BESCHREIBUNG , PREIS) VALUES" + " (@ARTKNR , @STUECK , @BESCHREIBUNG ,  @PREIS)";
+                    command.Parameters.AddWithValue("@ARTKNR", CacheData3);
+                    command.Parameters.AddWithValue("@STUECK", CacheData1);
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", CacheData2);
+                    command.Parameters.AddWithValue("@PREIS", CacheData4);
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern des Items.", "Error by Save the Item.", " Inventory_Manager :: SaveItem(); Error: " + ex);
+                        startManager.Error("InsertItem(Network_Manager);", "" + ex);
+                    }
+                        dbConnection.Close();
+                }
+                //inventoryList.RefreschIndex();
+                Semmel = false;
+            }
         }
+
         else
+
         if (CacheData0 == "Decoder")
         {
-            //startManager.Log("Modul Network_Manager :: Ok, Empfange Decoder daten..!");
+            for (int i = 0; i < decoderManager.dbDecoder.Count; i++)
+            {
+                if (CacheData22 == decoderManager.dbDecoder[i].dbIdentifyer)
+                {
+                    Semmel = true;
+                }
+            }
+            if (Semmel == true)
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (Application.persistentDataPath + "/" + "Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "UPDATE DECODER SET BESCHREIBUNG = @BESCHREIBUNG, OUT1 = @OUT1, OUT2 = @OUT2 , OUT3 = @OUT3 , OUT4 = @OUT4 , OUT5 = @OUT5 ,OUT6 = @OUT6 , OUT7 = @OUT7 ,OUT8 = @OUT8 , OUT9 = @OUT9 , OUT10 = @OUT10 , OUT11 = @OUT11 , OUT12 = @OUT12 , OUT13 = @OUT13 , OUT14 = @OUT14 ,OUT15 = @OUT15 , OUT16 = @OUT16  WHERE IDENTIFYER='" + CacheData22 + "' AND IDENTIFYER='" + CacheData22 + "'  ";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", CacheData2);
+                    command.Parameters.AddWithValue("@TYPE", Int32.Parse(CacheData4));
+                    command.Parameters.AddWithValue("@OUT1", CacheData5);
+                    command.Parameters.AddWithValue("@OUT2", CacheData6);
+                    command.Parameters.AddWithValue("@OUT3", CacheData7);
+                    command.Parameters.AddWithValue("@OUT4", CacheData8);
+                    command.Parameters.AddWithValue("@OUT5", CacheData9);
+                    command.Parameters.AddWithValue("@OUT6", CacheData10);
+                    command.Parameters.AddWithValue("@OUT7", CacheData11);
+                    command.Parameters.AddWithValue("@OUT8", CacheData12);
+                    command.Parameters.AddWithValue("@OUT9", CacheData13);
+                    command.Parameters.AddWithValue("@OUT10", CacheData14);
+                    command.Parameters.AddWithValue("@OUT11", CacheData15);
+                    command.Parameters.AddWithValue("@OUT12", CacheData16);
+                    command.Parameters.AddWithValue("@OUT13", CacheData17);
+                    command.Parameters.AddWithValue("@OUT14", CacheData18);
+                    command.Parameters.AddWithValue("@OUT15", CacheData19);
+                    command.Parameters.AddWithValue("@OUT16", CacheData20);
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Update the Decoder", " Decoder_Liste :: SaveDecoder::Edit = true; M84(); Error: " + ex);
+                        startManager.Error("UpdateDecoder(Network_Manager);", "" + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Network_Manager :: Decoder Upgedated", "Modul Network_Manager :: Decoder Upgedated");
+                    }
+                    //decoderList.ReadDecoder();
+                    Semmel = false;
+                }
+            }
+            else
+            {
+                SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (Application.persistentDataPath + "/" + "Database/" + "TrainBase.ext2db"));
+                using (SqliteCommand command = new SqliteCommand())
+                {
+                    command.Connection = dbConnection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "INSERT into DECODER (BESCHREIBUNG , TYPE , OUT1 , OUT2 , OUT3 , OUT4 , OUT5 ,OUT6 , OUT7 ,OUT8 , OUT9 , OUT10 , OUT11 , OUT12 , OUT13 , OUT14 ,OUT15 , OUT16 , IDENTIFYER  ) VALUES" + " (@BESCHREIBUNG , @TYPE , @OUT1 , @OUT2 , @OUT3 , @OUT4 , @OUT5 ,@OUT6 , @OUT7 ,@OUT8 , @OUT9 , @OUT10 , @OUT11 , @OUT12 , @OUT13 , @OUT14 ,@OUT15 , @OUT16 , @IDENTIFYER )";
+                    command.Parameters.AddWithValue("@BESCHREIBUNG", CacheData2);
+                    command.Parameters.AddWithValue("@TYPE", Int32.Parse(CacheData4));
+                    command.Parameters.AddWithValue("@OUT1", CacheData5);
+                    command.Parameters.AddWithValue("@OUT2", CacheData6);
+                    command.Parameters.AddWithValue("@OUT3", CacheData7);
+                    command.Parameters.AddWithValue("@OUT4", CacheData8);
+                    command.Parameters.AddWithValue("@OUT5", CacheData9);
+                    command.Parameters.AddWithValue("@OUT6", CacheData10);
+                    command.Parameters.AddWithValue("@OUT7", CacheData11);
+                    command.Parameters.AddWithValue("@OUT8", CacheData12);
+                    command.Parameters.AddWithValue("@OUT9", CacheData13);
+                    command.Parameters.AddWithValue("@OUT10", CacheData14);
+                    command.Parameters.AddWithValue("@OUT11", CacheData15);
+                    command.Parameters.AddWithValue("@OUT12", CacheData16);
+                    command.Parameters.AddWithValue("@OUT13", CacheData17);
+                    command.Parameters.AddWithValue("@OUT14", CacheData18);
+                    command.Parameters.AddWithValue("@OUT15", CacheData19);
+                    command.Parameters.AddWithValue("@OUT16", CacheData20);
+                    command.Parameters.AddWithValue("@IDENTIFYER", CacheData22);
+                    try
+                    {
+                        dbConnection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqliteException ex)
+                    {
+                        startManager.LogError("Fehler beim Speichern des Decoder.", "Error Save the Decoder", " Decoder_Liste :: SaveDecoder::M84(); Error: " + ex);
+                        startManager.Error("InsertDecoder(Network_Manager);", "" + ex);
+                    }
+                    finally
+                    {
+                        dbConnection.Close();
+                        startManager.Log("Modul Network_Manager :: Decoder Hinzugefügt.", "Modul Network_Manager :: Decoder Saved.");
+                    }
+                    //decoderList.ReadDecoder();
+                    Semmel = false;
+                }
+            }
         }
+
         else
+
         if (CacheData0 == "IP")
         {
-            //startManager.Log("Modul Network_Manager :: Getting Other IP");
+            startManager.Log("Modul Network_Manager :: Sender IP: " + OtherIP, "Modul Network_Manager :: Sender IP: " + OtherIP);
             OtherIP = CacheData1;
         }
         else
+
         if (CacheData0 == "disconnect")
         {
-            startManager.Log("Modul Network_Manager :: Bekomme andere IP", "Modul Network_Manager :: Getting Other IP");
+            startManager.Log("Modul Network_Manager :: Sender Trennt die Verbindung", "Modul Network_Manager :: Sender Close the Connection");
             DisconnectHost();
         }
     }
 
-    void ClientButton() //Open Client -> Receiver
+    void ClientButton()
     {
         IsClient = true;
         byte error;
@@ -386,14 +601,13 @@ public class Network_Manager : MonoBehaviour
         m_ConnectionID = NetworkTransport.Connect(m_ClientSocket, ConnectionIp, 54321, 0, out error);
         if ((NetworkError)error != NetworkError.Ok)
         {
-            //startManager.Log("Modul Network_Manager :: Error: " + (NetworkError)error);
-            //startManager.Notify("Verbindungs Fehler.", "red");
+            startManager.LogError("Verbindungs Fehler.", "Connection Error.", "Modul Network_Manager :: Error: " + (NetworkError)error);
         }
     }
 
     void ServerButton() //Open the Server -> Sender
     {
-        //startManager.Notify("Verbindung ist OK.", "green");
+        startManager.Notify("Verbindung ist OK.", "Connection is OK.", "green", "green");
         IsServer = true;
         byte error;
         m_ServerSocket = NetworkTransport.AddHost(m_HostTopology, 54321);
@@ -416,11 +630,8 @@ public class Network_Manager : MonoBehaviour
         NetworkTransport.Send(m_ClientSocket, m_ConnectionID, m_ChannelID, buffer, (int)message.Position, out error);
         if ((NetworkError)error != NetworkError.Ok)
         {
-            //startManager.Log("Modul Network_Manager :: Message send error: " + (NetworkError)error);
+            startManager.LogError("Falsches Protokoll","Wrong Protokoll","Modul Network_Manager :: Message send error: " + (NetworkError)error);
         }
-        //startManager.Log("Modul Network_Manager :: Send to = " + m_ClientSocket + ", connectionId = " + m_ConnectionID + ", channelId = " + m_ChannelID + ", size = " + (int)message.Position + ", error = " + error.ToString());
-        //startManager.Log("Modul Network_Manager :: Send data = " + textInput);
-        //startManager.Notify("Sende Daten..", "blue");
     }
 
     public void DisconnectHost()
@@ -429,7 +640,8 @@ public class Network_Manager : MonoBehaviour
         ConnectionIsReady = false;
         m_ClientsActive = false;
         IsServer = false;
-        Debug.Log("Trenne Verbindung");
+        startManager.Notify("Verbindung Getrennt", "Connection Closed", "yellow", "yellow");
+        startManager.Log("Modul Network_Manager :: Verbindung Getrennt", "Modul Network_Manager :: Connection Closed");
     }
 
     IEnumerator PushTick()
@@ -445,30 +657,66 @@ public class Network_Manager : MonoBehaviour
                 TrainTick = TrainTick + 1;
             }
             else
+            {
+                if (Train == false)
+                {
+                    startManager.Log("Modul Network_Manager :: Trainlisten Synchronisation Abgeschlossen.", "Modul Network_Manager :: Train Synchronisation Finshed.");
+                    Train = true;
+                }
+            }
+
             if (WagonTick != wagonList.Trains.Count)
             {
                 WagonTick = WagonTick + 1;
             }
             else
+            {
+                if (Wagon == false)
+                {
+                    startManager.Log("Modul Network_Manager :: Wagonlisten Synchronisation Abgeschlossen.", "Modul Network_Manager :: Wagons Synchronisation Finshed.");
+                    Wagon = true;
+                }
+            }
+
             if (ItemTick != itemManager.Item.Count)
             {
                 ItemTick = ItemTick + 1;
             }
             else
+            {
+                if (Item == false)
+                {
+                    startManager.Log("Modul Network_Manager :: Inventorylist Synchronisation Abgeschlossen.", "Modul Network_Manager :: Inventorylist Synchronisation Finshed.");
+                    Item = true;
+                }
+            }
+
             if (DecoderTick != decoderManager.dbDecoder.Count)
             {
                 DecoderTick = DecoderTick + 1;
             }
             else
+            {
+                if (Decoder == false)
+                {
+                    startManager.Log("Modul Network_Manager :: Decoderlist Synchronisation Abgeschlossen.", "Modul Network_Manager :: Decoderlist Synchronisation Finshed.");
+                    Decoder = true;
+                }
+            }
+
             if (TickCounts == (TrainTick + WagonTick + ItemTick + DecoderTick))
             {
                 DisconnectHost();
             }
-            StartCoroutine(PushTick());
+            else
+            {
+                StartCoroutine(PushTick());
+            }
         }
         else
         {
-
+            startManager.Log("Modul Network_Manager :: Autosync ist nicht an, Benutze die ForceSync Funktion zum Senden.!", "Modul Network_Manager :: Autosync is not Enabled, Use the Force Sync Function!");
+            startManager.Notify("Autosync ist nicht an Benutze die RPC Export Funktion", "Autosync is not on, Use the RPC Export Funktion", "cyan", "cyan");
         }
     }
 

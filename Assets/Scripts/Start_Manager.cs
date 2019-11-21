@@ -19,6 +19,7 @@ public class Start_Manager : MonoBehaviour
     public string StatsUrl;
     public string KeyURL;
     public string AVGPriceURL;
+    public string ErrorURL;
     public string Language;
     public string ConfigLanguage;
     public string CopyrightLine;
@@ -35,6 +36,7 @@ public class Start_Manager : MonoBehaviour
     public bool IsGerman;
     public bool IsEnglisch;
     public bool Premium = false;
+    public bool AutoError = false;
     private config configData;
     [Header("Haupt-Panel-Elements")]
     public Text Copyright;
@@ -44,6 +46,10 @@ public class Start_Manager : MonoBehaviour
     public Image DebugIcon;
     Color ColorParser;
     Color ColorParserIcon;
+    public GameObject ErrorView;
+    public Text ErrorTyp;
+    public Text ErrorDSC;
+    public string Send = "Aus";
     [Header("Verlauf-Panel")]
     public Text History;
 
@@ -64,6 +70,7 @@ public class Start_Manager : MonoBehaviour
             ProgrammIsInEditorMode = true;
             Log("Modul Start_Manager :: Programm ist im Editor Mode, Keine Statistik, Update Check Verfügbar.", "Modul Start_Manager :: Programm is im Editor Mode, No Statistik, Update Check");
         }
+
     }
 
     void GetLanguage()
@@ -87,6 +94,7 @@ public class Start_Manager : MonoBehaviour
             configData.AutoDedectLanguage = AutoDedectLanguage;
             configData.WriteErrorLog = WriteError;
             configData.WriteLog = WriteLog;
+            configData.AutoError = AutoError;
             string jsonData = JsonUtility.ToJson(configData, true);
             File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml", jsonData);
         }
@@ -164,6 +172,11 @@ public class Start_Manager : MonoBehaviour
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons"))
         {
             Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/" + "Images/" + "Wagons");
+        }
+
+        if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Inventory"))
+        {
+            Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/" + "Images/" + "Inventory");
         }
 
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups"))
@@ -384,6 +397,7 @@ public class Start_Manager : MonoBehaviour
         WriteLog = configData.WriteLog;
         WriteError = configData.WriteErrorLog;
         AutoDedectLanguage = configData.AutoDedectLanguage;
+        AutoError = configData.AutoError;
     }
 
     void SetScreen()
@@ -499,6 +513,35 @@ public class Start_Manager : MonoBehaviour
         }
         if (insert.isDone)
         {
+        }
+    }
+
+    public void Error(string Activity, string Error)
+    {
+        if(AutoError == true)
+        {
+            Send = "AN";
+            StartCoroutine(SendError(Activity, Error));
+        }
+        else
+        {
+            Send = "AUS";
+        }
+        ErrorTyp.text = "Fehler: " + Activity;
+        ErrorDSC.text = "Fehler wird Automatisch Gemeldet: " + Send + "\n \n" + Error;
+        ErrorView.gameObject.SetActive(true);
+    }
+
+    private IEnumerator SendError(string Error, string Activity)
+    {
+        string FinshURL = "http://" + ErrorURL + "error" + "/insert.php?error=" + Activity + "&data=" + Error + " ";
+        WWW insert = new WWW(FinshURL);
+
+        yield return insert;
+
+        if (insert.error != null)
+        {
+            LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Train_List :: SendSelected(); Error: " + insert.error);
         }
     }
 }

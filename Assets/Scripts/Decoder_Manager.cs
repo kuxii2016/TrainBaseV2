@@ -140,6 +140,7 @@ public class Decoder_Manager : MonoBehaviour
             catch (SqliteException ex)
             {
                 startManager.LogError("Modul Decoder_Liste :: Decoder wurde Gelöscht id:" + SelectedID, "Modul Decoder_Liste :: Decoder Removed id:" + SelectedID, " Decoder_Liste :: Delete(); Error: " + ex);
+                startManager.Error("Delete(Decoder);", "" + ex);
             }
             finally
             {
@@ -207,6 +208,7 @@ public class Decoder_Manager : MonoBehaviour
         catch (SqliteException ex)
         {
             startManager.LogError("Fehler beim Laden der Decoder.", "Error Loading Decoder Data", " Decoder_Liste :: ReadAllItems(); Error: " + ex);
+            startManager.Error("ReadAll(Decoder);", "" + ex);
         }
         finally
         {
@@ -374,6 +376,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::S88(); Error: " + ex);
+                        startManager.Error("Savedecoder(S88);", "" + ex);
                     }
                     finally
                     {
@@ -418,6 +421,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::M83(); Error: " + ex);
+                        startManager.Error("Savedecoder(M83);", "" + ex);
                     }
                     finally
                     {
@@ -462,6 +466,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Speichern des Decoder.", "Error Saving Decoder Data", " Decoder_Liste :: SaveDecoder::M84(); Error: " + ex);
+                        startManager.Error("Savedecoder(M84);", "" + ex);
                     }
                     finally
                     {
@@ -509,6 +514,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; S88(); Error: " + ex);
+                        startManager.Error("UpdateDecoder(S88);", "" + ex);
                     }
                     finally
                     {
@@ -552,6 +558,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; M83(); Error: " + ex);
+                        startManager.Error("UpdateDecoder(M83);", "" + ex);
                     }
                     finally
                     {
@@ -595,6 +602,7 @@ public class Decoder_Manager : MonoBehaviour
                     catch (SqliteException ex)
                     {
                         startManager.LogError("Fehler beim Bearbeiten des Decoder.", "Error Edit Decoder Data", " Decoder_Liste :: SaveDecoder::Edit = true; M84(); Error: " + ex);
+                        startManager.Error("UpdateDecoder(M84);", "" + ex);
                     }
                     finally
                     {

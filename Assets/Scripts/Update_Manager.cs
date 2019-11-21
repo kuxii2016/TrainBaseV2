@@ -42,8 +42,8 @@ public class Update_Manager : MonoBehaviour
         TVersion = startManager.ProgrammVersion;
         ParsedTVersion = TVersion.Replace(".", "");
     }
-	
-    private IEnumerator CheckVersion()
+
+    public IEnumerator CheckVersion()
     {
         {
             WWW www = new WWW(UpdateURL);
@@ -77,6 +77,14 @@ public class Update_Manager : MonoBehaviour
         }
     }
 
+    public void ManuellCheck()
+    {
+        StartCoroutine(CheckVersion());
+        StartCoroutine(CheckNews());
+        startManager.Notify("Check version", "Checked version", "cyan", "cyan");
+        EnableUpdateWindows();
+    }
+
     public void DisableWin()
     {
         Checked = false;
@@ -89,6 +97,7 @@ public class Update_Manager : MonoBehaviour
         {
             Updatewindows.SetActive(false);
             startManager.Log("MODUL  Update_Manager :: Version ist Aktuell", "MODUL Update_Manager :: Version is current");
+            startManager.Notify("Version ist Aktuell", "Version is Uptodate", "green", "green");
         }
         else
         {
@@ -106,7 +115,7 @@ public class Update_Manager : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckNews()
+    public IEnumerator CheckNews()
     {
         {
             WWW www = new WWW("https://" + startManager.UpdateUrl + "/" + startManager.ProgrammVersion + "/news.txt");

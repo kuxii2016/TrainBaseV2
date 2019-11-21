@@ -50,6 +50,7 @@ public class Settings_Manager : MonoBehaviour
     public Toggle PreisInventar;
     public Toggle AnnonPrice;
     public Toggle Autosync;
+    public Toggle AutoReport;
     public Dropdown Lang;
     public Dropdown ImageTyp;
     public Dropdown Wartungs;
@@ -88,6 +89,7 @@ public class Settings_Manager : MonoBehaviour
     public Text resolutionText;
     public Text ToggleText;
     public Resolution[] resolutions;
+    public bool IsLoadet = false;
 
     void Start ()
     {
@@ -95,12 +97,6 @@ public class Settings_Manager : MonoBehaviour
         if (startManager.IsGerman)
         {
             Language = "German";
-            ReCreateTrainImages.GetComponentInChildren<Text>().text = "Stantart Lokbilder Erstellen";
-            ReCreateWagonImages.GetComponentInChildren<Text>().text = "Stantart Wagon Erstellen";
-            RefreshTrainImages.GetComponentInChildren<Text>().text = "Lokbilder neu Einlesen";
-            RefreshWagonImages.GetComponentInChildren<Text>().text = "Wagonbilder neu Einlesen";
-            CheckVersion.GetComponentInChildren<Text>().text = "Auf neue Version Prüfen";
-            SaveSettings.GetComponentInChildren<Text>().text = "Einstellungen Speichern";
             AnnonPrice.GetComponentInChildren<Text>().text = "Anonyme Preis erfassung";
             Displaylabel.text = "Display Einstellungen";
             resolutionText.text = "Auflösung:";
@@ -206,6 +202,7 @@ public class Settings_Manager : MonoBehaviour
             {
                 Lang.value = 1;
             }
+            AutoReport.isOn = configData.AutoError;
             Autosync.isOn = configData.Autosync;
             AnnonPrice.isOn = configData.AVGPrice;
             WriteError.isOn = configData.WriteErrorLog;
@@ -223,6 +220,7 @@ public class Settings_Manager : MonoBehaviour
             NonWartungColor.text = configData.NonMaintenanceColor;
             Fullscreen.isOn = configData.FullScreen;
             Resulotion.RefreshShownValue();
+            IsLoadet = true;
         }
         else
         {
@@ -259,6 +257,7 @@ public class Settings_Manager : MonoBehaviour
         catch (SqliteException ex)
         {
             startManager.LogError("Fehler beim Laden der Einstellungen.", "Error Loading Settings Data", " Settings_Manager :: ReadSettings; Error: " + ex);
+            startManager.Error("ReadDatabase(Settings_Manager);", "" + ex);
         }
         dbConnection.Close();
         dbConnection = null;
@@ -371,13 +370,21 @@ public class Settings_Manager : MonoBehaviour
 
     public void RefreshTrainPic()
     {
-        trainList.RefreshIntervall();
+        trainList.RefreshIndex();
     }
 
     public void SaveSettingsBTN()
     {
         try
         {
+            if(AutoReport.isOn == true)
+            {
+                configData.AutoError = true;
+            }
+            else
+            {
+                configData.AutoError = false;
+            }
             if(DedectLang.isOn == true)
             {
                 configData.AutoDedectLanguage = true;
@@ -500,10 +507,12 @@ public class Settings_Manager : MonoBehaviour
         catch (Exception ex)
         {
             startManager.LogError("Fehler beim Speichern der Einstellungen.", "Error Saving Settings.", "Settings_Manager Train_List :: Error SaveSettingsBTN(); " + ex);
+            startManager.Error("SaveSettings(Settings_Manager);", "" + ex);
         }
         finally
         {
             startManager.Log("Modul Settings_Manager :: Einstellungen Erfolgreich Gespeichert.", "Settings_Manager Train_List :: Settings Successfully saved.");
+            startManager.Notify("Einstellungen Gespeichert.!", "Settings Saved.!", "green", "green");
         }
     }
 

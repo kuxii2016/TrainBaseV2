@@ -110,6 +110,7 @@ public class Backup_Manager : MonoBehaviour
         {
             startManager.Notify("Backup wurde nicht Erstellt", "Backup not Creadet", "red", "red");
             startManager.LogError("Backup wurde nicht Erstellt.", "Backup not Creadet", " Backup_Manager :: CreateBackup(); Error: " + ex);
+            startManager.Error("CreateBackup(Backup);",  "" + ex);
         }
         finally
         {
@@ -152,6 +153,7 @@ public class Backup_Manager : MonoBehaviour
         {
             startManager.Notify("Kann Datenbank nicht Überschreiben", "Can not Replace the Database", "red", "red");
             startManager.LogError("Backup wurde nicht Wieder Hergestellt.", "Backup not ReCreadet", " Backup_Manager :: ReCreate(); Error: " + ex);
+            startManager.Error("ReCreate(Backup);", "" + ex);
         }
         finally
         {

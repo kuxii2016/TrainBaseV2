@@ -19,4 +19,6 @@
     public int Resolution = 0;
     public bool AVGPrice = false;
     public bool Autosync = false;
+    public string LastIP = "";
+    public bool AutoError = false;
 }

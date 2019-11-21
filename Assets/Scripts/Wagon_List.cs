@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Überarbeitete Version vom 17.11.2019 19:53
+using System;
 using System.IO;
 using System.Data;
 using System.Text;
@@ -38,6 +39,7 @@ public class Wagon_List : MonoBehaviour
     [Header("Depents")]
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
+    public Network_Manager NM;
     [Header("Lok View - Elemente")]
     public List<WagonData> Trains;
     public Texture2D[] CacheImage;
@@ -123,19 +125,18 @@ public class Wagon_List : MonoBehaviour
     public GameObject Win;
     public InputField SendOK;
     public string ImageType;
+    public Texture2D StandArtPic;
 
     void Start()
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Wagon_List -> Nachricht ist Normal.", "Load Wagon_List -> message is normal");
-        ReadTrains();
+        RefreschIndex();
         IsPremium = UserSettings.Premium;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        ImageType = UserSettings.ImageType;
-        CompleteTrains = Trains.Count;
         for (int i = 0; i < 12; i++)
         {
             EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
@@ -144,10 +145,8 @@ public class Wagon_List : MonoBehaviour
                 SelectedID = (i + PageOffset);
             }
         }
-    }
-
-    private void FixedUpdate()
-    {
+        ImageType = UserSettings.ImageType;
+        CompleteTrains = Trains.Count;
         if (IsPremium == true)
         {
             if (startManager.IsGerman == true)
@@ -206,64 +205,7 @@ public class Wagon_List : MonoBehaviour
         }
     }
 
-    public void SetCurrentScreen()
-    {
-        ClearScreen();
-
-        if (IsPremium == true)
-        {
-            if (startManager.IsGerman == true)
-            {
-                CTrains.text = "Gefundene Wagons: " + CompleteTrains;
-                WTrains.text = "";
-                NTrains.text = "";
-            }
-            else
-            {
-
-                CTrains.text = "Found Wagons: " + CompleteTrains;
-                WTrains.text = "";
-                NTrains.text = "";
-            }
-        }
-
-        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
-        {
-            if (startManager.IsGerman == true)
-            {
-                Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
-                SlotBild[i - PageOffset].texture = CacheImage[i];
-                TrainID[i - PageOffset].text = "ID: " + (i + 1).ToString();
-
-                if (IsPremium == true)
-                {
-                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                }
-                else
-                {
-
-                    Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                }
-            }
-            else
-            {
-                Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + vTyp[Trains[i].DBTyp] + " | " + "FARBE: " + Trains[i].DBFarbe;
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DBHersteller] + " | Spur: " + vSpur[Trains[i].DBSpurweite] + " | AtNR: " + Trains[i].DBKatalognummer + " | " + "SNR: " + Trains[i].DBSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DBErstellt + " | Kauf am: " + Tag[Trains[i].DBKaufTag] + "." + Monat[Trains[i].DBKaufMonat] + "." + Jahr[Trains[i].DBKaufJahr];
-                SlotBild[i - PageOffset].texture = CacheImage[i];
-            }
-        }
-    }
-
-    public void ReadTrains()
+    public void RefreschIndex()
     {
         Trains = new List<WagonData>();
         SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
@@ -303,30 +245,29 @@ public class Wagon_List : MonoBehaviour
         catch (SqliteException ex)
         {
             startManager.LogError("Fehler beim Laden der Wagondaten.", "Error Loading Wagondata Data", " Wagon_List :: ReadTrains(); Error: " + ex);
+            startManager.Error("RefreshIndex(Wagons);", "" + ex);
         }
+        LoadIcon();
         dbConnection.Close();
         dbConnection = null;
+        startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
+        startManager.Log("Modul Wagon_List :: " +Trains.Count+" Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
+    }
+
+    private void LoadIcon()
+    {
         CacheImage = new Texture2D[Trains.Count];
         for (int i = 0; i < Trains.Count; i++)
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons"))
-            {
-                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons");
-            }
-
             if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
             {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Wagon.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType);
-                startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
+                CacheImage[i] = StandArtPic;
             }
             else
             {
                 StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType), i));
             }
         }
-        startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
-        startManager.Log("Modul Wagon_List :: Alle Wagons Eingelesen.", "Modul Wagon_List :: All Wagons are Read");
-        startManager.Log("Modul Wagon_List :: " +Trains.Count+" Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
     }
 
     IEnumerator LoadImage(string url, int i)
@@ -343,13 +284,17 @@ public class Wagon_List : MonoBehaviour
 
     public void PageVorward()
     {
+        for (int i = 0; i < 12; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
         if (Trains.Count >= PageOffset)
         {
             PageOffset2 = PageOffset2 + 12;
             PageOffset = PageOffset + 12;
             CurrentPage = CurrentPage + 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
         }
         else
         {
@@ -357,12 +302,16 @@ public class Wagon_List : MonoBehaviour
             PageOffset = 0;
             CurrentPage = 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
         }
     }
 
     public void PageBack()
     {
+        for (int i = 0; i < 12; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
         if (PageOffset == 0)
         {
         }
@@ -372,35 +321,6 @@ public class Wagon_List : MonoBehaviour
             PageOffset = PageOffset - 12;
             CurrentPage = CurrentPage - 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
-        }
-    }
-
-    void ClearScreen()
-    {
-        for (int i = 0; i < 12; i++)
-        {
-            Slot[i].gameObject.SetActive(false);
-            Slot1[i].GetComponent<Text>().text = "";
-            Slot2[i].GetComponent<Text>().text = "";
-            Slot3[i].GetComponent<Text>().text = "";
-            DeleteEditToggle[i].isOn = false;
-        }
-    }
-
-    public void RefreschImages()
-    {
-        for (int i = 0; i < Trains.Count; i++)
-        {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType))
-            {
-                File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType);
-                startManager.Log("Modul Wagon_List :: Wagon ID: " + i + " Kein Bild vorhanden, Erstelle standart Bild.", "Modul Wagon_List :: Wagon ID: " + i + " No picture available, Create standard Picture");
-            }
-            else
-            {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + UserSettings.ImageType), i));
-            }
         }
     }
 
@@ -420,9 +340,7 @@ public class Wagon_List : MonoBehaviour
                 SqliteCommand Command = new SqliteCommand(sql, dbConnection);
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
-                Trains.RemoveAt(SelectedID);
                 File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (SelectedID + 1) + "." + UserSettings.ImageType);
-                SelectedID = -1;
             }
             catch (SqliteException ex)
             {
@@ -433,27 +351,17 @@ public class Wagon_List : MonoBehaviour
                 startManager.Notify("Lok wurde Gelöscht id:" + (SelectedID + 1), "Train Removed id:" + (SelectedID + 1), "green", "green");
                 startManager.Log("Modul Wagon_List :: Wagin id: " + SelectedID + " wurde Erfolgreich Gelöscht.!", "Modul Wagon_List :: Wagon id: " + SelectedID + " Removed.!");
             }
-            DeleteSchutz();
-            SetCurrentScreen();
+            
         }
         SelectedID = -1;
-        DeleteEditToggle[0].isOn = false;
-        DeleteEditToggle[1].isOn = false;
-        DeleteEditToggle[2].isOn = false;
-        DeleteEditToggle[3].isOn = false;
-        DeleteEditToggle[4].isOn = false;
-        DeleteEditToggle[5].isOn = false;
-        DeleteEditToggle[6].isOn = false;
-        DeleteEditToggle[7].isOn = false;
-        DeleteEditToggle[8].isOn = false;
-        DeleteEditToggle[9].isOn = false;
-        DeleteEditToggle[10].isOn = false;
-        DeleteEditToggle[11].isOn = false;
-    }
-
-    public void DeleteSchutz()
-    {
-        SelectedID = -1;
+        for (int i = 0; i < 12; i++)
+        {
+            EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
+            if (EditDeleteToggle[i] == true)
+            {
+                SelectedID = (i + PageOffset);
+            }
+        }
     }
 
     public void SaveEditTrain()
@@ -509,28 +417,25 @@ public class Wagon_List : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save.", " Wagon_List :: SaveEditTrain().IsEditMode==True; Error: " + ex);
+                    startManager.Error("EditWagon(Wagons);", "" + ex);
                 }
                 finally
                 {
-                    SetCurrentScreen();
                     startManager.Notify("Wagon wurde Bearbeited", "Wagon edited", "green", "green");
                 }
                 dbConnection.Close();
                 dbConnection = null;
             }
             SelectedID = -1;
-            DeleteEditToggle[0].isOn = false;
-            DeleteEditToggle[1].isOn = false;
-            DeleteEditToggle[2].isOn = false;
-            DeleteEditToggle[3].isOn = false;
-            DeleteEditToggle[4].isOn = false;
-            DeleteEditToggle[5].isOn = false;
-            DeleteEditToggle[6].isOn = false;
-            DeleteEditToggle[7].isOn = false;
-            DeleteEditToggle[8].isOn = false;
-            DeleteEditToggle[9].isOn = false;
-            DeleteEditToggle[10].isOn = false;
-            DeleteEditToggle[11].isOn = false;
+            for (int i = 0; i < 12; i++)
+            {
+                EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
+                if (EditDeleteToggle[i] == true)
+                {
+                    SelectedID = (i + PageOffset);
+                }
+            }
+            RefreschIndex();
         }
         else
         {
@@ -584,6 +489,7 @@ public class Wagon_List : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Wagon_List :: SaveEditTrain().IsEditMode==false; Error: " + ex);
+                    startManager.Error("Save(Wagons);", "" + ex);
                 }
                 finally
                 {
@@ -591,26 +497,22 @@ public class Wagon_List : MonoBehaviour
                     {
                         File.Copy(Application.streamingAssetsPath + "/Resources/Train.png", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (Trains.Count + 1) + "." + UserSettings.ImageType);
                     }
-                    SetCurrentScreen();
                     startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");
                 }
                 dbConnection.Close();
                 dbConnection = null;
             }
             SelectedID = -1;
-            DeleteEditToggle[0].isOn = false;
-            DeleteEditToggle[1].isOn = false;
-            DeleteEditToggle[2].isOn = false;
-            DeleteEditToggle[3].isOn = false;
-            DeleteEditToggle[4].isOn = false;
-            DeleteEditToggle[5].isOn = false;
-            DeleteEditToggle[6].isOn = false;
-            DeleteEditToggle[7].isOn = false;
-            DeleteEditToggle[8].isOn = false;
-            DeleteEditToggle[9].isOn = false;
-            DeleteEditToggle[10].isOn = false;
-            DeleteEditToggle[11].isOn = false;
+            for (int i = 0; i < 12; i++)
+            {
+                EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
+                if (EditDeleteToggle[i] == true)
+                {
+                    SelectedID = (i + PageOffset);
+                }
+            }
         }
+        RefreschIndex();
     }
 
     public void GetLokData()
@@ -705,5 +607,23 @@ public class Wagon_List : MonoBehaviour
         File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Exporter/" + vHersteller[Trains[SelectedID].DBHersteller] + "-" + Trains[SelectedID].DBKatalognummer + "-" + Trains[SelectedID].DBFarbe + ".TRAIN", jsonData);
         SelectedID = -1;
         startManager.Notify("Wagon als Datei Exportiert", "Wagon as File Exported", "green", "green");
+    }
+
+    public void SendWagon(int id)
+    {
+        NM.TrySendTrainData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
+    }
+
+    public void ForceRPCSend()
+    {
+        if (SelectedID == -1)
+        {
+            startManager.Notify("Kein Wagon ausgewählt","No Wagon Selecdet","yellow", "yellow");
+        }
+        else
+        {
+            int id = SelectedID;
+            NM.TrySendTrainData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
+        }
     }
 }

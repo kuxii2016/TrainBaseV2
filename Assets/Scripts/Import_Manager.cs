@@ -298,6 +298,7 @@ public class Import_Manager : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Import_Manager :: SaveEditTrain().Type == 'TRAIN' Error: " + ex);
+                    startManager.Error("Import(Train);", "" + ex);
                 }
                 finally
                 {
@@ -316,7 +317,7 @@ public class Import_Manager : MonoBehaviour
                 }
                 dbConnection.Close();
                 dbConnection = null;
-                TL.ReadTrains();
+                TL.RefreshIndex();
             }
         }
         else
@@ -350,6 +351,7 @@ public class Import_Manager : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save.", " Import_Manager :: SaveEditTrain().Type == 'TRAIN' Error: " + ex);
+                    startManager.Error("Import(Wagon);", "" + ex);
                 }
                 finally
                 {
@@ -365,7 +367,7 @@ public class Import_Manager : MonoBehaviour
                         }
                     }
                     startManager.Notify("Wagon Gespeichert", "Wagon Saved", "green", "green");
-                    WL.ReadTrains();
+                    WL.RefreschIndex();
                 }
                 dbConnection.Close();
                 dbConnection = null;

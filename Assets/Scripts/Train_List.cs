@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Überarbeitete Version vom 17.11.2019 19:53
+using System;
 using System.IO;
 using System.Data;
 using System.Text;
@@ -49,7 +50,7 @@ public class TrainData : System.Object
     public string DBIdentifyer;
     public int DBLagerort;
     public bool Wartung;
-    public bool Checked;
+    public bool Checked = false;
 }
 
 public class Train_List : MonoBehaviour
@@ -148,78 +149,30 @@ public class Train_List : MonoBehaviour
     public GameObject Win;
     public InputField SendOK;
     public string ImageType;
-    byte[] Image;
 
     void Start()
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Train_List -> Nachricht ist Normal.", "Load Train_List -> message is normal");
-        ClearScreen();
-        ReadTrains();
-        IsPremium = UserSettings.Premium;
+        RefreshIndex();
         readIntervall();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
+        for (int i = 0; i < 12; i++)
+        {
+            EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
+            if (EditDeleteToggle[i] == true)
+            {
+                SelectedID = (i + PageOffset);
+            }
+        }
+        ImageType = UserSettings.ImageType;
+        IsPremium = UserSettings.Premium;
         for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
         {
-            TrainID[i - PageOffset].gameObject.SetActive(true);
             TrainID[i - PageOffset].text = "ID: " + (i + 1);
-            SlotBild[i - PageOffset].texture = CacheImage[i];
-            if (IsPremium == true)
-            {
-                if (Trains[i].DbSound == 1)
-                {
-                    Smoke[i - PageOffset].SetActive(true);
-                }
-                else
-                {
-                    Smoke[i - PageOffset].SetActive(false);
-                }
-                if (Trains[i].DbROTWEISS == 1)
-                {
-                    LightSwitch[i - PageOffset].SetActive(true);
-                }
-                else
-                {
-                    LightSwitch[i - PageOffset].SetActive(false);
-                }
-            }
-        }
-
-        for (int i = 0; i < Trains.Count; i++)
-        {
-            if (Trains[i].Checked == false)
-            {
-                DateTime date = DateTime.Now;
-                DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
-                Trains[i].Checked = true;
-                if (firstStart != 1)
-                {
-                    CompleteTrains = CompleteTrains + 1;
-                }
-                if (date1 >= date)
-                {
-                    if (firstStart != 1)
-                    {
-                        nonWartungsTrains = nonWartungsTrains + 1;
-                    }
-                    Trains[i].Wartung = false;
-                }
-                else
-                {
-                    if (firstStart != 1)
-                    {
-                        WartungsTrains = WartungsTrains + 1;
-                    }
-                    Trains[i].Wartung = true;
-                }
-            }
-        }
-
-        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
-        {
             if (startManager.IsGerman == true)
             {
                 Slot[i - PageOffset].gameObject.SetActive(true);
@@ -227,42 +180,11 @@ public class Train_List : MonoBehaviour
                 Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Spur: " + vSpur[Trains[i].DbSpurweite] + " | AtNR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
                 Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "." + Jahr[Trains[i].DbWartungJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
-                if (Trains[i].Wartung == true)
+                if (IsPremium == true)
                 {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    }
-                    else
-                    {
-                        Smoke[i - PageOffset].SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    }
-                }
-                else
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        WartungsPic[i - PageOffset].SetActive(false);
-                        LightSwitch[i - PageOffset].SetActive(false);
-                        Smoke[i - PageOffset].SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    }
+                    CTrains.text = "Gefundene Loks: " + CompleteTrains;
+                    WTrains.text = "Loks mit Wartung: " + WartungsTrains;
+                    NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
                 }
             }
             else
@@ -272,83 +194,53 @@ public class Train_List : MonoBehaviour
                 Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Gauge: " + vSpur[Trains[i].DbSpurweite] + " | INR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
                 Slot3[i - PageOffset].GetComponent<Text>().text = " Detected: " + Trains[i].DbAngelegt + " | Last Maintenance: " + Monat[Trains[i].DbWartungMonat] + "." + Tag[Trains[i].DbWartungTag] + "." + Jahr[Trains[i].DbWartungJahr];
                 SlotBild[i - PageOffset].texture = CacheImage[i];
-                if (Trains[i].Wartung == true)
+                if (IsPremium == true)
                 {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
-
-                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    }
+                    CTrains.text = "Gefundene Loks: " + CompleteTrains;
+                    WTrains.text = "Loks mit Wartung: " + WartungsTrains;
+                    NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
+                }
+            }
+            if (Trains[i].Wartung == true)
+            {
+                if (IsPremium == true)
+                {
+                    WartungsPic[i - PageOffset].SetActive(true);
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
                 }
                 else
                 {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    }
+                    Smoke[i - PageOffset].SetActive(false);
+                    Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
+                }
+            }
+            else
+            {
+                if (IsPremium == true)
+                {
+                    WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                    Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
+                }
+                else
+                {
+                    WartungsPic[i - PageOffset].gameObject.SetActive(false);
+                    WartungsPic[i - PageOffset].SetActive(false);
+                    LightSwitch[i - PageOffset].SetActive(false);
+                    Smoke[i - PageOffset].SetActive(false);
+                    Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
+                    Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
                 }
             }
         }
     }
-
-    void Update()
-    {
-        ImageType = UserSettings.ImageType;
-
-        for (int i = 0; i < 12; i++)
-        {
-            EditDeleteToggle[i] = DeleteEditToggle[i].isOn;
-            if (EditDeleteToggle[i] == true)
-            {
-                SelectedID = (i + PageOffset);
-            }
-        }
-
-        if (IsPremium == true)
-        {
-            if (startManager.IsGerman == true)
-            {
-                CTrains.text = "Gefundene Loks: " + CompleteTrains;
-                WTrains.text = "Loks mit Wartung: " + WartungsTrains;
-                NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
-            }
-            else
-            {
-
-                CTrains.text = "Found Trains: " + CompleteTrains;
-                WTrains.text = "Trains with Maintenance: " + WartungsTrains;
-                NTrains.text = "Trains without Maintenance: " + nonWartungsTrains;
-            }
-        }
-        else
-        {
-
-            CTrains.text = "";
-            WTrains.text = "";
-            NTrains.text = "";
-        }
-    }
-
+    
     public void readIntervall()
     {
         for (int i = 0; i < Trains.Count; i++)
@@ -384,198 +276,10 @@ public class Train_List : MonoBehaviour
         }
         startManager.Log("Modul Train_List :: Loks mit Wartung: " + WartungsTrains + " Loks ohne Wartung: " + nonWartungsTrains + " Gespeicherte Loks: " + CompleteTrains, "Modul Train_List :: Trains with Maintenance: " + WartungsTrains + " Trains without Maintenance: " + nonWartungsTrains + " Total Trains: " + CompleteTrains);
         firstStart = 1;
+        LoadIcon();
     }
 
-    public void SetCurrentScreen()
-    {
-        ClearScreen();
-
-        if (IsPremium == true)
-        {
-            if (startManager.IsGerman == true)
-            {
-                CTrains.text = "Gefundene Loks: " + CompleteTrains;
-                WTrains.text = "Loks mit Wartung: " + WartungsTrains;
-                NTrains.text = "Loks ohne Wartung: " + nonWartungsTrains;
-            }
-            else
-            {
-
-                CTrains.text = "Found Trains: " + CompleteTrains;
-                WTrains.text = "Trains with Maintenance: " + WartungsTrains;
-                NTrains.text = "Trains without Maintenance: " + nonWartungsTrains;
-            }
-        }
-
-        for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
-        {
-            if (startManager.IsGerman == true)
-            {
-                Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "FARBE: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Spur: " + vSpur[Trains[i].DbSpurweite] + " | AtNR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Erfasst: " + Trains[i].DbAngelegt + " | Letzte Wartung am: " + Tag[Trains[i].DbWartungTag] + "." + Monat[Trains[i].DbWartungMonat] + "." + Jahr[Trains[i].DbWartungJahr];
-                SlotBild[i - PageOffset].texture = CacheImage[i];
-                if (Trains[i].Wartung == true)
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
-
-                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    }
-                }
-                else
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    }
-                }
-            }
-            else
-            {
-                Slot[i - PageOffset].gameObject.SetActive(true);
-                Slot1[i - PageOffset].GetComponent<Text>().text = " " + Trains[i].DbBaureihe + " | " + "Color: " + Trains[i].DbFarbe + " | " + "#: " + Trains[i].DbAdresse + " -> " + vProtokoll[Trains[i].DbProtokoll];
-                Slot2[i - PageOffset].GetComponent<Text>().text = " " + vHersteller[Trains[i].DbHersteller] + " | Gauge: " + vSpur[Trains[i].DbSpurweite] + " | INR: " + Trains[i].DbKatalognummer + " | " + "SNR: " + Trains[i].DbSeriennummer;
-                Slot3[i - PageOffset].GetComponent<Text>().text = " Detected: " + Trains[i].DbAngelegt + " | Last Maintenance: " + Monat[Trains[i].DbWartungMonat] + "." + Tag[Trains[i].DbWartungTag] + "." + Jahr[Trains[i].DbWartungJahr];
-                SlotBild[i - PageOffset].texture = CacheImage[i];
-                if (Trains[i].Wartung == true)
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].SetActive(true);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol0;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].SetActive(false);
-
-                        Slot1[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = ColorWartung;
-                    }
-                }
-                else
-                {
-                    if (IsPremium == true)
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = UserSettings.newCol1;
-                    }
-                    else
-                    {
-                        WartungsPic[i - PageOffset].gameObject.SetActive(false);
-                        Slot1[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                        Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
-                    }
-                }
-            }
-        }
-    }
-
-    public void ReadTrains()
-    {
-        Trains = new List<TrainData>();
-        SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
-        dbConnection.Open();
-        try
-        {
-            SqliteCommand cmd = new SqliteCommand("SELECT * FROM Trains", dbConnection);
-            SqliteDataReader reader = cmd.ExecuteReader();
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    TrainData trainData = new TrainData();
-                    trainData.DbBaureihe = reader.GetString(0);
-                    trainData.DbFarbe = reader.GetString(1);
-                    trainData.DbLokTyp = reader.GetInt32(2);
-                    trainData.DbHersteller = reader.GetInt32(3);
-                    trainData.DbAngelegt = reader.GetString(4);
-                    trainData.DbKatalognummer = reader.GetString(5);
-                    trainData.DbSeriennummer = reader.GetString(6);
-                    trainData.DbPreis = reader.GetChar(8);
-                    trainData.DbWartungTag = reader.GetInt32(9);
-                    trainData.DbWartungMonat = reader.GetInt32(10);
-                    trainData.DbWartungJahr = reader.GetInt32(11);
-                    trainData.DbAdresse = reader.GetString(12);
-                    trainData.DbProtokoll = reader.GetInt32(13);
-                    trainData.DbFahrstufen = reader.GetInt32(14);
-                    trainData.DbDecHersteller = reader.GetString(15);
-                    trainData.DbRauch = reader.GetInt32(16);
-                    trainData.DbSound = reader.GetInt32(17);
-                    trainData.DbROTWEISS = reader.GetInt32(18);
-                    trainData.DbPandos = reader.GetInt32(19);
-                    trainData.DbTelex = reader.GetInt32(20);
-                    trainData.DbElekKupplung = reader.GetInt32(21);
-                    trainData.DbKaufTag = reader.GetInt32(22);
-                    trainData.DbKaufMonat = reader.GetInt32(23);
-                    trainData.DbKaufJahr = reader.GetInt32(24);
-                    trainData.DbSpurweite = reader.GetInt32(25);
-                    trainData.DbCV2 = reader.GetInt32(26);
-                    trainData.DbCV3 = reader.GetInt32(27);
-                    trainData.DbCV4 = reader.GetInt32(28);
-                    trainData.DbCV5 = reader.GetInt32(29);
-                    trainData.DBIdentifyer = reader.GetString(31);
-                    trainData.DBLagerort = reader.GetInt32(32);
-                    TotalSumme = TotalSumme + reader.GetChar(8);
-                    Trains.Add(trainData);
-                }
-            }
-            reader.Close();
-            reader = null;
-        }
-        catch (SqliteException ex)
-        {
-            startManager.LogError("Fehler beim Laden der Lokdaten.", "Error Loading Locomotive Data", " Train_List :: ReadAllTrains(); Error: " + ex);
-        }
-        finally
-        {
-            CacheImage = new Texture2D[Trains.Count];
-            for (int i = 0; i < Trains.Count; i++)
-            {
-                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
-                {
-                    CacheImage[i] = StandartPic;
-                }
-                else
-                {
-                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
-                }
-            }
-                dbConnection.Close();
-            dbConnection = null;
-        }
-        startManager.Notify("Alle Loks Eingelesen", "All Locos are Read", "green", "green");
-        startManager.Log("Modul Train_List :: Alle Loks Eingelesen.", "Modul Train_List :: All Locos are Read");
-    }
-
-    public void RefreshIntervall()
+    public void RefreshIndex()
     {
         Trains.Clear();
         CompleteTrains = 0;
@@ -632,13 +336,18 @@ public class Train_List : MonoBehaviour
         }
         catch (SqliteException ex)
         {
+            startManager.LogError("Fehler beim Reload.", "Error by Reload Train.", " Train_List :: RefreshIndex() Error: " + ex);
         }
         finally
         {
+            LoadIcon();
             dbConnection.Close();
             dbConnection = null;
         }
+    }
 
+    private void LoadIcon()
+    {
         CacheImage = new Texture2D[Trains.Count];
         for (int i = 0; i < Trains.Count; i++)
         {
@@ -650,7 +359,6 @@ public class Train_List : MonoBehaviour
             {
                 StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
             }
-
             if (Trains[i].Checked == false)
             {
                 DateTime date = DateTime.Now;
@@ -671,11 +379,6 @@ public class Train_List : MonoBehaviour
         }
     }
 
-    public void SetArrayNew()
-    {
-        RefreschImages();
-    }
-
     IEnumerator LoadImage(string url, int i)
     {
         Texture2D tex;
@@ -690,13 +393,17 @@ public class Train_List : MonoBehaviour
 
     public void PageVorward()
     {
+        for (int i = 0; i < 12; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
         if (Trains.Count >= PageOffset)
         {
             PageOffset2 = PageOffset2 + 12;
             PageOffset = PageOffset + 12;
             CurrentPage = CurrentPage + 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
         }
         else
         {
@@ -704,12 +411,21 @@ public class Train_List : MonoBehaviour
             PageOffset = 0;
             CurrentPage = 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
         }
     }
 
     public void PageBack()
     {
+        for (int i = 0; i < 12; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
         if (PageOffset == 0)
         {
         }
@@ -719,30 +435,6 @@ public class Train_List : MonoBehaviour
             PageOffset = PageOffset - 12;
             CurrentPage = CurrentPage - 1;
             Page.text = CurrentPage.ToString();
-            SetCurrentScreen();
-        }
-    }
-
-    void ClearScreen()
-    {
-        for (int i = 0; i < 12; i++)
-        {
-            Slot[i].gameObject.SetActive(false);
-            Slot1[i].GetComponent<Text>().text = "";
-            Slot2[i].GetComponent<Text>().text = "";
-            Slot3[i].GetComponent<Text>().text = "";
-            DeleteEditToggle[i].isOn = false;
-            LightSwitch[i].SetActive(false);
-            Smoke[i].SetActive(false);
-            TrainID[i].gameObject.SetActive(false);
-        }
-    }
-
-    public void RefreschImages()
-    {
-        for (int i = 0; i < Trains.Count; i++)
-        {
-            StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
         }
     }
 
@@ -750,7 +442,7 @@ public class Train_List : MonoBehaviour
     {
         if (SelectedID == -1)
         {
-            startManager.Notify("Keine Lok ausgewählt", "No Train Selected", "red", "red");
+            startManager.Notify("Keine Lok ausgewählt", "No Train Selected", "yellow", "yellow");
         }
         else
         {
@@ -762,41 +454,27 @@ public class Train_List : MonoBehaviour
                 SqliteCommand Command = new SqliteCommand(sql, dbConnection);
                 Command.ExecuteNonQuery();
                 dbConnection.Close();
-                Trains.RemoveAt(SelectedID);
-                readIntervall();
-                SetCurrentScreen();
                 File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (SelectedID + 1) + "." + UserSettings.ImageType);
                 SelectedID = -1;
             }
             catch (SqliteException ex)
             {
                 startManager.LogError("Modul Train_List :: Lok wurde Gelöscht id:" + SelectedID, "Modul Train_List :: Train Removed id:" + SelectedID, " Train_List :: DeleteTrain(); Error: " + ex);
+                startManager.Error("Delete(Train);", "" + ex);
             }
             finally
             {
                 startManager.Notify("Lok wurde Gelöscht id:" + (SelectedID + 1), "Train Removed id:" + (SelectedID + 1), "green", "green");
                 startManager.Log("Modul Train_List :: Lok wurde Gelöscht id:" + SelectedID, "Modul Train_List :: Train Removed id:" + SelectedID);
             }
-            DeleteSchutz();
+            RefreshIndex();
+            SelectedID = -1;
+            for (int i = 0; i < 12; i++)
+            {
+                DeleteEditToggle[i].isOn = false;
+                Slot[i].gameObject.SetActive(false);
+            }
         }
-        SelectedID = -1;
-        DeleteEditToggle[0].isOn = false;
-        DeleteEditToggle[1].isOn = false;
-        DeleteEditToggle[2].isOn = false;
-        DeleteEditToggle[3].isOn = false;
-        DeleteEditToggle[4].isOn = false;
-        DeleteEditToggle[5].isOn = false;
-        DeleteEditToggle[6].isOn = false;
-        DeleteEditToggle[7].isOn = false;
-        DeleteEditToggle[8].isOn = false;
-        DeleteEditToggle[9].isOn = false;
-        DeleteEditToggle[10].isOn = false;
-        DeleteEditToggle[11].isOn = false;
-    }
-
-    public void DeleteSchutz()
-    {
-        SelectedID = -1;
     }
 
     public void SaveEditTrain()
@@ -895,30 +573,24 @@ public class Train_List : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Train_List :: SaveEditTrain().IsEditMode==True; Error: " + ex);
+                    startManager.Error("UpdateTrain(Train);", "" + ex);
                 }
                 finally
                 {
                     readIntervall();
-                    SetCurrentScreen();
-                    startManager.Notify("Lok wurde Bearbeited", "Train edited", "green", "green");
+                    RefreshIndex();
+                    startManager.Notify("Lok wurde Erfolgreich Bearbeited", "Train edited", "green", "green");
+                    dbConnection.Close();
+                    dbConnection = null;
                 }
-                dbConnection.Close();
-                dbConnection = null;
             }
             IsEditMode = false;
             SelectedID = -1;
-            DeleteEditToggle[0].isOn = false;
-            DeleteEditToggle[1].isOn = false;
-            DeleteEditToggle[2].isOn = false;
-            DeleteEditToggle[3].isOn = false;
-            DeleteEditToggle[4].isOn = false;
-            DeleteEditToggle[5].isOn = false;
-            DeleteEditToggle[6].isOn = false;
-            DeleteEditToggle[7].isOn = false;
-            DeleteEditToggle[8].isOn = false;
-            DeleteEditToggle[9].isOn = false;
-            DeleteEditToggle[10].isOn = false;
-            DeleteEditToggle[11].isOn = false;
+            for (int i = 0; i < 12; i++)
+            {
+                DeleteEditToggle[i].isOn = false;
+                Slot[i].gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -1016,6 +688,7 @@ public class Train_List : MonoBehaviour
                 catch (SqliteException ex)
                 {
                     startManager.LogError("Fehler beim Speichern.", "Error by Save Train.", " Train_List :: SaveEditTrain().IsEditMode==False; Error: " + ex);
+                    startManager.Error("Save(Train);", "" + ex);
                 }
                 finally
                 {
@@ -1024,22 +697,15 @@ public class Train_List : MonoBehaviour
                 dbConnection.Close();
                 dbConnection = null;
             }
-            ReadTrains();
+            RefreshIndex();
         }
-        SetCurrentScreen();
+        IsEditMode = false;
         SelectedID = -1;
-        DeleteEditToggle[0].isOn = false;
-        DeleteEditToggle[1].isOn = false;
-        DeleteEditToggle[2].isOn = false;
-        DeleteEditToggle[3].isOn = false;
-        DeleteEditToggle[4].isOn = false;
-        DeleteEditToggle[5].isOn = false;
-        DeleteEditToggle[6].isOn = false;
-        DeleteEditToggle[7].isOn = false;
-        DeleteEditToggle[8].isOn = false;
-        DeleteEditToggle[9].isOn = false;
-        DeleteEditToggle[10].isOn = false;
-        DeleteEditToggle[11].isOn = false;
+        for (int i = 0; i < 12; i++)
+        {
+            DeleteEditToggle[i].isOn = false;
+            Slot[i].gameObject.SetActive(false);
+        }
     }
 
     public void GetLokData()
@@ -1148,7 +814,6 @@ public class Train_List : MonoBehaviour
     IEnumerator SendSelected()
     {
         string FinshURL = "http://" + startManager.WebExporterUrl + "exporter" + "/insert.php?uniqueID=" + uniqueID + "&data=ISTRAIN," + Trains[SelectedID].DbBaureihe.ToString() + "," + Trains[SelectedID].DbFarbe.ToString() + "," + Trains[SelectedID].DbLokTyp.ToString() + "," + Trains[SelectedID].DbHersteller.ToString() + "," + Trains[SelectedID].DbKatalognummer.ToString() + "," + Trains[SelectedID].DbSeriennummer.ToString() + "," + Trains[SelectedID].DbKaufTag.ToString() + "," + Trains[SelectedID].DbKaufMonat.ToString() + "," + Trains[SelectedID].DbKaufJahr.ToString() + "," + Trains[SelectedID].DbPreis.ToString() + "," + Trains[SelectedID].DbWartungTag.ToString() + "," + Trains[SelectedID].DbWartungMonat.ToString() + "," + Trains[SelectedID].DbWartungJahr.ToString() + "," + Trains[SelectedID].DbAdresse.ToString() + "," + Trains[SelectedID].DbProtokoll.ToString() + "," + Trains[SelectedID].DbFahrstufen.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbDecHersteller.ToString() + "," + Trains[SelectedID].DbAngelegt.ToString() + "," + Trains[SelectedID].DbRauch.ToString() + "," + Trains[SelectedID].DbSound.ToString() + "," + Trains[SelectedID].DbROTWEISS.ToString() + "," + "EMPTY" + "," + Trains[SelectedID].DbPandos.ToString() + "," + Trains[SelectedID].DbTelex.ToString() + "," + Trains[SelectedID].DbElekKupplung.ToString() + "," + Trains[SelectedID].DbSpurweite.ToString() + "," + Trains[SelectedID].DbCV2.ToString() + "," + Trains[SelectedID].DbCV3.ToString() + "," + Trains[SelectedID].DbCV4.ToString() + "," + Trains[SelectedID].DbCV5.ToString() + "," + Trains[SelectedID].DBIdentifyer.ToString() + "," + Trains[SelectedID].DBLagerort.ToString();
-        Debug.Log(FinshURL);
         WWW insert = new WWW(FinshURL);
 
         yield return insert;
@@ -1207,7 +872,19 @@ public class Train_List : MonoBehaviour
 
     public void SendTrain(int id)
     {
-        Image = File.ReadAllBytes(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (id + 1) + "." + ImageType);
-       NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + File.ReadAllBytes((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (id + 1) + "." + UserSettings.ImageType)));
+       NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
+    }
+
+    public void ForceRPCSend()
+    {
+        if (SelectedID == -1)
+        {
+            startManager.Notify("Keine Lok ausgewählt", "No Train Selecdet", "yellow", "yellow");
+        }
+        else
+        {
+            int id = SelectedID;
+            NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
+        }
     }
 }
