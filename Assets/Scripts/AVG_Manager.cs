@@ -135,6 +135,7 @@ public class AVG_Manager : MonoBehaviour
         if (insert.error != null)
         {
             startManager.LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Train_List :: SendSelected(); Error: " + insert.error);
+            startManager.Error("SendSelected(AVG);", insert.error);
         }
         if (insert.isDone)
         {
@@ -152,6 +153,7 @@ public class AVG_Manager : MonoBehaviour
             if (www.error != null)
             {
                 startManager.LogError("Fehler beim Abfragen der Daten.", "Error while querying the data", " AVG_Manager :: SendSelected(); Error: " + www.error);
+                startManager.Error("GetData(AVG)", www.error);
             }
             else
             {

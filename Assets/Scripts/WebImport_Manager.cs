@@ -689,6 +689,7 @@ public class WebImport_Manager : MonoBehaviour
             startManager.Log("WebImport_Manager :: Keine Verbindung zum Server", "WebImport_Manager :: No Server Connection");
             startManager.LogError("Keine Verbindung zum Server", "No Server Connection", " WebImport_Manager :: ReadData(); Error: " + read.error);
             startManager.Notify("Keine Verbindung zum Server", "No Server Connection", "red", "red");
+            startManager.Error("Clear(WebImport)", read.error.ToString());
         }
         else
         {

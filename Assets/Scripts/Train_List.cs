@@ -337,6 +337,7 @@ public class Train_List : MonoBehaviour
         catch (SqliteException ex)
         {
             startManager.LogError("Fehler beim Reload.", "Error by Reload Train.", " Train_List :: RefreshIndex() Error: " + ex);
+            startManager.Error("RefreshIndex(Trains)", ex.ToString());
         }
         finally
         {
@@ -348,34 +349,41 @@ public class Train_List : MonoBehaviour
 
     private void LoadIcon()
     {
-        CacheImage = new Texture2D[Trains.Count];
-        for (int i = 0; i < Trains.Count; i++)
+        try
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
+            CacheImage = new Texture2D[Trains.Count];
+            for (int i = 0; i < Trains.Count; i++)
             {
-                CacheImage[i] = StandartPic;
-            }
-            else
-            {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
-            }
-            if (Trains[i].Checked == false)
-            {
-                DateTime date = DateTime.Now;
-                DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
-                Trains[i].Checked = true;
-                CompleteTrains = CompleteTrains + 1;
-                if (date1 >= date)
+                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType))
                 {
-                    nonWartungsTrains = nonWartungsTrains + 1;
-                    Trains[i].Wartung = false;
+                    CacheImage[i] = StandartPic;
                 }
                 else
                 {
-                    WartungsTrains = WartungsTrains + 1;
-                    Trains[i].Wartung = true;
+                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (i + 1) + "." + ImageType), i));
+                }
+                if (Trains[i].Checked == false)
+                {
+                    DateTime date = DateTime.Now;
+                    DateTime date1 = new DateTime((Int32.Parse((Jahr[Trains[i].DbWartungJahr]).ToString()) + UserSettings.Maintenance), Int32.Parse(Monat[Trains[i].DbWartungMonat]), Int32.Parse(Tag[Trains[i].DbWartungTag]));
+                    Trains[i].Checked = true;
+                    CompleteTrains = CompleteTrains + 1;
+                    if (date1 >= date)
+                    {
+                        nonWartungsTrains = nonWartungsTrains + 1;
+                        Trains[i].Wartung = false;
+                    }
+                    else
+                    {
+                        WartungsTrains = WartungsTrains + 1;
+                        Trains[i].Wartung = true;
+                    }
                 }
             }
+        }
+        catch(Exception ex)
+        {
+            startManager.Error("LoadIcon(Trains)", ex.ToString());
         }
     }
 
@@ -821,6 +829,7 @@ public class Train_List : MonoBehaviour
         if (insert.error != null)
         {
             startManager.LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Train_List :: SendSelected(); Error: " + insert.error);
+            startManager.Error("SendSelected(Trains)", insert.error.ToString());
         }
         if (insert.isDone)
         {

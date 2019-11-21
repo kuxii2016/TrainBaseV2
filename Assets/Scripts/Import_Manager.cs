@@ -167,6 +167,7 @@ public class Import_Manager : MonoBehaviour
         catch (Exception ex)
         {
             startManager.LogError("Fehler beim Lesen der Daten.", "Error by Read the Data", " Import_Manager :: cacheData; Error: " + ex);
+            startManager.Error("cacheData(Import)", ex.ToString());
         }
         finally
         {

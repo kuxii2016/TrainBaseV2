@@ -178,28 +178,73 @@ public class Image_Manager : MonoBehaviour
     {
         if (Type == 0)
         {
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image);
-            TL.CacheImage[TL.SelectedID] = Pic[id];
-            TrainEditPic.texture = Pic[id];
-            TL.RefreshIndex();
-
+            try
+            {
+                if(File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image))
+                {
+                    File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image);
+                }
+                File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image);
+                TL.CacheImage[TL.SelectedID] = Pic[id];
+                TrainEditPic.texture = Pic[id];
+                TL.RefreshIndex();
+            }
+            catch(Exception ex)
+            {
+                startManager.Error("CopyImage(Image) == 0", ex.ToString());
+            }
+            finally
+            {
+                startManager.Log("Modul Image_Manager :: Bild Ausgetauscht", "Modul Image_Manager :: Image Replaced");
+            }
         }
 
         if (Type == 1)
         {
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + Image);
-            WL.CacheImage[WL.SelectedID] = Pic[id];
-            WagonEditPic.texture = Pic[id];
-            WL.RefreschIndex();
+            try
+            {
+                if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + Image))
+                {
+                    File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + Image);
+                }
+                File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (WL.SelectedID + 1) + "." + Image);
+                WL.CacheImage[WL.SelectedID] = Pic[id];
+                WagonEditPic.texture = Pic[id];
+                WL.RefreschIndex();
+            }
+            catch (Exception ex)
+            {
+                startManager.Error("CopyImage(Image) == 1", ex.ToString());
+            }
+            finally
+            {
+                startManager.Log("Modul Image_Manager :: Bild Ausgetauscht", "Modul Image_Manager :: Image Replaced");
+            }
         }
 
         if (Type == 2)
         {
-            File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + Image);
-            IM.CacheImage[IM.SelectedID] = Pic[id];
-            IM.RefreschIndex();
+            try
+            {
+                if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + Image))
+                {
+                    File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + Image);
+                }
+                File.Copy(Images[id], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Inventory/" + (IM.SelectedID + 1) + "." + Image);
+                IM.CacheImage[IM.SelectedID] = Pic[id];
+                IM.RefreschIndex();
+            }
+            catch (Exception ex)
+            {
+                startManager.Error("CopyImage(Image) == 2", ex.ToString());
+            }
+            finally
+            {
+                startManager.Log("Modul Image_Manager :: Bild Ausgetauscht", "Modul Image_Manager :: Image Replaced");
+            }
         }
-        ImageView.SetActive(false);
+
+    ImageView.SetActive(false);
     }
 
     public void SetImageRecorder(int id)

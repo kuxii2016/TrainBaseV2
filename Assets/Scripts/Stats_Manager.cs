@@ -449,6 +449,7 @@ public class Stats_Manager : MonoBehaviour
         catch (Exception ex)
         {
             startManager.LogError("Fehler beim Laden der Daten.", "Error Loading  Data", " Stats_Manager :: ReadDataValues(); Error: " + ex);
+            startManager.Error("ReadDataValues(Stats)", ex.ToString());
         }
         finally
         {

@@ -51,6 +51,7 @@ public class Update_Manager : MonoBehaviour
             if (www.error != null)
             {
                 startManager.Log("MODUL  Update_Manager :: Keine Verbindung zum Server", "MODUL Update_Manager :: No Connection to the Server");
+                startManager.Error("CheckVersion(Update)", www.error.ToString());
             }
             else
             {
@@ -122,6 +123,7 @@ public class Update_Manager : MonoBehaviour
             yield return www;
             if (www.error != null)
             {
+                startManager.Error("CheckNews(Update)", www.error.ToString());
             }
             else
             {

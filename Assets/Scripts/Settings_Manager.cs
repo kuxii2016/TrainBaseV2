@@ -385,6 +385,7 @@ public class Settings_Manager : MonoBehaviour
             {
                 configData.AutoError = false;
             }
+
             if(DedectLang.isOn == true)
             {
                 configData.AutoDedectLanguage = true;
@@ -483,7 +484,7 @@ public class Settings_Manager : MonoBehaviour
             }
             else
             {
-                configData.Autosync = true;
+                configData.Autosync = false;
             }
 
             configData.ImageTyp = ImageTyp.value;

@@ -256,17 +256,24 @@ public class Wagon_List : MonoBehaviour
 
     private void LoadIcon()
     {
-        CacheImage = new Texture2D[Trains.Count];
-        for (int i = 0; i < Trains.Count; i++)
+        try
         {
-            if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
+            CacheImage = new Texture2D[Trains.Count];
+            for (int i = 0; i < Trains.Count; i++)
             {
-                CacheImage[i] = StandArtPic;
+                if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType))
+                {
+                    CacheImage[i] = StandArtPic;
+                }
+                else
+                {
+                    StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType), i));
+                }
             }
-            else
-            {
-                StartCoroutine(LoadImage((System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Wagons/" + (i + 1) + "." + ImageType), i));
-            }
+        }
+        catch(Exception ex)
+        {
+            startManager.Error("LoadIcon(Wagons)", ex.ToString());
         }
     }
 
@@ -575,6 +582,7 @@ public class Wagon_List : MonoBehaviour
         if (insert.error != null)
         {
             startManager.LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Train_List :: SendSelected(); Error: " + insert.error);
+            startManager.Error("SendSelected(Wagons)", insert.error.ToString());
         }
         if (insert.isDone)
         {

@@ -602,6 +602,7 @@ public class Network_Manager : MonoBehaviour
         if ((NetworkError)error != NetworkError.Ok)
         {
             startManager.LogError("Verbindungs Fehler.", "Connection Error.", "Modul Network_Manager :: Error: " + (NetworkError)error);
+            startManager.Error("ClientButton(Network)", "" + (NetworkError)error);
         }
     }
 
@@ -631,26 +632,32 @@ public class Network_Manager : MonoBehaviour
         if ((NetworkError)error != NetworkError.Ok)
         {
             startManager.LogError("Falsches Protokoll","Wrong Protokoll","Modul Network_Manager :: Message send error: " + (NetworkError)error);
+            startManager.Error("SendData(Network)", "" + (NetworkError)error);
         }
     }
 
     public void DisconnectHost()
     {
-        NetworkTransport.RemoveHost(m_ServerSocket);
-        ConnectionIsReady = false;
-        m_ClientsActive = false;
-        IsServer = false;
-        startManager.Notify("Verbindung Getrennt", "Connection Closed", "yellow", "yellow");
-        startManager.Log("Modul Network_Manager :: Verbindung Getrennt", "Modul Network_Manager :: Connection Closed");
+        try
+        {
+            NetworkTransport.RemoveHost(m_ServerSocket);
+            ConnectionIsReady = false;
+            m_ClientsActive = false;
+            IsServer = false;
+            startManager.Notify("Verbindung Getrennt", "Connection Closed", "yellow", "yellow");
+            startManager.Log("Modul Network_Manager :: Verbindung Getrennt", "Modul Network_Manager :: Connection Closed");
+        }
+        catch(Exception ex)
+        {
+            startManager.Error("NetworkError", ex.ToString());
+        }
     }
 
     IEnumerator PushTick()
     {
         if (settingsManager.Autosync.isOn == true)
         {
-            Debug.Log("Read Data");
             yield return new WaitForSeconds(2);
-
             if (TrainTick != trainList.Trains.Count)
             {
                 trainList.SendTrain(TrainTick);
@@ -703,15 +710,7 @@ public class Network_Manager : MonoBehaviour
                     Decoder = true;
                 }
             }
-
-            if (TickCounts == (TrainTick + WagonTick + ItemTick + DecoderTick))
-            {
-                DisconnectHost();
-            }
-            else
-            {
-                StartCoroutine(PushTick());
-            }
+            StartCoroutine(PushTick());
         }
         else
         {
