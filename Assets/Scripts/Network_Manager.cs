@@ -91,10 +91,13 @@ public class Network_Manager : MonoBehaviour
     public bool Wagon = false;
     public bool Item = false;
     public bool Decoder = false;
+    private config configData;
 
     void Start()
     {
+        configData = new config();
         startManager.Log("Lade Network_Manager -> Nachricht ist Normal.", "Load Network_Manager -> Nachricht ist Normal.");
+        GetLastIP();
         m_ClientsActive = false;
         myText = "";
         ConnectionConfig config = new ConnectionConfig();
@@ -599,6 +602,17 @@ public class Network_Manager : MonoBehaviour
         byte error;
         m_ClientSocket = NetworkTransport.AddHost(m_HostTopology);
         m_ConnectionID = NetworkTransport.Connect(m_ClientSocket, ConnectionIp, 54321, 0, out error);
+        try
+        {
+            configData.LastIP = ConnectionIp.ToString();
+            string jsonData = JsonUtility.ToJson(configData, true);
+            File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml", jsonData);
+        }
+        catch(Exception ex)
+        {
+            startManager.LogError("Fehler beim Speichern der Einstellungen.", "Error Saving Settings.", "Network_Manager :: Write Last IP(); " + ex);
+            startManager.Error("Network_Manager(Write Last IP);", "" + ex);
+        }
         if ((NetworkError)error != NetworkError.Ok)
         {
             startManager.LogError("Verbindungs Fehler.", "Connection Error.", "Modul Network_Manager :: Error: " + (NetworkError)error);
@@ -722,5 +736,30 @@ public class Network_Manager : MonoBehaviour
     public void TrySendTrainData(string TrainData)
     {
         SendData(TrainData);
+    }
+
+    void GetLastIP()
+    {
+        try
+        {
+            if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"))
+            {
+                configData = JsonUtility.FromJson<config>(File.ReadAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml"));
+                if (ConnectionIp != null)
+                {
+                    ConnectionIp = configData.LastIP;
+                    settingsManager.SenderIP.text = configData.LastIP;
+                }
+                else
+                {
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            startManager.LogError("Fehler beim Speichern der Einstellungen.", "Error Saving Settings.", "Network_Manager :: Load Last IP(); " + ex);
+            startManager.Error("Network_Manager(Load Last IP);", "" + ex);
+        }
     }
 }

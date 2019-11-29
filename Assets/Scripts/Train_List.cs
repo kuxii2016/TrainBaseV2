@@ -137,6 +137,7 @@ public class Train_List : MonoBehaviour
     public RawImage TrainPic;
     public GameObject EditPanel;
     private DataExporter dataexporter;
+    public GameObject CV;
     [Header("Workflow")]
     public int firstStart = 0;
     public bool IsPremium = false;
@@ -714,6 +715,7 @@ public class Train_List : MonoBehaviour
             DeleteEditToggle[i].isOn = false;
             Slot[i].gameObject.SetActive(false);
         }
+        CV.gameObject.SetActive(false);
     }
 
     public void GetLokData()
@@ -751,6 +753,14 @@ public class Train_List : MonoBehaviour
             GUUID.text = Trains[SelectedID].DBIdentifyer;
             Lager.value = Trains[SelectedID].DBLagerort;
 
+            if(Trains[SelectedID].DbProtokoll != 0)
+            {
+                CV.gameObject.SetActive(true);
+            }
+            else
+            {
+                CV.gameObject.SetActive(false);
+            }
             if (Trains[SelectedID].DbRauch == 1)
             {
                 EditRauch.isOn = true;
