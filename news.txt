@@ -1,4 +1,4 @@
-
-In Vers. 1.1.4 ist Neu,
-- DiscordRPC
-- Anlagen Decoder können nun Gespeichert werden.
+In Vers. 1.1.8 ist Neu,
+- Fehler Reporter Ausgearbeitet
+- Lok CV's werden nun im Analog Modus ausgeblendet
+- Image Importer Fehler behoben
