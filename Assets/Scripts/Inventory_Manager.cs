@@ -309,6 +309,6 @@ public class Inventory_Manager : MonoBehaviour
 
     public void SendItem(int id)
     {
-        NM.TrySendTrainData("ITEM" + "?" + Item[id].dbStueck.ToString() + "?" + Item[id].dbBeschreibung.ToString() + "?" + Item[id].dbArtkNR.ToString() + "?" + Item[id].dbPreis.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
+        NM.TrySendData("ITEM" + "?" + Item[id].dbStueck.ToString() + "?" + Item[id].dbBeschreibung.ToString() + "?" + Item[id].dbArtkNR.ToString() + "?" + Item[id].dbPreis.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
     }
 }

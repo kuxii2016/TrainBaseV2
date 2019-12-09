@@ -120,6 +120,7 @@ public class Network_Manager : MonoBehaviour
         int receivedSize;
         byte error;
         NetworkEventType eventType = NetworkTransport.Receive(out outHostId, out outConnectionId, out outChannelId, buffer, buffer.Length, out receivedSize, out error);
+
         switch (eventType)
         {
             case NetworkEventType.ConnectEvent:
@@ -141,12 +142,15 @@ public class Network_Manager : MonoBehaviour
                 startManager.Notify("Verbindung Getrennt", "Connection Closed", "red", "red");
                 break;
         }
+
         m_InputField.gameObject.SetActive(m_ClientsActive);
+
         if (m_ClientsActive)
         {
             m_ClientButton.gameObject.SetActive(false);
             m_ServerButton.gameObject.SetActive(false);
         }
+
         if (CacheData0 == "IP")
         {
             if (OtherIP == "0.0.0.0")
@@ -166,6 +170,7 @@ public class Network_Manager : MonoBehaviour
                 }
             }
         }
+
         if (IsClient == true && ConnectionIsReady == true && Beginn == 0)
         {
             Beginn = 1;
@@ -596,40 +601,52 @@ public class Network_Manager : MonoBehaviour
         }
     }
 
-    void ClientButton()
+    public void ClientButton()
     {
-        IsClient = true;
-        byte error;
-        m_ClientSocket = NetworkTransport.AddHost(m_HostTopology);
-        m_ConnectionID = NetworkTransport.Connect(m_ClientSocket, ConnectionIp, 54321, 0, out error);
         try
+        {
+            byte error;
+            m_ClientSocket = NetworkTransport.AddHost(m_HostTopology);
+            m_ConnectionID = NetworkTransport.Connect(m_ClientSocket, ConnectionIp, 54321, 0, out error);
+            if ((NetworkError)error != NetworkError.Ok)
+            {
+                startManager.LogError("Verbindungs Fehler.", "Connection Error.", "Modul Network_Manager :: Error: " + (NetworkError)error);
+                startManager.Error("ClientButton(Network)", "" + (NetworkError)error);
+            }
+        }
+        catch(Exception ex)
+        {
+            startManager.Error("Network_Manager(ClientButton);", "" + ex);
+        }
+        finally
         {
             configData.LastIP = ConnectionIp.ToString();
             string jsonData = JsonUtility.ToJson(configData, true);
             File.WriteAllText(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/" + "config.xml", jsonData);
+            IsClient = true;
+        }
+    }
+
+    public void ServerButton() //Open the Server -> Sender
+    {
+        try
+        {
+            byte error;
+            m_ServerSocket = NetworkTransport.AddHost(m_HostTopology, 54321);
+            NetworkTransport.Connect(m_ServerSocket, "127.0.0.1", 54321, 0, out error);
         }
         catch(Exception ex)
         {
-            startManager.LogError("Fehler beim Speichern der Einstellungen.", "Error Saving Settings.", "Network_Manager :: Write Last IP(); " + ex);
-            startManager.Error("Network_Manager(Write Last IP);", "" + ex);
+            startManager.Error("Network_Manager(ServerButton); ", "" + ex);
         }
-        if ((NetworkError)error != NetworkError.Ok)
+        finally
         {
-            startManager.LogError("Verbindungs Fehler.", "Connection Error.", "Modul Network_Manager :: Error: " + (NetworkError)error);
-            startManager.Error("ClientButton(Network)", "" + (NetworkError)error);
+            startManager.Notify("Verbindung ist OK.", "Connection is OK.", "green", "green");
+            IsServer = true;
         }
     }
 
-    void ServerButton() //Open the Server -> Sender
-    {
-        startManager.Notify("Verbindung ist OK.", "Connection is OK.", "green", "green");
-        IsServer = true;
-        byte error;
-        m_ServerSocket = NetworkTransport.AddHost(m_HostTopology, 54321);
-        NetworkTransport.Connect(m_ServerSocket, "127.0.0.1", 54321, 0, out error);
-    }
-
-    void SendMessageField() //Zwischen Cache Für Debug Daten
+    void SendMessageField()
     {
         myText = m_InputField.text;
         SendData(myText);
@@ -655,11 +672,15 @@ public class Network_Manager : MonoBehaviour
         try
         {
             NetworkTransport.RemoveHost(m_ServerSocket);
+            //NetworkTransport.Shutdown();
             ConnectionIsReady = false;
             m_ClientsActive = false;
             IsServer = false;
             startManager.Notify("Verbindung Getrennt", "Connection Closed", "yellow", "yellow");
             startManager.Log("Modul Network_Manager :: Verbindung Getrennt", "Modul Network_Manager :: Connection Closed");
+            m_ClientButton.gameObject.SetActive(true);
+            m_ServerButton.gameObject.SetActive(true);
+            settingsManager.SenderIP.gameObject.SetActive(true);
         }
         catch(Exception ex)
         {
@@ -671,11 +692,14 @@ public class Network_Manager : MonoBehaviour
     {
         if (settingsManager.Autosync.isOn == true)
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(4);
+
             if (TrainTick != trainList.Trains.Count)
             {
                 trainList.SendTrain(TrainTick);
                 TrainTick = TrainTick + 1;
+                startManager.Log("Modul Network_Manager :: Send Train ID: " + TrainTick, "Modul Network_Manager :: Send Train ID: " + TrainTick);
+                StartCoroutine(PushTick());
             }
             else
             {
@@ -688,7 +712,10 @@ public class Network_Manager : MonoBehaviour
 
             if (WagonTick != wagonList.Trains.Count)
             {
+                wagonList.SendWagon(WagonTick);
                 WagonTick = WagonTick + 1;
+                startManager.Log("Modul Network_Manager :: Send Wagon ID: " + WagonTick, "Modul Network_Manager :: Send Wagon ID: " + WagonTick);
+                StartCoroutine(PushTick());
             }
             else
             {
@@ -701,7 +728,10 @@ public class Network_Manager : MonoBehaviour
 
             if (ItemTick != itemManager.Item.Count)
             {
+                itemManager.SendItem(ItemTick);
                 ItemTick = ItemTick + 1;
+                startManager.Log("Modul Network_Manager :: Send Item ID: " + ItemTick, "Modul Network_Manager :: Send Item ID: " + ItemTick);
+                StartCoroutine(PushTick());
             }
             else
             {
@@ -714,7 +744,10 @@ public class Network_Manager : MonoBehaviour
 
             if (DecoderTick != decoderManager.dbDecoder.Count)
             {
+                decoderManager.SendDecoder(DecoderTick);
                 DecoderTick = DecoderTick + 1;
+                startManager.Log("Modul Network_Manager :: Send Decoder ID: " + DecoderTick, "Modul Network_Manager :: Send Decoder ID: " + DecoderTick);
+                StartCoroutine(PushTick());
             }
             else
             {
@@ -724,7 +757,6 @@ public class Network_Manager : MonoBehaviour
                     Decoder = true;
                 }
             }
-            StartCoroutine(PushTick());
         }
         else
         {
@@ -733,9 +765,9 @@ public class Network_Manager : MonoBehaviour
         }
     }
 
-    public void TrySendTrainData(string TrainData)
+    public void TrySendData(string input)
     {
-        SendData(TrainData);
+        SendData(input);
     }
 
     void GetLastIP()

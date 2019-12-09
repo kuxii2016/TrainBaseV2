@@ -45,6 +45,7 @@ public class Decoder_Manager : MonoBehaviour
     [Header("Depents")]
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
+    public Network_Manager NM;
     [Header("Slots")]
     public GameObject[] Slot;
     public RawImage[] m83;
@@ -690,5 +691,10 @@ public class Decoder_Manager : MonoBehaviour
             InputFields[12].text = dbDecoder[SelectedID].db12;
             InputFields[0].text = dbDecoder[SelectedID].dbBeschreibung;
         }
+    }
+
+    public void SendDecoder(int id)
+    {
+        NM.TrySendData("Decoder" + "?" + dbDecoder[id].dbDatum.ToString() + "?" + dbDecoder[id].dbBeschreibung.ToString() + "?" +"null" + "?" + dbDecoder[id].dbType.ToString() + "?" + dbDecoder[id].db1.ToString() + "?" + dbDecoder[id].db2.ToString() + "?" + dbDecoder[id].db3.ToString() + "?" + dbDecoder[id].db4.ToString() + "?" + dbDecoder[id].db5.ToString() + "?" + dbDecoder[id].db6.ToString() + "?" + dbDecoder[id].db7.ToString() + "?" + dbDecoder[id].db8.ToString() + "?" + dbDecoder[id].db9.ToString() + "?" + dbDecoder[id].db10.ToString() + "?" + dbDecoder[id].db11.ToString() + "?" + dbDecoder[id].db12.ToString() + "?" + dbDecoder[id].db13.ToString() + "?" + dbDecoder[id].db14.ToString() + "?" + dbDecoder[id].db15.ToString() + "?" + dbDecoder[id].db16.ToString() + "?" + "null" + "?" + dbDecoder[id].dbIdentifyer.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
     }
 }

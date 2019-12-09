@@ -527,8 +527,8 @@ public class Start_Manager : MonoBehaviour
         {
             Send = "AUS";
         }
-        ErrorTyp.text = "Fehler: " + Activity;
-        ErrorDSC.text = "Fehler wird Automatisch Gemeldet: " + Send + "\n \n" + Error;
+        ErrorTyp.text = "  Fehler: " + Activity;
+        ErrorDSC.text = "  Fehler wird Automatisch Gemeldet: " + Send + "\n \n" + Error;
         ErrorView.gameObject.SetActive(true);
     }
 
