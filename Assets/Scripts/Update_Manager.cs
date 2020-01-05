@@ -35,7 +35,7 @@ public class Update_Manager : MonoBehaviour
 
     void Start ()
     {
-        StartCoroutine(CheckVersion());
+        //StartCoroutine(CheckVersion());
         StartCoroutine(CheckNews());
         startManager.Log("Lade Update_Manager -> Nachricht ist Normal.", "Load Update_Manager -> message is normal");
         ThisVersion.text = startManager.ProgrammVersion;
@@ -68,7 +68,7 @@ public class Update_Manager : MonoBehaviour
         {
             if (UserSettings.AutoUpdateCheck.isOn == true)
             {
-                EnableUpdateWindows();
+                //EnableUpdateWindows();
             }
             else
             {

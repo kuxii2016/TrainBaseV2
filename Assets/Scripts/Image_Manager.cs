@@ -61,7 +61,7 @@ public class Image_Manager : MonoBehaviour
         GetRows();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Image = UserSettings.ImageType;
         for (int i = 0; i < Slots.Length; i++)

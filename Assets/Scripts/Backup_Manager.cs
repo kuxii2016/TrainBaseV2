@@ -24,12 +24,16 @@ public class Backup_Manager : MonoBehaviour
     public int PageOffset2 = 12;
     public int CurrentPage = 1;
     public int SelectedID = -1;
+    public string[] Backup;
+    public string BackupS;
+    public string NameOfPath;
 
     void Start()
     {
         startManager.Log("Lade Backup_Manager -> Nachricht ist Normal.", "Load Backup_Manager -> message is normal");
         ClearScreen();
         FindBackups();
+        NameOfPath = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db").Replace("/", "\\");
     }
 
     void Update()
@@ -42,6 +46,7 @@ public class Backup_Manager : MonoBehaviour
         string[] imports = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/");
         for (int i = PageOffset; i < imports.Length && i < PageOffset2; i++)
         {
+            Backup[i - PageOffset] = Path.GetFileName(imports[i]).ToString();
             Slots[i - PageOffset].GetComponentInChildren<Text>().text = Path.GetFileName(imports[i]);
             Slots[i - PageOffset].gameObject.SetActive(true);
         }
@@ -121,7 +126,7 @@ public class Backup_Manager : MonoBehaviour
 
     public void Selected(int id)
     {
-        SelectedID = (id + PageOffset);
+        SelectedID = (id);
     }
 
     public void UnSelected()
@@ -139,15 +144,14 @@ public class Backup_Manager : MonoBehaviour
 
     public void ReCreate()
     {
+        //BackupS = Backup[SelectedID];
         try
         {
-            string connection = "URI=file:" + System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db";
-            IDbConnection dbcon = new SqliteConnection(connection);
-            dbcon.Close();
-            dbcon = null;
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Thread.Sleep(100);
+            File.Delete(NameOfPath);
             Debug.Log("Step 1");
-            File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/" + Slots[SelectedID].GetComponentInChildren<Text>().text, System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
         }
         catch (Exception ex)
         {
@@ -157,7 +161,7 @@ public class Backup_Manager : MonoBehaviour
         }
         finally
         {
-
+            File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/" + Backup[SelectedID], System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
         }
     }
 }

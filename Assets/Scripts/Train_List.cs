@@ -159,7 +159,7 @@ public class Train_List : MonoBehaviour
         readIntervall();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         for (int i = 0; i < 12; i++)
         {
