@@ -260,6 +260,7 @@ public class Settings_Manager : MonoBehaviour
             startManager.Error("ReadDatabase(Settings_Manager);", "" + ex);
         }
         dbConnection.Close();
+        dbConnection.Dispose();
         dbConnection = null;
     }
 

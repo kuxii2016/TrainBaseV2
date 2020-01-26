@@ -358,6 +358,7 @@ public class Train_List : MonoBehaviour
         {
             LoadIcon();
             dbConnection.Close();
+            dbConnection.Dispose();
             dbConnection = null;
         }
     }

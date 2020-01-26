@@ -203,8 +203,6 @@ public class Decoder_Manager : MonoBehaviour
                     dbDecoder.Add(RdbDecoder);
                 }
             }
-            reader.Close();
-            reader = null;
         }
         catch (SqliteException ex)
         {
@@ -214,10 +212,10 @@ public class Decoder_Manager : MonoBehaviour
         finally
         {
             startManager.Log("Modul Decoder_Liste :: Alle Decoder Eingelesen.", "Modul Decoder_List :: All Decoders are Read");
+            dbConnection.Close();
+            dbConnection.Dispose();
+            dbConnection = null;
         }
-
-        dbConnection.Close();
-        dbConnection = null;
 
         startManager.Log("Modul Decoder_Liste :: "+ (dbDecoder.Count) +" Gespeicherte Decoder Gefunden.", "Modul Decoder_List :: " + (dbDecoder.Count) + " Saved Decoder Found.");
     }

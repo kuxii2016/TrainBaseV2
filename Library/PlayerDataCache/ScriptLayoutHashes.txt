@@ -123,7 +123,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 7995d53e4896aad706b30f3ef64dcc67 Assembly-CSharp.dll:.Settings_Manager
-29d1f41076e38083de9e1b5afbaec342 Assembly-CSharp.dll:.Inventory_Manager
+2a3935dbfe5d0d9d3f3feafab0a7f139 Assembly-CSharp.dll:.Inventory_Manager
 42b95fa34af58e29e6c9a113fd062eb7 Assembly-CSharp.dll:.Train_List
 39c49a38bfd39945719c68a51bc40a90 Assembly-CSharp.dll:.Stats_Manager
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator

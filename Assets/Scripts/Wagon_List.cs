@@ -247,11 +247,15 @@ public class Wagon_List : MonoBehaviour
             startManager.LogError("Fehler beim Laden der Wagondaten.", "Error Loading Wagondata Data", " Wagon_List :: ReadTrains(); Error: " + ex);
             startManager.Error("RefreshIndex(Wagons);", "" + ex);
         }
-        LoadIcon();
-        dbConnection.Close();
-        dbConnection = null;
-        startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
-        startManager.Log("Modul Wagon_List :: " +Trains.Count+" Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
+        finally
+        {
+            LoadIcon();
+            dbConnection.Close();
+            dbConnection.Dispose();
+            dbConnection = null;
+            startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
+            startManager.Log("Modul Wagon_List :: " + Trains.Count + " Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
+        }
     }
 
     private void LoadIcon()

@@ -43,8 +43,9 @@ public class Image_Manager : MonoBehaviour
     public int CurrentPage = 1;
     public int SelectedID = -1;
     public string Image = "png";
+    Thread picThread = null;
 
-    void Start ()
+    void Start()
     {
         startManager.Log("Lade Image_Manager -> Nachricht ist Normal.", "Load Image_Manager -> message is normal");
         DirPath1 = (System.Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).Replace("\\", "/") + "/");
@@ -90,7 +91,7 @@ public class Image_Manager : MonoBehaviour
                     for (int i = 0; i < Images.Count; i++)
                     {
                         Pic = new Texture2D[Images.Count];
-                        StartCoroutine(setImage(Images[i], i));
+                        StartCoroutine(SetImage(Images[i], i));
                     }
                 }
             }
@@ -108,8 +109,8 @@ public class Image_Manager : MonoBehaviour
                     Images.Add(f);
                     for (int i = 0; i < Images.Count; i++)
                     {
-                        StartCoroutine(setImage(Images[i], i));
                         Pic = new Texture2D[Images.Count];
+                        StartCoroutine(SetImage(Images[i], i));
                     }
                 }
             }
@@ -128,7 +129,7 @@ public class Image_Manager : MonoBehaviour
                     for (int i = 0; i < Images.Count; i++)
                     {
                         Pic = new Texture2D[Images.Count];
-                        StartCoroutine(setImage(Images[i], i));
+                        StartCoroutine(SetImage(Images[i], i));
                     }
                 }
             }
@@ -147,7 +148,8 @@ public class Image_Manager : MonoBehaviour
                     for (int i = 0; i < Images.Count; i++)
                     {
                         Pic = new Texture2D[Images.Count];
-                        StartCoroutine(setImage(Images[i], i));
+
+                        StartCoroutine(SetImage(Images[i], i));
                     }
                 }
             }
@@ -166,11 +168,12 @@ public class Image_Manager : MonoBehaviour
                     for (int i = 0; i < Images.Count; i++)
                     {
                         Pic = new Texture2D[Images.Count];
-                        StartCoroutine(setImage(Images[i], i));
+                        StartCoroutine(SetImage(Images[i], i));
                     }
                 }
             }
             startManager.Log("Modul Image_Manager :: Bilder Gelesen " + Images.Count + " Verwendbare(s) Gefunden", "Modul Image_Manager :: Images Read " + Images.Count + " Useable Images Found");
+
         }
     }
 
@@ -180,7 +183,7 @@ public class Image_Manager : MonoBehaviour
         {
             try
             {
-                if(File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image))
+                if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image))
                 {
                     File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2/Images/Trains/" + (TL.SelectedID + 1) + "." + Image);
                 }
@@ -189,7 +192,7 @@ public class Image_Manager : MonoBehaviour
                 TrainEditPic.texture = Pic[id];
                 TL.RefreshIndex();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 startManager.Error("CopyImage(Image) == 0", ex.ToString());
             }
@@ -244,7 +247,7 @@ public class Image_Manager : MonoBehaviour
             }
         }
 
-    ImageView.SetActive(false);
+        ImageView.SetActive(false);
     }
 
     public void SetImageRecorder(int id)
@@ -292,7 +295,7 @@ public class Image_Manager : MonoBehaviour
         return s[s.Length - 1];
     }
 
-    IEnumerator setImage(string url, int number)
+    IEnumerator SetImage(string url, int number)
     {
         Texture2D tex;
         tex = new Texture2D(2, 2, TextureFormat.DXT1, false);
@@ -301,6 +304,7 @@ public class Image_Manager : MonoBehaviour
             yield return www;
             www.LoadImageIntoTexture(tex);
             Pic[number] = tex;
+
         }
     }
 }
