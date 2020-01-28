@@ -43,7 +43,6 @@ public class Image_Manager : MonoBehaviour
     public int CurrentPage = 1;
     public int SelectedID = -1;
     public string Image = "png";
-    Thread picThread = null;
 
     void Start()
     {

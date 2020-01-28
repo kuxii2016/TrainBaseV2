@@ -131,11 +131,18 @@ public class Wagon_List : MonoBehaviour
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Wagon_List -> Nachricht ist Normal.", "Load Wagon_List -> message is normal");
-        RefreschIndex();
+        if (startManager._IsReady == true)
+        {
+            RefreschIndex();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
         IsPremium = UserSettings.Premium;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         for (int i = 0; i < 12; i++)
         {

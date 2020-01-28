@@ -513,7 +513,7 @@ public class Settings_Manager : MonoBehaviour
         }
         finally
         {
-            startManager.Log("Modul Settings_Manager :: Einstellungen Erfolgreich Gespeichert.", "Settings_Manager Train_List :: Settings Successfully saved.");
+            startManager.Log("Modul Settings_Manager :: Einstellungen Erfolgreich Gespeichert.", "Settings_Manager :: Settings Successfully saved.");
             startManager.Notify("Einstellungen Gespeichert.!", "Settings Saved.!", "green", "green");
         }
     }
@@ -538,5 +538,34 @@ public class Settings_Manager : MonoBehaviour
     {
         WaggonPicSize = DirSize(new DirectoryInfo(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Wagons"));
         TrainPicSize = DirSize(new DirectoryInfo(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Images/" + "Trains"));
+    }
+
+    public void CreateErrorReport()
+    {
+        try
+        {
+            if (!Directory.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report"))
+            {
+                Directory.CreateDirectory(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report");
+                if (File.Exists(startManager.LogPath + "OLD-Log"))
+                    File.Copy(startManager.LogPath + "OLD-Log", System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report/" + "_old");
+                if (File.Exists(startManager.LogPath + "last.Log"))
+                    File.Copy(startManager.LogPath + "last.log", System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report/" + "_curr");
+                if (File.Exists(startManager.LogPath + "error.log"))
+                    File.Copy(startManager.LogPath + "error.log", System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report/" + "_err");
+                if (File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"))
+                    File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db", System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Error-Report/" + "_db");
+            }
+        }
+        catch(Exception ex)
+        {
+            startManager.LogError("Fehler beim Erstellen des Fehler Report.", "Error to Create the Error Report", " Settings_Manager :: CreateErrorReport; Error: " + ex);
+            startManager.Error("CreateErrorReport(Settings_Manager);", "" + ex);
+        }
+        finally
+        {
+            startManager.Log("Modul Settings_Manager :: Error Report  Erfolgreich Erstellt.", "Settings_Manager :: Error Report Successfully saved.");
+            startManager.Notify("Error Report Gespeichert.!", "Error Report Saved.!", "green", "green");
+        }
     }
 }

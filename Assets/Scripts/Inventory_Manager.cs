@@ -39,6 +39,7 @@ public class Inventory_Manager : MonoBehaviour
     public Text[] Stock;
     public Text[] Number;
     public Text[] Price;
+    public Text[] ID;
     public Toggle[] Selected;
     public Text PageIndex;
     public Text SeitenWert;
@@ -67,7 +68,14 @@ public class Inventory_Manager : MonoBehaviour
     void Start()
     {
         startManager.Log("Lade Inventory_Manager -> Nachricht ist Normal.", "Load Inventory_Manager -> message is normal");
-        RefreschIndex();
+        if (startManager._IsReady == true)
+        {
+            RefreschIndex();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
         for (int i = 0; i < Item.Count; i++)
         {
             CompleteSumm = CompleteSumm + Item[i].dbPreis;
@@ -167,7 +175,7 @@ public class Inventory_Manager : MonoBehaviour
         }
         else
         {
-            PageOffset2 = 12;
+            PageOffset2 = 10;
             PageOffset = 0;
             CurrentPage = 1;
             PageIndex.text = CurrentPage.ToString();
@@ -308,6 +316,7 @@ public class Inventory_Manager : MonoBehaviour
         for (int i = PageOffset; i < Item.Count && i < PageOffset2; i++)
         {
             Slot[i - PageOffset].SetActive(true);
+            ID[i - PageOffset].text = "ID: " + (i +1);
             Created[i - PageOffset].text = "Gespeichert: " + Item[i].dbDatum;
             Description[i - PageOffset].text = "Titel: " + Item[i].dbBeschreibung;
             Stock[i - PageOffset].text = "Stück: " + Item[i].dbStueck;
@@ -374,31 +383,34 @@ public class Inventory_Manager : MonoBehaviour
 
     public void UpdateItem(string date, string desc, string uuid, string Art, string stk, string price)
     {
-        SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
-        using (SqliteCommand command = new SqliteCommand())
+        if (startManager._IsReady == true)
         {
-            command.Connection = dbConnection;
-            command.CommandType = CommandType.Text; 
-            command.CommandText = "UPDATE Inventory set ARTKNR = @ARTKNR ,STUECK  = @STUECK ,BESCHREIBUNG = @BESCHREIBUNG,PREIS = @PREIS,FREEa = @FREEa WHERE BESCHREIBUNG='" + desc + "' AND DATUM='" + date + "'  ";
-            command.Parameters.AddWithValue("@ARTKNR", Art);
-            command.Parameters.AddWithValue("@STUECK", stk);
-            command.Parameters.AddWithValue("@BESCHREIBUNG", desc);
-            command.Parameters.AddWithValue("@PREIS", price);
-            command.Parameters.AddWithValue("@FREEa", uuid);
-            try
+            SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+            using (SqliteCommand command = new SqliteCommand())
             {
-                dbConnection.Open();
-                command.ExecuteNonQuery();
-            }
-            catch (SqliteException ex)
-            {
-                startManager.LogError("Fehler beim Speichern des Items.", "Error Saving Item Data", " Inventory_Manager :: UpdateItem(); Error: " + ex);
-                startManager.Error("UpdateItem(InventoryList);", "" + ex);
-            }
-            finally
-            {
-                dbConnection.Close();
-                startManager.Log("Modul Inventory_Manager :: Item Upgedated.", "Modul Inventory_Manager :: Item Upgedated");
+                command.Connection = dbConnection;
+                command.CommandType = CommandType.Text;
+                command.CommandText = "UPDATE Inventory set ARTKNR = @ARTKNR ,STUECK  = @STUECK ,BESCHREIBUNG = @BESCHREIBUNG,PREIS = @PREIS,FREEa = @FREEa WHERE BESCHREIBUNG='" + desc + "' AND DATUM='" + date + "'  ";
+                command.Parameters.AddWithValue("@ARTKNR", Art);
+                command.Parameters.AddWithValue("@STUECK", stk);
+                command.Parameters.AddWithValue("@BESCHREIBUNG", desc);
+                command.Parameters.AddWithValue("@PREIS", price);
+                command.Parameters.AddWithValue("@FREEa", uuid);
+                try
+                {
+                    dbConnection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (SqliteException ex)
+                {
+                    startManager.LogError("Fehler beim Speichern des Items.", "Error Saving Item Data", " Inventory_Manager :: UpdateItem(); Error: " + ex);
+                    startManager.Error("UpdateItem(InventoryList);", "" + ex);
+                }
+                finally
+                {
+                    dbConnection.Close();
+                    startManager.Log("Modul Inventory_Manager :: Item Upgedated.", "Modul Inventory_Manager :: Item Upgedated");
+                }
             }
         }
     }

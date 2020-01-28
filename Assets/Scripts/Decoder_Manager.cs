@@ -103,7 +103,14 @@ public class Decoder_Manager : MonoBehaviour
     {
         startManager.Log("Lade Decoder_Liste -> Nachricht ist Normal.", "Load Decoder_List -> message is normal");
         SetStartScreen();
-        ReadAllItems();
+        if (startManager._IsReady == true)
+        {
+            ReadAllItems();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
         IsS88();
     }
 

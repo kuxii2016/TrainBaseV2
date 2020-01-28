@@ -8,6 +8,7 @@ using UnityEngine;
 using Microsoft.Win32;
 using System.Text;
 using System.Net;
+using Mono.Data.Sqlite;
 
 public class Start_Manager : MonoBehaviour
 {
@@ -52,6 +53,12 @@ public class Start_Manager : MonoBehaviour
     public string Send = "Aus";
     [Header("Verlauf-Panel")]
     public Text History;
+    [Header("Version Check")]
+    public bool _IsReady = false;
+    public string OldDBVersion;
+    public GameObject ControllView;
+    public Button _ok;
+    public Text _Message;
 
     void Start()
     {
@@ -197,6 +204,60 @@ public class Start_Manager : MonoBehaviour
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"))
         {
             File.Copy(Application.streamingAssetsPath + "/Resources/clear.db", System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
+            _IsReady = true;
+        }
+
+        else
+        {
+            SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
+            dbConnection.Open();
+            try
+            {
+                LoadConfig();
+                SqliteCommand cmd = new SqliteCommand("SELECT * FROM Settings", dbConnection);
+                SqliteDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        if (reader[6].GetType() != typeof(DBNull))
+                        {
+                            OldDBVersion = reader.GetString(6);
+                        }
+                    }
+                }
+                reader.Close();
+                reader = null;
+            }
+            catch (SqliteException ex)
+            {
+                LogError("Fehler beim Version Compatibility Test.", "Error Loading Settings Data", " Settings_Manager :: Com. Test; Error: " + ex);
+                Error("CheckFolder(Settings_Manager);", "" + ex);
+            }
+            finally
+            {
+                dbConnection.Close();
+                dbConnection.Dispose();
+                dbConnection = null;
+                if (OldDBVersion != "110")
+                {
+                    AutoError = false;
+                    WriteError = false;
+                    ControllView.gameObject.SetActive(true);
+                    if(IsGerman == true)
+                    {
+                        _Message.text = "Achtung es wurde vom System eine Alte Datenbank Gefunden \nGehen sie bitte in Ihre Eigenen Dateien in den TrainbaseV2 Ordner und Löschen sie Bitte Die TrainBaseV2 Datenbank \nAnsonnsten kann das Programm Nicht Weiter mit dieser Version Genutzt Werden.!";
+                    }
+                    else
+                    {
+                        _Message.text = "Waring the System dedect ah Old Database File \n This can not use with the Current Version \n Please Go in our Documents Folder under TrainBaseV2 and Delete in the Database Folder the Old Databse.!";
+                    }
+                }
+                else
+                {
+                    _IsReady = true;
+                }
+            }
         }
 
         if (!File.Exists(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Exporter"))
@@ -543,5 +604,10 @@ public class Start_Manager : MonoBehaviour
         {
             LogError("Keine Verbindung zum Server möglich!.", "No Connection to the Server.", " Train_List :: SendSelected(); Error: " + insert.error);
         }
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }

@@ -155,8 +155,15 @@ public class Train_List : MonoBehaviour
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Train_List -> Nachricht ist Normal.", "Load Train_List -> message is normal");
-        RefreshIndex();
-        readIntervall();
+        if (startManager._IsReady == true)
+        {
+            RefreshIndex();
+            readIntervall();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
     }
 
     void Update()
