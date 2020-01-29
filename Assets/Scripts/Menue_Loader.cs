@@ -72,6 +72,7 @@ public class Menue_Loader : MonoBehaviour {
             Backup_View.GetComponentInChildren<Text>().text = "Backup Übersicht";
             About_View.GetComponentInChildren<Text>().text = "Über TrainbaseV2";
         }
+
         if (startManager.IsEnglisch == true)
         {
             Train_List.GetComponentInChildren<Text>().text = "Locomotive list";
@@ -160,6 +161,11 @@ public class Menue_Loader : MonoBehaviour {
     public void OnEnterReFreshWagonImages()
     {
         startManager.Notify("Läd Eigene Wagon Bilder neu", "Reload own Wagon images", "blue", "blue");
+    }
+
+    public void OnEnterCreateErrorReport()
+    {
+        startManager.Notify("Erstellt alle nötigen Dateien für einen Error Report", "Created all needed File for ah Error Report", "blue", "blue");
     }
 
     public void OnEnterCkeckVersion()

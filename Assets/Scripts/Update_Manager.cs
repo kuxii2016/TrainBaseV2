@@ -35,12 +35,6 @@ public class Update_Manager : MonoBehaviour
 
     void Start ()
     {
-        StartCoroutine(CheckVersion());
-        StartCoroutine(CheckNews());
-        startManager.Log("Lade Update_Manager -> Nachricht ist Normal.", "Load Update_Manager -> message is normal");
-        ThisVersion.text = startManager.ProgrammVersion;
-        TVersion = startManager.ProgrammVersion;
-        ParsedTVersion = TVersion.Replace(".", "");
     }
 
     public IEnumerator CheckVersion()
@@ -68,7 +62,7 @@ public class Update_Manager : MonoBehaviour
         {
             if (UserSettings.AutoUpdateCheck.isOn == true)
             {
-                EnableUpdateWindows();
+                //EnableUpdateWindows();
             }
             else
             {
@@ -80,8 +74,6 @@ public class Update_Manager : MonoBehaviour
 
     public void ManuellCheck()
     {
-        StartCoroutine(CheckVersion());
-        StartCoroutine(CheckNews());
         startManager.Notify("Check version", "Checked version", "cyan", "cyan");
         EnableUpdateWindows();
     }
@@ -93,27 +85,6 @@ public class Update_Manager : MonoBehaviour
 
     public void EnableUpdateWindows()
     {
-        Checked = false;
-        if (OVersion == TVersion)
-        {
-            Updatewindows.SetActive(false);
-            startManager.Log("MODUL  Update_Manager :: Version ist Aktuell", "MODUL Update_Manager :: Version is current");
-            startManager.Notify("Version ist Aktuell", "Version is Uptodate", "green", "green");
-        }
-        else
-        {
-            if (Int32.Parse(ParsedOVersion) >= Int32.Parse(ParsedTVersion))
-            {
-                Updatewindows.SetActive(true);
-                startManager.Log("MODUL  Update_Manager :: Neue Version Verfügbar, Aktuell ist: " + OVersion, "MODUL Update_Manager :: New Version Available, Currently: " + OVersion);
-                startManager.Notify("Neue Version Verfuegbar", "New Version Available", "magenta", "magenta");
-            }
-            else
-            {
-                startManager.Notify("Insider Build", "Insider Build", "cyan", "cyan");
-                startManager.Log("MODUL  Update_Manager :: Insider Build" , "MODUL Update_Manager ::Insider Build");
-            }
-        }
     }
 
     public IEnumerator CheckNews()

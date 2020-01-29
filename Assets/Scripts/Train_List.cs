@@ -155,11 +155,18 @@ public class Train_List : MonoBehaviour
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Train_List -> Nachricht ist Normal.", "Load Train_List -> message is normal");
-        RefreshIndex();
-        readIntervall();
+        if (startManager._IsReady == true)
+        {
+            RefreshIndex();
+            readIntervall();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         for (int i = 0; i < 12; i++)
         {
@@ -169,8 +176,10 @@ public class Train_List : MonoBehaviour
                 SelectedID = (i + PageOffset);
             }
         }
+
         ImageType = UserSettings.ImageType;
         IsPremium = UserSettings.Premium;
+
         for (int i = PageOffset; i < Trains.Count && i < PageOffset2; i++)
         {
             TrainID[i - PageOffset].text = "ID: " + (i + 1);
@@ -238,6 +247,18 @@ public class Train_List : MonoBehaviour
                     Slot2[i - PageOffset].GetComponent<Text>().color = NonWartung;
                     Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
                 }
+            }
+        }
+
+        if(SelectedID != -1)
+        {
+            if (EditProtokoll.value != 0)
+            {
+                CV.gameObject.SetActive(true);
+            }
+            else
+            {
+                CV.gameObject.SetActive(false);
             }
         }
     }
@@ -344,6 +365,7 @@ public class Train_List : MonoBehaviour
         {
             LoadIcon();
             dbConnection.Close();
+            dbConnection.Dispose();
             dbConnection = null;
         }
     }
@@ -603,6 +625,7 @@ public class Train_List : MonoBehaviour
         }
         else
         {
+            SelectedID = -2;
             SqliteConnection dbConnection = new SqliteConnection("Data Source = " + (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db"));
             using (SqliteCommand command = new SqliteCommand())
             {
@@ -761,6 +784,7 @@ public class Train_List : MonoBehaviour
             {
                 CV.gameObject.SetActive(false);
             }
+
             if (Trains[SelectedID].DbRauch == 1)
             {
                 EditRauch.isOn = true;
@@ -816,6 +840,7 @@ public class Train_List : MonoBehaviour
             }
 
             TrainPic.GetComponent<RawImage>().texture = CacheImage[SelectedID];
+
             for (int i = 0; i < 12; i++)
             {
                 DeleteEditToggle[i].isOn = false;
@@ -891,7 +916,7 @@ public class Train_List : MonoBehaviour
 
     public void SendTrain(int id)
     {
-       NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
+       NM.TrySendData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
     }
 
     public void ForceRPCSend()
@@ -903,7 +928,7 @@ public class Train_List : MonoBehaviour
         else
         {
             int id = SelectedID;
-            NM.TrySendTrainData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
+            NM.TrySendData("TRAIN" + "?" + Trains[id].DbBaureihe.ToString() + "?" + Trains[id].DbFarbe.ToString() + "?" + Trains[id].DbLokTyp.ToString() + "?" + Trains[id].DbHersteller.ToString() + "?" + Trains[id].DbKatalognummer.ToString() + "?" + Trains[id].DbSeriennummer.ToString() + "?" + Trains[id].DbKaufTag.ToString() + "?" + Trains[id].DbKaufMonat.ToString() + "?" + Trains[id].DbKaufJahr.ToString() + "?" + Trains[id].DbPreis.ToString() + "?" + Trains[id].DbWartungTag.ToString() + "?" + Trains[id].DbWartungMonat.ToString() + "?" + Trains[id].DbWartungJahr.ToString() + "?" + Trains[id].DbAdresse.ToString() + "?" + Trains[id].DbProtokoll.ToString() + "?" + Trains[id].DbFahrstufen.ToString() + "?" + Trains[id].DbDecHersteller.ToString() + "?" + "null" + "?" + Trains[id].DbAngelegt.ToString() + "?" + Trains[id].DbRauch.ToString() + "?" + Trains[id].DbSound.ToString() + "?" + Trains[id].DbROTWEISS.ToString() + "?" + Trains[id].DbBeleuchtung.ToString() + "?" + Trains[id].DbPandos.ToString() + "?" + Trains[id].DbTelex.ToString() + "?" + Trains[id].DbElekKupplung.ToString() + "?" + Trains[id].DbSpurweite.ToString() + "?" + Trains[id].DbCV2.ToString() + "?" + Trains[id].DbCV3.ToString() + "?" + Trains[id].DbCV4.ToString() + "?" + Trains[id].DbCV5.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + Trains[id].Wartung.ToString() + "?" + "null");
         }
     }
 }

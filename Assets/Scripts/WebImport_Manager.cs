@@ -20,7 +20,6 @@ public class WebImport_Manager : MonoBehaviour
     public Settings_Manager UserSettings;
     public Train_List TL;
     public Wagon_List WL;
-
     [Header("Elements")]
     public InputField ImportKey;
     public Text ItemType;
@@ -29,7 +28,6 @@ public class WebImport_Manager : MonoBehaviour
     public Text wwwArtNR;
     public Text wwwErfasst;
     public Toggle DeleteToggle;
-
     [Header("Workflow")]
     public string CacheData0 = "NULL";
     public string CacheData1 = "NULL";

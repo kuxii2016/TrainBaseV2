@@ -45,6 +45,7 @@ public class Decoder_Manager : MonoBehaviour
     [Header("Depents")]
     public Start_Manager startManager;
     public Settings_Manager UserSettings;
+    public Network_Manager NM;
     [Header("Slots")]
     public GameObject[] Slot;
     public RawImage[] m83;
@@ -102,7 +103,14 @@ public class Decoder_Manager : MonoBehaviour
     {
         startManager.Log("Lade Decoder_Liste -> Nachricht ist Normal.", "Load Decoder_List -> message is normal");
         SetStartScreen();
-        ReadAllItems();
+        if (startManager._IsReady == true)
+        {
+            ReadAllItems();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
         IsS88();
     }
 
@@ -202,8 +210,6 @@ public class Decoder_Manager : MonoBehaviour
                     dbDecoder.Add(RdbDecoder);
                 }
             }
-            reader.Close();
-            reader = null;
         }
         catch (SqliteException ex)
         {
@@ -213,10 +219,10 @@ public class Decoder_Manager : MonoBehaviour
         finally
         {
             startManager.Log("Modul Decoder_Liste :: Alle Decoder Eingelesen.", "Modul Decoder_List :: All Decoders are Read");
+            dbConnection.Close();
+            dbConnection.Dispose();
+            dbConnection = null;
         }
-
-        dbConnection.Close();
-        dbConnection = null;
 
         startManager.Log("Modul Decoder_Liste :: "+ (dbDecoder.Count) +" Gespeicherte Decoder Gefunden.", "Modul Decoder_List :: " + (dbDecoder.Count) + " Saved Decoder Found.");
     }
@@ -690,5 +696,10 @@ public class Decoder_Manager : MonoBehaviour
             InputFields[12].text = dbDecoder[SelectedID].db12;
             InputFields[0].text = dbDecoder[SelectedID].dbBeschreibung;
         }
+    }
+
+    public void SendDecoder(int id)
+    {
+        NM.TrySendData("Decoder" + "?" + dbDecoder[id].dbDatum.ToString() + "?" + dbDecoder[id].dbBeschreibung.ToString() + "?" +"null" + "?" + dbDecoder[id].dbType.ToString() + "?" + dbDecoder[id].db1.ToString() + "?" + dbDecoder[id].db2.ToString() + "?" + dbDecoder[id].db3.ToString() + "?" + dbDecoder[id].db4.ToString() + "?" + dbDecoder[id].db5.ToString() + "?" + dbDecoder[id].db6.ToString() + "?" + dbDecoder[id].db7.ToString() + "?" + dbDecoder[id].db8.ToString() + "?" + dbDecoder[id].db9.ToString() + "?" + dbDecoder[id].db10.ToString() + "?" + dbDecoder[id].db11.ToString() + "?" + dbDecoder[id].db12.ToString() + "?" + dbDecoder[id].db13.ToString() + "?" + dbDecoder[id].db14.ToString() + "?" + dbDecoder[id].db15.ToString() + "?" + dbDecoder[id].db16.ToString() + "?" + "null" + "?" + dbDecoder[id].dbIdentifyer.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
     }
 }

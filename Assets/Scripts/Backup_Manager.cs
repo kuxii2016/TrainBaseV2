@@ -24,12 +24,17 @@ public class Backup_Manager : MonoBehaviour
     public int PageOffset2 = 12;
     public int CurrentPage = 1;
     public int SelectedID = -1;
+    public string[] Backup;
+    public string BackupS;
+    public string NameOfPath;
 
     void Start()
     {
         startManager.Log("Lade Backup_Manager -> Nachricht ist Normal.", "Load Backup_Manager -> message is normal");
+        NameOfPath = (System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db").Replace("\\", "/");
         ClearScreen();
         FindBackups();
+        Debug.Log(SystemInfo.operatingSystemFamily);
     }
 
     void Update()
@@ -42,6 +47,7 @@ public class Backup_Manager : MonoBehaviour
         string[] imports = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/");
         for (int i = PageOffset; i < imports.Length && i < PageOffset2; i++)
         {
+            Backup[i - PageOffset] = Path.GetFileName(imports[i]).ToString();
             Slots[i - PageOffset].GetComponentInChildren<Text>().text = Path.GetFileName(imports[i]);
             Slots[i - PageOffset].gameObject.SetActive(true);
         }
@@ -121,7 +127,7 @@ public class Backup_Manager : MonoBehaviour
 
     public void Selected(int id)
     {
-        SelectedID = (id + PageOffset);
+        SelectedID = (id);
     }
 
     public void UnSelected()
@@ -139,25 +145,45 @@ public class Backup_Manager : MonoBehaviour
 
     public void ReCreate()
     {
-        try
+        if (SystemInfo.operatingSystemFamily.ToString() == "Windows")
         {
-            string connection = "URI=file:" + System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db";
-            IDbConnection dbcon = new SqliteConnection(connection);
-            dbcon.Close();
-            dbcon = null;
-            File.Delete(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
-            Debug.Log("Step 1");
-            File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/" + Slots[SelectedID].GetComponentInChildren<Text>().text, System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
-        }
-        catch (Exception ex)
-        {
-            startManager.Notify("Kann Datenbank nicht Überschreiben", "Can not Replace the Database", "red", "red");
-            startManager.LogError("Backup wurde nicht Wieder Hergestellt.", "Backup not ReCreadet", " Backup_Manager :: ReCreate(); Error: " + ex);
-            startManager.Error("ReCreate(Backup);", "" + ex);
-        }
-        finally
-        {
+            try
+            {
+                File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/" + Slots[SelectedID].GetComponentInChildren<Text>().text, System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db-rename");
+            }
+            catch (Exception ex)
+            {
+                startManager.LogError("Backup wurde nicht Wieder Hergestellt.", "Backup not ReCreadet", " Backup_Manager :: ReCreate(); Error: " + ex);
+                startManager.Error("ReCreate(Backup);", "" + ex);
+            }
+            finally
+            {
 
+                startManager.Notify("Datenbank muss unter Win, Manuell umbenannt Werden.!", "Can not Replace the Database", "red", "red");
+                startManager.Log("Sorry Windows nutzer, Leider muss das Backup Manuell wieder Hergestellt werden, \nDazu einfach in den Datenbank Ordner von TrainBaseV2 die Alte datenbank Loeschen \n(Programm muss Geschlossen sein, und von der anderen das -rename Loeschen.", "");
+            }
+        }
+        else // Unix Have ah other Funtion under Unix will work This :D
+        {
+            try
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Thread.Sleep(100);
+                File.Delete(NameOfPath);
+            }
+            catch (Exception ex)
+            {
+                startManager.Notify("Kann Datenbank nicht Überschreiben", "Can not Replace the Database", "red", "red");
+                startManager.LogError("Backup wurde nicht Wieder Hergestellt.", "Backup not ReCreadet", " Backup_Manager :: ReCreate(); Error: " + ex);
+                startManager.Error("ReCreate(Backup);", "" + ex);
+            }
+            finally
+            {
+                File.Copy(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Backups/" + Slots[SelectedID].GetComponentInChildren<Text>().text, System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) + "/TrainBaseV2" + "/Database/" + "TrainBase.ext2db");
+                startManager.Notify("Datenbank zurück Gesetzt", "Database Replaced.", "green", "green");
+                startManager.Log("Modul Backup_Manager :: Datenbank Erfolgreich zurück Gesetzt", "Modul Backup_Manager ::  Replaced");
+            }
         }
     }
 }

@@ -131,11 +131,18 @@ public class Wagon_List : MonoBehaviour
     {
         dataexporter = new DataExporter();
         startManager.Log("Lade Wagon_List -> Nachricht ist Normal.", "Load Wagon_List -> message is normal");
-        RefreschIndex();
+        if (startManager._IsReady == true)
+        {
+            RefreschIndex();
+        }
+        else
+        {
+            startManager.Notify("Warnung Alte Datenbank Erkannt, Bitte Löschen ist nicht nutzbar", "Old Databse Dedected, The Database is Not Useable", "blue", "blue");
+        }
         IsPremium = UserSettings.Premium;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         for (int i = 0; i < 12; i++)
         {
@@ -247,11 +254,15 @@ public class Wagon_List : MonoBehaviour
             startManager.LogError("Fehler beim Laden der Wagondaten.", "Error Loading Wagondata Data", " Wagon_List :: ReadTrains(); Error: " + ex);
             startManager.Error("RefreshIndex(Wagons);", "" + ex);
         }
-        LoadIcon();
-        dbConnection.Close();
-        dbConnection = null;
-        startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
-        startManager.Log("Modul Wagon_List :: " +Trains.Count+" Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
+        finally
+        {
+            LoadIcon();
+            dbConnection.Close();
+            dbConnection.Dispose();
+            dbConnection = null;
+            startManager.Notify("Alle Wagons Eingelesen", "All Wagons are Read", "green", "green");
+            startManager.Log("Modul Wagon_List :: " + Trains.Count + " Wagons Gefunden", "Modul Wagon_List :: " + Trains.Count + " Wagons Found");
+        }
     }
 
     private void LoadIcon()
@@ -619,7 +630,7 @@ public class Wagon_List : MonoBehaviour
 
     public void SendWagon(int id)
     {
-        NM.TrySendTrainData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
+        NM.TrySendData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
     }
 
     public void ForceRPCSend()
@@ -631,7 +642,7 @@ public class Wagon_List : MonoBehaviour
         else
         {
             int id = SelectedID;
-            NM.TrySendTrainData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
+            NM.TrySendData("WAGON" + "?" + Trains[id].DBTyp.ToString() + "?" + Trains[id].DBFarbe.ToString() + "?" + Trains[id].DBHersteller.ToString() + "?" + Trains[id].DBErstellt.ToString() + "?" + Trains[id].DBKatalognummer.ToString() + "?" + Trains[id].DBSeriennummer.ToString() + "?" + Trains[id].DBKaufTag.ToString() + "?" + Trains[id].DBKaufMonat.ToString() + "?" + Trains[id].DBKaufJahr.ToString() + "?" + Trains[id].DBPreis.ToString() + "?" + Trains[id].DBKupplung.ToString() + "?" + Trains[id].DBLicht.ToString() + "?" + Trains[id].DBPreiser.ToString() + "?" + Trains[id].DBSpurweite.ToString() + "?" + Trains[id].DBIdentifyer.ToString() + "?" + Trains[id].DBLagerort.ToString() + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null" + "?" + "null");
         }
     }
 }
