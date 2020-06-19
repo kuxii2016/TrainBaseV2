@@ -165,7 +165,7 @@ public class Network_Manager : MonoBehaviour
             {
                 if (FirstConnection == 0)
                 {
-                    SendData("IP?" + Network.player.ipAddress.ToString() + "?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null");
+                    //SendData("IP?" + Network.player.ipAddress.ToString() + "?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null");
                     FirstConnection = 1;
                 }
             }

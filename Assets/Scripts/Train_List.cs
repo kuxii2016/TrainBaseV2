@@ -248,6 +248,30 @@ public class Train_List : MonoBehaviour
                     Slot3[i - PageOffset].GetComponent<Text>().color = NonWartung;
                 }
             }
+
+            if (Trains[i].DbROTWEISS == 1)
+            {
+                if (IsPremium == true)
+                {
+                    LightSwitch[i - PageOffset].SetActive(true);
+                }
+                else
+                {
+                    LightSwitch[i - PageOffset].SetActive(false);
+                }
+            }
+
+            if (Trains[i].DbSound == 1)
+            {
+                if(IsPremium == true)
+                {
+                    Smoke[i - PageOffset].SetActive(true);
+                }
+                else
+                {
+                    Smoke[i - PageOffset].SetActive(false);
+                }
+            }
         }
 
         if(SelectedID != -1)

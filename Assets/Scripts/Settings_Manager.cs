@@ -301,7 +301,7 @@ public class Settings_Manager : MonoBehaviour
             }
             UUID.text = "Serialnummer: " + startManager.UserUUID.ToString();
             ImageFolder.text = "Bilder Ordner Größe: " + ((WaggonPicSize + TrainPicSize) / 1000 / 1024).ToString() + " Mb";
-            IPAdress.text = "IP Adresse: " + Network.player.ipAddress.ToString();
+            IPAdress.text = "IP Adresse: ";// + Network.player.ipAddress.ToString();
             Sonstiges.text = "Sonstige";
         }
         else
@@ -324,7 +324,7 @@ public class Settings_Manager : MonoBehaviour
             }
             UUID.text = "Serialnumber: " + startManager.UserUUID.ToString();
             ImageFolder.text = "Pictures Folder Size: " + ((WaggonPicSize + TrainPicSize) / 1000 / 1024).ToString() + " Mb";
-            IPAdress.text = "IP Adress: " + Network.player.ipAddress.ToString();
+            IPAdress.text = "IP Adress: ";// + Network.player.ipAddress.ToString();
             Sonstiges.text = "Other";
         }
         startManager.Log("Modul Settings_Manager :: Einstellungen Geladen set: ERROR:"+WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ", "Modul Settings_Manager :: Settings Loadet set: ERROR:" + WriteError.isOn + " | LOG:" + WriteLog.isOn + " | AutoLang:" + startManager.AutoDedectLanguage + " | AutoUpdate:" + AutoUpdateCheck.isOn + " | EigeneBilder:" + ListenBilder.isOn + " | LokPreise:" + PreisLoks.isOn + " | WagonPreise:" + PreisWagons.isOn + " | InventarPreise:" + PreisInventar.isOn + " | UpdateURL:" + startManager.UpdateUrl + " | KeyURL:" + startManager.KeyURL + " ");
