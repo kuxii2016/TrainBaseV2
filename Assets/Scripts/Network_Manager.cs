@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mono.Data.Sqlite;
-using UnityEngine.Networking;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Net.NetworkInformation;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using UnityEngine.Networking;
 
 public class Network_Manager : MonoBehaviour
 {
@@ -92,6 +94,7 @@ public class Network_Manager : MonoBehaviour
     public bool Item = false;
     public bool Decoder = false;
     private config configData;
+    private string ipadrees = "0.0.0.0:0000";
 
     void Start()
     {
@@ -107,6 +110,8 @@ public class Network_Manager : MonoBehaviour
         m_ClientButton.onClick.AddListener(ClientButton);
         m_ServerButton.onClick.AddListener(ServerButton);
         m_InputField.onEndEdit.AddListener(delegate { SendMessageField(); });
+        ipadrees = IPManager.GetIP(ADDRESSFAM.IPv4);
+        settingsManager.IPAdress.text = "IP Adresse: " + ipadrees;
     }
 
     void Update() //Init Connection
@@ -165,7 +170,8 @@ public class Network_Manager : MonoBehaviour
             {
                 if (FirstConnection == 0)
                 {
-                    //SendData("IP?" + Network.player.ipAddress.ToString() + "?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null");
+                    var ip = IPManager.GetIP(ADDRESSFAM.IPv4);
+                    SendData("IP?" + ip.ToString() + "?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null?null");
                     FirstConnection = 1;
                 }
             }
@@ -793,5 +799,57 @@ public class Network_Manager : MonoBehaviour
             startManager.LogError("Fehler beim Speichern der Einstellungen.", "Error Saving Settings.", "Network_Manager :: Load Last IP(); " + ex);
             startManager.Error("Network_Manager(Load Last IP);", "" + ex);
         }
+    }
+    
+    public class IPManager
+    {
+        public static string GetIP(ADDRESSFAM Addfam)
+        {
+            //Return null if ADDRESSFAM is Ipv6 but Os does not support it
+            if (Addfam == ADDRESSFAM.IPv6 && !Socket.OSSupportsIPv6)
+            {
+                return null;
+            }
+
+            string output = "";
+
+            foreach (NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+                NetworkInterfaceType _type1 = NetworkInterfaceType.Wireless80211;
+                NetworkInterfaceType _type2 = NetworkInterfaceType.Ethernet;
+
+                if ((item.NetworkInterfaceType == _type1 || item.NetworkInterfaceType == _type2) && item.OperationalStatus == OperationalStatus.Up)
+#endif 
+                {
+                    foreach (UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        //IPv4
+                        if (Addfam == ADDRESSFAM.IPv4)
+                        {
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                output = ip.Address.ToString();
+                            }
+                        }
+
+                        //IPv6
+                        else if (Addfam == ADDRESSFAM.IPv6)
+                        {
+                            if (ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
+                            {
+                                output = ip.Address.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            return output;
+        }
+    }
+
+    public enum ADDRESSFAM
+    {
+        IPv4, IPv6
     }
 }
